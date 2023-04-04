@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>318741072710-vgcu52cf4d3as1rb0rqsjtoqmfdi0hrs.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.318741072710-vgcu52cf4d3as1rb0rqsjtoqmfdi0hrs</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCq5tCoXC6IeDD76-_wo4hEZoqw2ckKd6s</string>
+	<key>GCM_SENDER_ID</key>
+	<string>318741072710</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.dogoFinalApp</string>
+	<key>PROJECT_ID</key>
+	<string>dogo-final-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dogo-final-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:318741072710:ios:ee5570455dcf08ee817347</string>
+</dict>
+</plist>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "318741072710",
+    "project_id": "dogo-final-app",
+    "storage_bucket": "dogo-final-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318741072710:android:b9c61c76a585aff3817347",
+        "android_client_info": {
+          "package_name": "com.example.dogo_final_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "318741072710-s9dqn2kkmml5hc3deqdap38t91e36csl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD3SfumjB81jW0rufyg13MBkqy0PohuAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "318741072710-s9dqn2kkmml5hc3deqdap38t91e36csl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,5 @@
 // Firebase
+import 'package:dogo_final_app/components/button_rounded_icon_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -76,29 +77,10 @@ class _LoginViewState extends State<LoginView> {
             SizedBox(height: 20),
             SizedBox(
               width: 300,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(16)),
-                  backgroundColor: MaterialStatePropertyAll(Colors.black),
-                ),
-                onPressed: signInWithGoogle,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.google,
-                      size: 16,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 20),
-                    Text(
-                      'Continuer avec Google',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
+              child: ButtonRoundedIconText(
+                text: "Connexion avec Google",
+                icon: FontAwesomeIcons.google,
+                callback: signInWithGoogle,
               ),
             ),
           ],

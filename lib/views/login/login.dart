@@ -55,7 +55,7 @@ class _LoginViewState extends State<LoginView> {
             });
 
         _authSubscription?.cancel();
-        // Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       }
     });
   }
@@ -75,12 +75,32 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
             SizedBox(height: 20),
+            Text(
+              "Ou",
+              style: TextStyle(
+                color: Colors.black54,
+              ),
+            ),
+            SizedBox(height: 20),
             SizedBox(
               width: 300,
               child: ButtonRoundedIconText(
-                text: "Connexion avec Google",
+                content: "Connexion avec Google",
                 icon: FontAwesomeIcons.google,
+                iconSize: 16,
+                gap: 18,
                 callback: signInWithGoogle,
+              ),
+            ),
+            SizedBox(height: 12),
+            SizedBox(
+              width: 300,
+              child: ButtonRoundedIconText(
+                content: "Connexion avec Apple",
+                icon: FontAwesomeIcons.apple,
+                iconSize: 20,
+                gap: 18,
+                callback: signInWithApple,
               ),
             ),
           ],

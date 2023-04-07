@@ -21,3 +21,8 @@ Future<UserCredential?> signInWithGoogle() async {
     rethrow;
   }
 }
+
+void signInWithApple() async {
+  print(
+      "En attente d'un compte développeur pour ajouter cette fonctionnalité.");
+}

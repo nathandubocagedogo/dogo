@@ -1,5 +1,6 @@
 // Firebase
-import 'package:dogo_final_app/components/button_rounded_icon_text.dart';
+import 'package:dogo_final_app/components/buttons/button_rounded_icon_text.dart';
+import 'package:dogo_final_app/components/input/input_rounded_icon_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,6 +26,10 @@ class _LoginViewState extends State<LoginView> {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +40,8 @@ class _LoginViewState extends State<LoginView> {
   void dispose() {
     super.dispose();
     _authSubscription?.cancel();
+    emailController.dispose();
+    passwordController.dispose();
   }
 
   Future<void> checkIfUserIsLogged() async {
@@ -62,27 +69,49 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Connexion',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 300,
+              child: Form(
+                key: formKey,
+                child: Column(children: [
+                  InputRoundedIconText(
+                    controller: emailController,
+                    labelText: 'Email',
+                    icon: FontAwesomeIcons.solidEnvelope,
+                    iconSize: 18,
+                  ),
+                  const SizedBox(height: 12),
+                  InputRoundedIconText(
+                    controller: passwordController,
+                    labelText: 'Mot de passe',
+                    icon: FontAwesomeIcons.lock,
+                    iconSize: 18,
+                  ),
+                ]),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
               "Ou",
               style: TextStyle(
                 color: Colors.black54,
               ),
             ),
-            SizedBox(height: 20),
-            SizedBox(
+            const SizedBox(height: 20),
+            const SizedBox(
               width: 300,
               child: ButtonRoundedIconText(
                 content: "Connexion avec Google",
@@ -92,8 +121,8 @@ class _LoginViewState extends State<LoginView> {
                 callback: signInWithGoogle,
               ),
             ),
-            SizedBox(height: 12),
-            SizedBox(
+            const SizedBox(height: 12),
+            const SizedBox(
               width: 300,
               child: ButtonRoundedIconText(
                 content: "Connexion avec Apple",

@@ -26,7 +26,7 @@ class SessionService {
             });
 
         authSubscription?.cancel();
-        // Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       }
     });
   }

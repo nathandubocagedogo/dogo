@@ -60,6 +60,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -112,6 +113,7 @@ class _LoginViewState extends State<LoginView> {
                         ButtonRoundedText(
                           content: "Se connecter",
                           callback: () async {
+                            FocusScope.of(context).unfocus();
                             await authService.signInBasically(
                               formKey: formKey,
                               emailController: emailController,
@@ -119,7 +121,7 @@ class _LoginViewState extends State<LoginView> {
                               context: context,
                             );
                           },
-                          color: themeData.primaryColor,
+                          backgroundColor: themeData.primaryColor,
                         ),
                       ],
                     ),

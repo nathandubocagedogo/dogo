@@ -39,7 +39,7 @@ class Dogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login',
+      initialRoute: '/welcome',
       routes: routes,
       theme: themeData,
       title: dotenv.get('APP_NAME'),

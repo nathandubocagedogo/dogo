@@ -43,7 +43,9 @@ class WelcomeView extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(context, '/login');
                 },
-                style: ButtonStyle(),
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                ),
                 child: const Text('Connexion'),
               )
             ],

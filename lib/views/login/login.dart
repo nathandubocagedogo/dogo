@@ -59,147 +59,152 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Connexion',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Connexion',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 300,
-              child: Column(
-                children: [
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        InputRoundedIconText(
-                          controller: emailController,
-                          labelText: 'Email',
-                          icon: FontAwesomeIcons.solidEnvelope,
-                          iconSize: 18,
-                        ),
-                        const SizedBox(height: 12),
-                        InputRoundedIconText(
-                          controller: passwordController,
-                          labelText: 'Mot de passe',
-                          icon: FontAwesomeIcons.lock,
-                          iconSize: 18,
-                        ),
-                        const SizedBox(height: 12),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/forgot-password');
-                          },
-                          child: Text(
-                            "Mot de passe oublié ?",
-                            textAlign: TextAlign.right,
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          InputRoundedIconText(
+                            controller: emailController,
+                            labelText: 'Email',
+                            icon: FontAwesomeIcons.solidEnvelope,
+                            iconSize: 18,
+                          ),
+                          const SizedBox(height: 12),
+                          InputRoundedIconText(
+                            controller: passwordController,
+                            labelText: 'Mot de passe',
+                            icon: FontAwesomeIcons.lock,
+                            iconSize: 18,
+                          ),
+                          const SizedBox(height: 12),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/forgot-password');
+                            },
+                            child: Text(
+                              "Mot de passe oublié ?",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: themeData.primaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          ButtonRoundedText(
+                            content: "Se connecter",
+                            callback: () async {
+                              FocusScope.of(context).unfocus();
+                              await authService.signInBasically(
+                                formKey: formKey,
+                                emailController: emailController,
+                                passwordController: passwordController,
+                                context: context,
+                              );
+                            },
+                            backgroundColor: themeData.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          const TextSpan(
+                            text: 'Pas encore un Doger ? ',
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          TextSpan(
+                            text: 'Rejoignez-nous',
                             style: TextStyle(
                               color: themeData.primaryColor,
                               fontWeight: FontWeight.w500,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushNamed(context, '/register');
+                              },
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        ButtonRoundedText(
-                          content: "Se connecter",
-                          callback: () async {
-                            FocusScope.of(context).unfocus();
-                            await authService.signInBasically(
-                              formKey: formKey,
-                              emailController: emailController,
-                              passwordController: passwordController,
-                              context: context,
-                            );
-                          },
-                          backgroundColor: themeData.primaryColor,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  RichText(
-                    text: TextSpan(
+                    const SizedBox(height: 20),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const TextSpan(
-                          text: 'Pas encore un Doger ? ',
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        TextSpan(
-                          text: 'Rejoignez-nous',
-                          style: TextStyle(
-                            color: themeData.primaryColor,
-                            fontWeight: FontWeight.w500,
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black38,
+                            height: 1.5,
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.pushNamed(context, '/register');
-                            },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            'OU',
+                            style: TextStyle(
+                              color: Colors.black38,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black38,
+                            height: 1.5,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: Colors.black38,
-                          height: 1.5,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text(
-                          'OU',
-                          style: TextStyle(
-                            color: Colors.black38,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: Colors.black38,
-                          height: 1.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ButtonRoundedIconText(
-                    content: "Connexion avec Google",
-                    icon: FontAwesomeIcons.google,
-                    iconSize: 16,
-                    gap: 18,
-                    callback: () async {
-                      await authService.signInWithGoogle();
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  ButtonRoundedIconText(
-                    content: "Connexion avec Apple",
-                    icon: FontAwesomeIcons.apple,
-                    iconSize: 20,
-                    gap: 18,
-                    callback: () async {
-                      await authService.signInWithApple();
-                    },
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    ButtonRoundedIconText(
+                      content: "Connexion avec Google",
+                      icon: FontAwesomeIcons.google,
+                      iconSize: 16,
+                      gap: 18,
+                      callback: () async {
+                        await authService.signInWithGoogle();
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    ButtonRoundedIconText(
+                      content: "Connexion avec Apple",
+                      icon: FontAwesomeIcons.apple,
+                      iconSize: 20,
+                      gap: 18,
+                      callback: () async {
+                        await authService.signInWithApple();
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

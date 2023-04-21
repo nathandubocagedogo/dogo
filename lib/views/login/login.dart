@@ -64,7 +64,14 @@ class _LoginViewState extends State<LoginView> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -126,6 +133,7 @@ class _LoginViewState extends State<LoginView> {
                               );
                             },
                             backgroundColor: themeData.primaryColor,
+                            textColor: Colors.white,
                           ),
                         ],
                       ),

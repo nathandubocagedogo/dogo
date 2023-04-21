@@ -38,7 +38,7 @@ class WelcomeView extends StatelessWidget {
                 backgroundColor: Colors.orange,
                 textColor: Colors.white,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 6),
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/login');

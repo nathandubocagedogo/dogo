@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -70,6 +70,8 @@ class AuthService {
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
+
+        print(credential);
 
         return await FirebaseAuth.instance.signInWithCredential(credential);
       } else {

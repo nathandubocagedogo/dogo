@@ -34,7 +34,7 @@ class InputRoundedIconText extends StatelessWidget {
           ),
         ),
         border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         contentPadding: const EdgeInsets.fromLTRB(
           20.0 + 40.0 + 10.0,

@@ -7,6 +7,7 @@ class ButtonRoundedText extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double elevation;
+  final bool isEnabled;
 
   const ButtonRoundedText({
     super.key,
@@ -16,6 +17,7 @@ class ButtonRoundedText extends StatelessWidget {
     required this.backgroundColor,
     this.textColor = Colors.black,
     this.elevation = 0,
+    this.isEnabled = true,
   });
 
   @override
@@ -23,7 +25,7 @@ class ButtonRoundedText extends StatelessWidget {
     return SizedBox(
       width: width,
       child: ElevatedButton(
-        onPressed: callback,
+        onPressed: isEnabled ? callback : null,
         style: ButtonStyle(
           backgroundColor: MaterialStatePropertyAll(backgroundColor),
           elevation: MaterialStateProperty.all(0),

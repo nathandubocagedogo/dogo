@@ -29,6 +29,7 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController passwordController = TextEditingController();
 
   bool obscureText = true;
+  bool isInLoginAction = false;
 
   @override
   void dispose() {
@@ -128,6 +129,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
+                      isEnabled: !isInLoginAction,
                     ),
                     const SizedBox(height: 20),
                     RichText(

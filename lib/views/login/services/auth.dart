@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 
 class AuthService {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Future<void> signInBasically({
     required GlobalKey<FormState> formKey,
     required TextEditingController emailController,
@@ -17,10 +21,32 @@ class AuthService {
 
     try {
       if (formKey.currentState!.validate()) {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailValue,
-          password: passwordValue,
-        );
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+              email: emailValue,
+              password: passwordValue,
+            )
+            .then(
+              (UserCredential user) => {
+                if (user.user!.emailVerified)
+                  {
+                    Navigator.pushNamed(context, '/home'),
+                  }
+                else
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      snackbarCustom(
+                        message:
+                            "Votre adresse n'est pas vérifiée. Veuillez vérifier votre boîte de réception.",
+                        backgroundColor: Colors.red[100],
+                        textColor: Colors.red[900],
+                        duration: const Duration(seconds: 3),
+                      ),
+                    ),
+                    FirebaseAuth.instance.signOut(),
+                  }
+              },
+            );
       }
     } on FirebaseAuthException catch (exception) {
       late String errorMessage;
@@ -36,26 +62,14 @@ class AuthService {
           errorMessage = "Impossible de vous authentifier.";
       }
 
-      final SnackBar snackBar = SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: const Color(0xFFF9E1DC),
-        elevation: 0,
-        duration: const Duration(seconds: 3),
-        content: Text(
-          errorMessage,
-          style: const TextStyle(
-            color: Color(0xFFD9110B),
-            fontWeight: FontWeight.w500,
-          ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        snackbarCustom(
+          message: errorMessage,
+          backgroundColor: Colors.red[100],
+          textColor: Colors.red[900],
+          duration: const Duration(seconds: 3),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        closeIconColor: const Color(0xFFD9110B),
-        showCloseIcon: true,
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -71,9 +85,24 @@ class AuthService {
           idToken: googleAuth.idToken,
         );
 
-        print(credential);
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        User? user = userCredential.user;
 
-        return await FirebaseAuth.instance.signInWithCredential(credential);
+        firestore.collection("users").doc(user?.uid).get().then((value) => {
+              if (!value.exists)
+                {
+                  firestore.collection("users").doc(user?.uid).set(
+                    {
+                      "name": user?.displayName,
+                      "email": user?.email,
+                      "picture": user?.photoURL,
+                    },
+                  )
+                }
+            });
+
+        return userCredential;
       } else {
         return null;
       }

@@ -1,7 +1,13 @@
+// Flutter
+import 'package:flutter/material.dart';
+import 'package:dogo_final_app/theme/theme.dart';
+
+// Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
-import 'package:dogo_final_app/theme/theme.dart';
-import 'package:flutter/material.dart';
+
+// Services
+import 'package:dogo_final_app/views/forgot-password/services/reset_password.dart';
 
 class ForgotPassewordView extends StatefulWidget {
   const ForgotPassewordView({super.key});
@@ -13,6 +19,8 @@ class ForgotPassewordView extends StatefulWidget {
 class _ForgotPassewordViewState extends State<ForgotPassewordView> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
+
+  final ResetPasswordService resetPasswordService = ResetPasswordService();
 
   @override
   Widget build(BuildContext context) {
@@ -40,62 +48,68 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
         body: Align(
           alignment: Alignment.topCenter,
           child: SizedBox(
-              width: screenWidth * 0.85,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Avez-vous oublié le mot de passe ?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
-                      ),
+            width: screenWidth * 0.85,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: Column(
+                children: [
+                  const Text(
+                    'Avez-vous oublié le mot de passe ?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Saisissez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 15,
-                        color: Colors.black54,
-                      ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Saisissez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: 15,
+                      color: Colors.black54,
                     ),
-                    const SizedBox(height: 40),
-                    Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Quel est votre email ?"),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          InputRoundedText(
-                            controller: emailController,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          ButtonRoundedText(
-                            content: "Réinitialiser le mot de passe",
-                            callback: () async {
-                              FocusScope.of(context).unfocus();
-                            },
-                            backgroundColor: themeData.primaryColor,
-                            textColor: Colors.white,
-                          )
-                        ],
-                      ),
+                  ),
+                  const SizedBox(height: 40),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Quel est votre email ?"),
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        InputRoundedText(
+                          controller: emailController,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ButtonRoundedText(
+                          content: "Réinitialiser le mot de passe",
+                          callback: () async {
+                            FocusScope.of(context).unfocus();
+                            await resetPasswordService.resetPassword(
+                              formKey: formKey,
+                              emailController: emailController,
+                              context: context,
+                            );
+                          },
+                          backgroundColor: themeData.primaryColor,
+                          textColor: Colors.white,
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

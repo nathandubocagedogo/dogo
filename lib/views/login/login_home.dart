@@ -1,12 +1,9 @@
-// Firebase
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_icon_text.dart';
 
 // Service
 import 'package:dogo_final_app/views/login/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 
 // Flutter
@@ -81,7 +78,14 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                       iconSize: 16,
                       gap: 18,
                       callback: () async {
-                        await authService.signInWithGoogle();
+                        await authService.signInWithGoogle().then(
+                              (UserCredential? userCredential) => {
+                                if (userCredential != null)
+                                  {
+                                    Navigator.pushNamed(context, '/home'),
+                                  }
+                              },
+                            );
                       },
                     ),
                     const SizedBox(height: 12),

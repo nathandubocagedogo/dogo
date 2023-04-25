@@ -1,16 +1,8 @@
-// Firebase
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
-// Services
-import 'package:dogo_final_app/views/login/services/session.dart';
-
 // Flutter
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key});
@@ -20,21 +12,6 @@ class WelcomeView extends StatefulWidget {
 }
 
 class _WelcomeViewState extends State<WelcomeView> {
-  StreamSubscription<User?>? authSubscription;
-
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final SessionService sessionService = SessionService();
-
-  @override
-  void initState() {
-    super.initState();
-    sessionService.checkIfUserIsLogged(
-      firestore: firestore,
-      authSubscription: authSubscription,
-      context: context,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -66,7 +43,6 @@ class _WelcomeViewState extends State<WelcomeView> {
               ),
               const SizedBox(height: 20),
               ButtonRoundedText(
-                width: double.infinity,
                 content: 'Commencer',
                 callback: () {
                   Navigator.pushNamed(context, '/home');

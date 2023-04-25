@@ -5,6 +5,7 @@ import 'package:dogo_final_app/views/login/login_home.dart';
 import 'package:dogo_final_app/views/login/login.dart';
 import 'package:dogo_final_app/views/register/register.dart';
 import 'package:dogo_final_app/views/forgot-password/forgot_password.dart';
+import 'package:dogo_final_app/views/home/home.dart';
 
 var routes = {
   '/welcome': (context) => const WelcomeView(),
@@ -12,6 +13,6 @@ var routes = {
   '/login': (context) => const LoginView(),
   '/register': (context) => const RegisterView(),
   '/forgot-password': (context) => const ForgotPassewordView(),
-  '/home': (context) => const Placeholder(),
+  '/home': (context) => const HomeView(),
   '/account': (context) => const Placeholder(),
 };

@@ -42,7 +42,7 @@ class _LoginHomeViewState extends State<LoginHomeView> {
             icon: const Icon(
               Icons.clear_rounded,
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pushNamed(context, '/welcome'),
           ),
         ),
         body: Center(

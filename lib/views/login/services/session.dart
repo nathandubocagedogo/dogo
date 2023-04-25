@@ -12,8 +12,7 @@ class SessionService {
     authSubscription = FirebaseAuth.instance.authStateChanges().listen(
       (User? user) {
         if (user != null) {
-          print("User is logged");
-        }
+        } else {}
       },
     );
   }

@@ -33,22 +33,11 @@ class _RegisterViewState extends State<RegisterView> {
   bool obscureText = true;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     super.dispose();
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-  }
-
-  void togglePasswordVisibility() {
-    setState(() {
-      obscureText = !obscureText;
-    });
   }
 
   @override

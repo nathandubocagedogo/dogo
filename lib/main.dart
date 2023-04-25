@@ -1,7 +1,7 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:dogo_final_app/routes/routes.dart';
 import 'package:dogo_final_app/theme/theme.dart';
+import 'package:dogo_final_app/routes/routes_with_animations.dart';
 import 'dart:async';
 
 // Firebase
@@ -66,7 +66,7 @@ class _DogoState extends State<Dogo> {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
             initialRoute: snapshot.data,
-            routes: routes,
+            onGenerateRoute: generateRoute,
             theme: themeData,
             title: dotenv.get('APP_NAME'),
             debugShowCheckedModeBanner: false,

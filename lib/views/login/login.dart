@@ -105,6 +105,7 @@ class _LoginViewState extends State<LoginView> {
                           },
                           backgroundColor: themeData.primaryColor,
                           textColor: Colors.white,
+                          enabledMode: true,
                         ),
                       ],
                     ),

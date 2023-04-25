@@ -1,14 +1,16 @@
 // Firebase
-import 'package:dogo_final_app/components/input/input_rounded_text.dart';
-import 'package:dogo_final_app/views/register/services/register.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Services
+import 'package:dogo_final_app/views/register/services/register.dart';
 
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
-import 'package:flutter/gestures.dart';
+import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -136,6 +138,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
+                      enabledMode: true,
                     ),
                     const SizedBox(height: 20),
                     RichText(

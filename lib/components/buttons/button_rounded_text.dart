@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ButtonRoundedText extends StatelessWidget {
+class ButtonRoundedText extends StatefulWidget {
   final double width;
   final String content;
   final VoidCallback callback;
   final Color backgroundColor;
   final Color textColor;
   final double elevation;
-  final bool isEnabled;
+  final bool enabledMode;
 
   const ButtonRoundedText({
     super.key,
@@ -17,17 +17,43 @@ class ButtonRoundedText extends StatelessWidget {
     required this.backgroundColor,
     this.textColor = Colors.black,
     this.elevation = 0,
-    this.isEnabled = true,
+    this.enabledMode = false,
   });
+
+  @override
+  State<ButtonRoundedText> createState() => _ButtonRoundedTextState();
+}
+
+class _ButtonRoundedTextState extends State<ButtonRoundedText> {
+  bool isEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
+      width: widget.width,
       child: ElevatedButton(
-        onPressed: isEnabled ? callback : null,
+        onPressed: isEnabled
+            ? () async {
+                if (!widget.enabledMode) {
+                  widget.callback();
+                } else {
+                  widget.callback();
+                  setState(() {
+                    isEnabled = false;
+                  });
+                  await Future.delayed(const Duration(seconds: 2));
+                  setState(() {
+                    isEnabled = true;
+                  });
+                }
+              }
+            : null,
         style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(backgroundColor),
+          backgroundColor: isEnabled
+              ? MaterialStatePropertyAll(widget.backgroundColor)
+              : MaterialStatePropertyAll(
+                  widget.backgroundColor.withOpacity(0.5),
+                ),
           elevation: MaterialStateProperty.all(0),
           padding: const MaterialStatePropertyAll(
             EdgeInsets.symmetric(
@@ -41,11 +67,11 @@ class ButtonRoundedText extends StatelessWidget {
           ),
         ),
         child: Text(
-          content,
+          widget.content,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             letterSpacing: 0.6,
-            color: textColor,
+            color: widget.textColor,
           ),
         ),
       ),

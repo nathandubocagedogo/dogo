@@ -8,10 +8,10 @@ class ResetPasswordService {
     required TextEditingController emailController,
     required BuildContext context,
   }) async {
-    String emailValue = emailController.value.text;
+    if (formKey.currentState!.validate()) {
+      String emailValue = emailController.value.text;
 
-    try {
-      if (emailValue.isNotEmpty) {
+      try {
         await FirebaseAuth.instance
             .sendPasswordResetEmail(
               email: emailValue,
@@ -30,8 +30,22 @@ class ResetPasswordService {
                 Navigator.pushNamed(context, '/login')
               },
             );
-      } else {
-        String errorMessage = "Veuillez saisir une adresse email.";
+      } on FirebaseException catch (exception) {
+        late String errorMessage;
+
+        switch (exception.code) {
+          case 'weak-password':
+            errorMessage = "Le mot de passe est trop faible.";
+            break;
+          case 'email-already-in-use':
+            errorMessage = "L'adresse email est déjà utilisée.";
+            break;
+          case 'invalid-email':
+            errorMessage = "Le format de l'adresse email est invalide.";
+            break;
+          default:
+            errorMessage = "Le format de l'adresse email est invalide.";
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
           snackbarCustom(
@@ -42,6 +56,6 @@ class ResetPasswordService {
           ),
         );
       }
-    } catch (exception) {}
+    }
   }
 }

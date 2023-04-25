@@ -80,6 +80,7 @@ class _LoginViewState extends State<LoginView> {
                         InputRoundedText(
                           controller: emailController,
                           textInputAction: TextInputAction.next,
+                          validator: true,
                         ),
                         const SizedBox(height: 30),
                         const Text("Mot de passe"),
@@ -88,6 +89,7 @@ class _LoginViewState extends State<LoginView> {
                           controller: passwordController,
                           textInputAction: TextInputAction.next,
                           obscureText: true,
+                          validator: true,
                         ),
                         const SizedBox(height: 30),
                         ButtonRoundedText(

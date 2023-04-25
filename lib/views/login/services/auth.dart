@@ -58,8 +58,11 @@ class AuthService {
         case 'wrong-password':
           errorMessage = "Le mot de passe n'est pas correct.";
           break;
+        case 'invalid-email':
+          errorMessage = "Le format de l'adresse email n'est pas valide.";
+          break;
         default:
-          errorMessage = "Impossible de vous authentifier.";
+          errorMessage = "Il est impossible de vous authentifier.";
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

@@ -86,6 +86,7 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
                         InputRoundedText(
                           controller: emailController,
                           textInputAction: TextInputAction.next,
+                          validator: true,
                         ),
                         const SizedBox(
                           height: 30,

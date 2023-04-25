@@ -29,7 +29,11 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController passwordController = TextEditingController();
 
   bool obscureText = true;
-  bool isInLoginAction = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -91,11 +95,12 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    const Text("Quel est votre nom ?"),
+                    const Text("Quel est votre prénom ?"),
                     const SizedBox(height: 12),
                     InputRoundedText(
                       controller: nameController,
                       textInputAction: TextInputAction.next,
+                      validator: true,
                     ),
                     const SizedBox(height: 12),
                     const Text("Quel est votre email ?"),
@@ -103,7 +108,8 @@ class _RegisterViewState extends State<RegisterView> {
                     InputRoundedText(
                       controller: emailController,
                       textInputAction: TextInputAction.next,
-                      helperText: 'Vous devrez confirmer cet e-mail plus tard',
+                      helperText: 'Vous devrez confirmer cet email plus tard.',
+                      validator: true,
                     ),
                     const SizedBox(height: 12),
                     const Text("Crée un mot de passe ?"),
@@ -112,7 +118,8 @@ class _RegisterViewState extends State<RegisterView> {
                       controller: passwordController,
                       textInputAction: TextInputAction.next,
                       obscureText: true,
-                      helperText: 'Utilisez au moins 6 caractères',
+                      helperText: 'Vous devez utilisez au moins 6 caractères',
+                      validator: true,
                     ),
                     const SizedBox(height: 30),
                     ButtonRoundedText(
@@ -129,7 +136,6 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
-                      isEnabled: !isInLoginAction,
                     ),
                     const SizedBox(height: 20),
                     RichText(

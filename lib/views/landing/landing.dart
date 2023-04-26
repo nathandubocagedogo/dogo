@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 class LandingView extends StatefulWidget {
@@ -11,6 +12,7 @@ class LandingView extends StatefulWidget {
 class _LandingViewState extends State<LandingView> {
   PageController pageController = PageController();
   int currentIndex = 0;
+  String buttonText = 'Suivant';
 
   @override
   void initState() {
@@ -20,15 +22,32 @@ class _LandingViewState extends State<LandingView> {
 
   @override
   void dispose() {
-    pageController.removeListener(onPageChanged);
-    pageController.dispose();
     super.dispose();
+    pageController.dispose();
+    pageController.removeListener(onPageChanged);
   }
 
   void onPageChanged() {
-    setState(() {
-      currentIndex = pageController.page!.round();
-    });
+    setState(
+      () {
+        int previousIndex = currentIndex;
+        double scrollThreshold = 50;
+        currentIndex = pageController.page!.round();
+
+        if (currentIndex == 2 &&
+            previousIndex == 2 &&
+            pageController.position.pixels >
+                pageController.position.maxScrollExtent + scrollThreshold) {
+          Navigator.pushNamed(context, '/home');
+        } else {
+          if (currentIndex == 2) {
+            buttonText = 'Démarrer';
+          } else {
+            buttonText = 'Suivant';
+          }
+        }
+      },
+    );
   }
 
   @override
@@ -73,23 +92,24 @@ class _LandingViewState extends State<LandingView> {
                       ),
                       const SizedBox(height: 20),
                       ButtonRoundedText(
-                        content: 'Suivant',
+                        content: buttonText,
                         callback: () {
-                          setState(
-                            () {
-                              if (currentIndex < 2) {
-                                currentIndex++;
-                                pageController.animateToPage(
-                                  currentIndex,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn,
-                                );
-                              } else {
-                                currentIndex = 0;
-                                pageController.jumpToPage(currentIndex);
-                              }
-                            },
-                          );
+                          setState(() {
+                            if (currentIndex < 1) {
+                              currentIndex++;
+                              buttonText = 'Suivant';
+                            } else if (currentIndex == 1) {
+                              currentIndex++;
+                              buttonText = 'Démarrer';
+                            } else {
+                              Navigator.pushNamed(context, '/home');
+                            }
+                            pageController.animateToPage(
+                              currentIndex,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeIn,
+                            );
+                          });
                         },
                         backgroundColor: Colors.orange,
                         textColor: Colors.white,

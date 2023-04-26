@@ -6,6 +6,7 @@ import 'package:dogo_final_app/views/login/login_home.dart';
 import 'package:dogo_final_app/views/login/login.dart';
 import 'package:dogo_final_app/views/register/register.dart';
 import 'package:dogo_final_app/views/forgot-password/forgot_password.dart';
+import 'package:dogo_final_app/views/landing/landing.dart';
 import 'package:dogo_final_app/views/home/home.dart';
 
 Route<dynamic> generateRoute(
@@ -37,6 +38,8 @@ Route<dynamic> generateRoute(
     case '/forgot-password':
       builder = (BuildContext context) => const ForgotPassewordView();
       break;
+    case '/landing':
+      builder = (BuildContext context) => const LandingView();
     case '/home':
       builder = (BuildContext context) => const HomeView();
     case '/account':

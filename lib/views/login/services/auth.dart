@@ -30,23 +30,7 @@ class AuthService {
           )
           .then(
             (UserCredential user) => {
-              if (user.user!.emailVerified)
-                {
-                  Navigator.pushNamed(context, '/home'),
-                }
-              else
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    snackbarCustom(
-                      message:
-                          "Votre adresse n'est pas vérifiée. Veuillez vérifier votre boîte de réception.",
-                      backgroundColor: Colors.red[100],
-                      textColor: Colors.red[900],
-                      duration: const Duration(seconds: 3),
-                    ),
-                  ),
-                  FirebaseAuth.instance.signOut(),
-                }
+              Navigator.pushNamed(context, '/home'),
             },
           );
     } on FirebaseAuthException catch (exception) {

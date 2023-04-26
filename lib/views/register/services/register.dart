@@ -24,7 +24,11 @@ class RegisterService {
         password: passwordValue,
       );
 
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/welcome',
+        (Route<dynamic> route) => false,
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         snackbarCustom(
@@ -38,7 +42,6 @@ class RegisterService {
 
       User? user = credential.user;
       await user?.sendEmailVerification();
-      FirebaseAuth.instance.signOut();
 
       firestore.collection("users").doc(user?.uid).get().then((value) => {
             if (!value.exists)

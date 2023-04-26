@@ -37,9 +37,11 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
         context: context,
       );
       await Future.delayed(const Duration(seconds: 3));
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 

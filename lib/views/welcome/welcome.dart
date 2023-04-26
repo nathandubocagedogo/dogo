@@ -3,6 +3,7 @@ import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 // Routes
 import 'package:dogo_final_app/routes/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Flutter
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class WelcomeView extends StatefulWidget {
 }
 
 class _WelcomeViewState extends State<WelcomeView> {
+  User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -47,33 +50,26 @@ class _WelcomeViewState extends State<WelcomeView> {
               const SizedBox(height: 20),
               ButtonRoundedText(
                 content: 'Commencer',
-                callback: () {
-                  // Navigator.pushNamed(
-                  //   context,
-                  //   '/home',
-                  //   arguments: {
-                  //     'animationType': AnimationType.slideLeft,
-                  //   },
-                  // );
-                },
+                callback: () {},
                 backgroundColor: Colors.orange,
                 textColor: Colors.white,
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/login-home',
-                    arguments: {
-                      'animationType': AnimationType.slideBottom,
-                    },
-                  );
-                },
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                ),
-                child: const Text('Connexion'),
-              )
+              if (user == null)
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/login-home',
+                      arguments: {
+                        'animationType': AnimationType.slideBottom,
+                      },
+                    );
+                  },
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  ),
+                  child: const Text('Connexion'),
+                )
             ],
           ),
         ),

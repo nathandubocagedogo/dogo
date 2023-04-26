@@ -41,7 +41,11 @@ class _HomeViewState extends State<HomeView> {
         child: ElevatedButton(
           onPressed: () {
             FirebaseAuth.instance.signOut();
-            Navigator.pushNamed(context, '/login-home');
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/welcome',
+              (Route<dynamic> route) => false,
+            );
           },
           child: const Text("Déconnexion"),
         ),

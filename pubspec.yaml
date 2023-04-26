@@ -42,6 +42,9 @@ dependencies:
   # Environment
   flutter_dotenv: ^5.0.2
 
+  # Log
+  logger: ^1.3.0
+
   # Utilities
   google_fonts: ^4.0.3
   provider: ^6.0.5

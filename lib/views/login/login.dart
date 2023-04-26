@@ -23,11 +23,32 @@ class _LoginViewState extends State<LoginView> {
 
   final AuthService authService = AuthService();
 
+  bool isLoading = false;
+
   @override
   void dispose() {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  Future<void> submitLogin() async {
+    FocusScope.of(context).unfocus();
+
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      await authService.signInBasically(
+        emailController: emailController,
+        passwordController: passwordController,
+        context: context,
+      );
+      await Future.delayed(const Duration(seconds: 3));
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -94,18 +115,10 @@ class _LoginViewState extends State<LoginView> {
                         const SizedBox(height: 30),
                         ButtonRoundedText(
                           content: "Connexion",
-                          callback: () async {
-                            FocusScope.of(context).unfocus();
-                            await authService.signInBasically(
-                              formKey: formKey,
-                              emailController: emailController,
-                              passwordController: passwordController,
-                              context: context,
-                            );
-                          },
+                          callback: submitLogin,
                           backgroundColor: themeData.primaryColor,
                           textColor: Colors.white,
-                          enabledMode: true,
+                          isLoading: isLoading,
                         ),
                       ],
                     ),

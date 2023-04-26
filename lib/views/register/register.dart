@@ -127,7 +127,6 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
-                      enabledMode: true,
                     ),
                     const SizedBox(height: 20),
                     RichText(

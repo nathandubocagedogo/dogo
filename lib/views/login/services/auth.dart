@@ -1,14 +1,20 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Firebae
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// Utilities
 import 'package:google_sign_in/google_sign_in.dart';
+
+// Components
 import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 
 class AuthService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> signInBasically({
-    required GlobalKey<FormState> formKey,
     required TextEditingController emailController,
     required TextEditingController passwordController,
     required BuildContext context,
@@ -16,38 +22,33 @@ class AuthService {
     String emailValue = emailController.value.text;
     String passwordValue = passwordController.value.text;
 
-    formKey.currentState!.validate();
-    formKey.currentState!.save();
-
     try {
-      if (formKey.currentState!.validate()) {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-              email: emailValue,
-              password: passwordValue,
-            )
-            .then(
-              (UserCredential user) => {
-                if (user.user!.emailVerified)
-                  {
-                    Navigator.pushNamed(context, '/home'),
-                  }
-                else
-                  {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      snackbarCustom(
-                        message:
-                            "Votre adresse n'est pas vérifiée. Veuillez vérifier votre boîte de réception.",
-                        backgroundColor: Colors.red[100],
-                        textColor: Colors.red[900],
-                        duration: const Duration(seconds: 3),
-                      ),
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+            email: emailValue,
+            password: passwordValue,
+          )
+          .then(
+            (UserCredential user) => {
+              if (user.user!.emailVerified)
+                {
+                  Navigator.pushNamed(context, '/home'),
+                }
+              else
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    snackbarCustom(
+                      message:
+                          "Votre adresse n'est pas vérifiée. Veuillez vérifier votre boîte de réception.",
+                      backgroundColor: Colors.red[100],
+                      textColor: Colors.red[900],
+                      duration: const Duration(seconds: 3),
                     ),
-                    FirebaseAuth.instance.signOut(),
-                  }
-              },
-            );
-      }
+                  ),
+                  FirebaseAuth.instance.signOut(),
+                }
+            },
+          );
     } on FirebaseAuthException catch (exception) {
       late String errorMessage;
 

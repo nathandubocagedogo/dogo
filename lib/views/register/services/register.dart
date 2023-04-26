@@ -26,7 +26,7 @@ class RegisterService {
           password: passwordValue,
         );
 
-        Navigator.of(context).pushNamed('/login');
+        Navigator.pushNamed(context, '/login');
 
         ScaffoldMessenger.of(context).showSnackBar(
           snackbarCustom(

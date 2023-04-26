@@ -4,7 +4,7 @@ SnackBar snackbarCustom({
   required String message,
   Color? backgroundColor = Colors.blue,
   Color? textColor = Colors.white,
-  Duration duration = const Duration(seconds: 4),
+  Duration duration = const Duration(seconds: 3),
 }) {
   return SnackBar(
     content: Text(

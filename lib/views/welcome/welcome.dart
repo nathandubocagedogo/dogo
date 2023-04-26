@@ -48,13 +48,13 @@ class _WelcomeViewState extends State<WelcomeView> {
               ButtonRoundedText(
                 content: 'Commencer',
                 callback: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/home',
-                    arguments: {
-                      'animationType': AnimationType.slideLeft,
-                    },
-                  );
+                  // Navigator.pushNamed(
+                  //   context,
+                  //   '/home',
+                  //   arguments: {
+                  //     'animationType': AnimationType.slideLeft,
+                  //   },
+                  // );
                 },
                 backgroundColor: Colors.orange,
                 textColor: Colors.white,
@@ -65,7 +65,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                     context,
                     '/login-home',
                     arguments: {
-                      'animationType': AnimationType.slideLeft,
+                      'animationType': AnimationType.slideBottom,
                     },
                   );
                 },

@@ -103,7 +103,6 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
                           },
                           backgroundColor: themeData.primaryColor,
                           textColor: Colors.white,
-                          enabledMode: true,
                         )
                       ],
                     ),

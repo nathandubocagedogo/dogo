@@ -1,5 +1,6 @@
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_icon_text.dart';
+import 'package:dogo_final_app/routes/animations.dart';
 
 // Service
 import 'package:dogo_final_app/views/login/services/auth.dart';
@@ -42,7 +43,7 @@ class _LoginHomeViewState extends State<LoginHomeView> {
             icon: const Icon(
               Icons.clear_rounded,
             ),
-            onPressed: () => Navigator.pushNamed(context, '/welcome'),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
         body: Center(
@@ -82,7 +83,14 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                               (UserCredential? userCredential) => {
                                 if (userCredential != null)
                                   {
-                                    Navigator.pushNamed(context, '/home'),
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/home',
+                                      arguments: {
+                                        'animationType':
+                                            AnimationType.slideLeft,
+                                      },
+                                    ),
                                   }
                               },
                             );

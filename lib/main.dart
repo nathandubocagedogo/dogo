@@ -52,8 +52,7 @@ class _DogoState extends State<Dogo> {
 
   Future<String> checkIfUserIsLoggedInAndReturnRoute() async {
     if (user == null) {
-      return '/landing';
-      // return '/welcome';
+      return '/welcome';
     } else {
       return '/home';
     }

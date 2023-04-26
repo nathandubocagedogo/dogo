@@ -50,7 +50,7 @@ class _WelcomeViewState extends State<WelcomeView> {
               const SizedBox(height: 20),
               ButtonRoundedText(
                 content: 'Commencer',
-                callback: () {},
+                callback: () => Navigator.pushNamed(context, '/landing'),
                 backgroundColor: Colors.orange,
                 textColor: Colors.white,
               ),

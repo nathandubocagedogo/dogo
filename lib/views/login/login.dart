@@ -118,7 +118,7 @@ class _LoginViewState extends State<LoginView> {
                           callback: submitLogin,
                           backgroundColor: themeData.primaryColor,
                           textColor: Colors.white,
-                          isLoading: isLoading,
+                          isActive: isLoading,
                         ),
                       ],
                     ),

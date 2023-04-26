@@ -30,7 +30,7 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool obscureText = true;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -38,6 +38,27 @@ class _RegisterViewState extends State<RegisterView> {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  Future<void> submitRegister() async {
+    FocusScope.of(context).unfocus();
+
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      await registerService.createAccount(
+        firestore: firestore,
+        nameController: nameController,
+        emailController: emailController,
+        passwordController: passwordController,
+        context: context,
+      );
+      await Future.delayed(const Duration(seconds: 3));
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -115,18 +136,10 @@ class _RegisterViewState extends State<RegisterView> {
                     const SizedBox(height: 30),
                     ButtonRoundedText(
                       content: 'Crée un compte',
-                      callback: () async {
-                        await registerService.createAccount(
-                          firestore: firestore,
-                          formKey: formKey,
-                          nameController: nameController,
-                          emailController: emailController,
-                          passwordController: passwordController,
-                          context: context,
-                        );
-                      },
+                      callback: submitRegister,
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
+                      isActive: isLoading,
                     ),
                     const SizedBox(height: 20),
                     RichText(

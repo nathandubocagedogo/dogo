@@ -22,6 +22,27 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
 
   final ResetPasswordService resetPasswordService = ResetPasswordService();
 
+  bool isLoading = false;
+
+  Future<void> submitForgotPassword() async {
+    FocusScope.of(context).unfocus();
+
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      await resetPasswordService.resetPassword(
+        formKey: formKey,
+        emailController: emailController,
+        context: context,
+      );
+      await Future.delayed(const Duration(seconds: 3));
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -93,16 +114,10 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
                         ),
                         ButtonRoundedText(
                           content: "Réinitialiser le mot de passe",
-                          callback: () async {
-                            FocusScope.of(context).unfocus();
-                            await resetPasswordService.resetPassword(
-                              formKey: formKey,
-                              emailController: emailController,
-                              context: context,
-                            );
-                          },
+                          callback: submitForgotPassword,
                           backgroundColor: themeData.primaryColor,
                           textColor: Colors.white,
+                          isActive: isLoading,
                         )
                       ],
                     ),

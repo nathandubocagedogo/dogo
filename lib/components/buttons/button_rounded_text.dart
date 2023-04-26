@@ -7,7 +7,7 @@ class ButtonRoundedText extends StatefulWidget {
   final Color backgroundColor;
   final Color textColor;
   final double elevation;
-  final bool isLoading;
+  final bool isActive;
 
   const ButtonRoundedText({
     super.key,
@@ -17,7 +17,7 @@ class ButtonRoundedText extends StatefulWidget {
     required this.backgroundColor,
     this.textColor = Colors.black,
     this.elevation = 0,
-    this.isLoading = false,
+    this.isActive = false,
   });
 
   @override
@@ -30,9 +30,9 @@ class _ButtonRoundedTextState extends State<ButtonRoundedText> {
     return SizedBox(
       width: widget.width,
       child: ElevatedButton(
-        onPressed: !widget.isLoading ? widget.callback : null,
+        onPressed: !widget.isActive ? widget.callback : null,
         style: ButtonStyle(
-          backgroundColor: !widget.isLoading
+          backgroundColor: !widget.isActive
               ? MaterialStateProperty.all(widget.backgroundColor)
               : MaterialStateProperty.all(
                   widget.backgroundColor.withOpacity(0.5),

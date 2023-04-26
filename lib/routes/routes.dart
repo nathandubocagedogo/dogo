@@ -1,5 +1,6 @@
-import 'package:dogo_final_app/animations/custom_page_route.dart';
 import 'package:flutter/material.dart';
+
+import 'package:dogo_final_app/routes/animations.dart';
 import 'package:dogo_final_app/views/welcome/welcome.dart';
 import 'package:dogo_final_app/views/login/login_home.dart';
 import 'package:dogo_final_app/views/login/login.dart';
@@ -7,8 +8,17 @@ import 'package:dogo_final_app/views/register/register.dart';
 import 'package:dogo_final_app/views/forgot-password/forgot_password.dart';
 import 'package:dogo_final_app/views/home/home.dart';
 
-Route<dynamic> generateRoute(RouteSettings settings) {
+Route<dynamic> generateRoute(
+  RouteSettings settings, {
+  AnimationType? animationType,
+}) {
   WidgetBuilder builder;
+  AnimationType? animationType;
+
+  if (settings.arguments is Map<String, dynamic>) {
+    final args = settings.arguments as Map<String, dynamic>;
+    animationType = args['animationType'] as AnimationType?;
+  }
 
   switch (settings.name) {
     case '/':
@@ -35,5 +45,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       builder = (BuildContext context) => const WelcomeView();
   }
 
-  return CustomPageRoute(builder: builder);
+  return CustomPageRoute(
+    builder: builder,
+    animationType: animationType ?? AnimationType.fadeIn,
+  );
 }

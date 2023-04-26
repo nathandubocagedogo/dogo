@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AnimationType { fadeIn, slideRight, slideLeft }
+enum AnimationType { fadeIn, slideRight, slideLeft, slideBottom, slideTop }
 
 class CustomPageRoute<T> extends PageRouteBuilder<T> {
   final AnimationType animationType;
@@ -23,13 +23,48 @@ class CustomPageRoute<T> extends PageRouteBuilder<T> {
                   position: Tween<Offset>(
                     begin: const Offset(-1, 0),
                     end: Offset.zero,
-                  ).animate(animation),
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: const Interval(
+                        0.0,
+                        0.5,
+                        curve: Curves.linear,
+                      ),
+                    ),
+                  ),
                   child: child,
                 );
               case AnimationType.slideLeft:
                 return SlideTransition(
                   position: Tween<Offset>(
                     begin: const Offset(1, 0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: const Interval(
+                        0.0,
+                        0.5,
+                        curve: Curves.linear,
+                      ),
+                    ),
+                  ),
+                  child: child,
+                );
+              case AnimationType.slideBottom:
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 1), // Commencez à partir du bas
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
+                );
+
+              case AnimationType.slideTop:
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, -1), // Commencez à partir du haut
                     end: Offset.zero,
                   ).animate(animation),
                   child: child,

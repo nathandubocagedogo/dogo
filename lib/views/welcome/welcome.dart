@@ -1,6 +1,9 @@
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
+// Routes
+import 'package:dogo_final_app/routes/animations.dart';
+
 // Flutter
 import 'package:flutter/material.dart';
 
@@ -45,14 +48,26 @@ class _WelcomeViewState extends State<WelcomeView> {
               ButtonRoundedText(
                 content: 'Commencer',
                 callback: () {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(
+                    context,
+                    '/home',
+                    arguments: {
+                      'animationType': AnimationType.slideLeft,
+                    },
+                  );
                 },
                 backgroundColor: Colors.orange,
                 textColor: Colors.white,
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/login-home');
+                  Navigator.pushNamed(
+                    context,
+                    '/login-home',
+                    arguments: {
+                      'animationType': AnimationType.slideLeft,
+                    },
+                  );
                 },
                 style: ButtonStyle(
                   overlayColor: MaterialStateProperty.all(Colors.transparent),

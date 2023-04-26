@@ -1,7 +1,7 @@
 // Flutter
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/theme/theme.dart';
-import 'package:dogo_final_app/routes/routes_with_animations.dart';
+import 'package:dogo_final_app/routes/routes.dart';
 import 'dart:async';
 
 // Firebase

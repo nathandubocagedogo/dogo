@@ -22,32 +22,41 @@ class ButtonRoundedIconText extends StatelessWidget {
       onPressed: callback,
       style: ButtonStyle(
         backgroundColor: const MaterialStatePropertyAll(Colors.black),
-        padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(
-          vertical: 18,
-        )),
+        padding: const MaterialStatePropertyAll(
+          EdgeInsets.symmetric(
+            vertical: 18,
+          ),
+        ),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Icon(
-            icon,
-            size: iconSize,
-            color: Colors.white,
-          ),
-          SizedBox(width: gap),
-          Text(
-            content,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.6,
-              color: Colors.white,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 26.0),
+              child: Icon(
+                icon,
+                size: iconSize,
+                color: Colors.white,
+              ),
             ),
-          )
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              content,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.6,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ],
       ),
     );

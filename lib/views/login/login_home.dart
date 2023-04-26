@@ -74,7 +74,7 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                     ),
                     const SizedBox(height: 20),
                     ButtonRoundedIconText(
-                      content: "Connexion avec Google",
+                      content: "Continuer avec Google",
                       icon: FontAwesomeIcons.google,
                       iconSize: 16,
                       gap: 18,
@@ -98,7 +98,7 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                     ),
                     const SizedBox(height: 12),
                     ButtonRoundedIconText(
-                      content: "Connexion avec Apple",
+                      content: "Continuer avec Apple",
                       icon: FontAwesomeIcons.apple,
                       iconSize: 20,
                       gap: 18,

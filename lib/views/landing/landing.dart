@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 class LandingView extends StatefulWidget {

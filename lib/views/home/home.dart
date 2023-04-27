@@ -40,6 +40,14 @@ class _HomeViewState extends State<HomeView> {
         title: const Text("Dogo"),
         automaticallyImplyLeading: false,
       ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: const Text("Déconnexion"),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(

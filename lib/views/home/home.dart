@@ -1,3 +1,4 @@
+import 'package:dogo_final_app/components/bottombar/bottombar_custom.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,10 +13,19 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final List<Widget> pages = [
+    const Center(child: Text('Page 1')),
+    const Center(child: Text('Page 2')),
+    const Center(child: Text('Page 3')),
+    const Center(child: Text('Page 4')),
+  ];
+
   StreamSubscription<User?>? authSubscription;
 
   SessionService sessionService = SessionService();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -27,6 +37,12 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  void onTap(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -36,38 +52,20 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Dogo"),
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-          },
-          child: const Text("Déconnexion"),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Groupes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Carte',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favoris',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
+      body: pages[currentIndex],
+      bottomNavigationBar:
+          CustomBottomAppBar(onTap: onTap, currentIndex: currentIndex),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.orange,
+        elevation: 2,
+        child: const Icon(Icons.add),
       ),
     );
   }

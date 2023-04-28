@@ -10,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dogo_final_app/firebase/firebase_options.dart';
 
 // Utilities
+import 'package:provider/provider.dart';
+import 'package:dogo_final_app/models/store/notifier.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -37,7 +39,12 @@ Future main() async {
   );
   database.close();
 
-  runApp(const Dogo());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => DataProvider(),
+      child: const Dogo(),
+    ),
+  );
 }
 
 class Dogo extends StatefulWidget {

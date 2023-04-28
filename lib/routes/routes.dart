@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:dogo_final_app/routes/animations.dart';
 import 'package:dogo_final_app/views/welcome/welcome.dart';
 import 'package:dogo_final_app/views/login/login_home.dart';
@@ -8,6 +7,7 @@ import 'package:dogo_final_app/views/register/register.dart';
 import 'package:dogo_final_app/views/forgot-password/forgot_password.dart';
 import 'package:dogo_final_app/views/landing/landing.dart';
 import 'package:dogo_final_app/views/home/home.dart';
+import 'package:dogo_final_app/views/map/map.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -40,10 +40,16 @@ Route<dynamic> generateRoute(
       break;
     case '/landing':
       builder = (BuildContext context) => const LandingView();
+      break;
     case '/home':
       builder = (BuildContext context) => const HomeView();
+      break;
+    case '/map':
+      builder = (BuildContext context) => const GoogleMapView();
+      break;
     case '/account':
       builder = (BuildContext context) => const Placeholder();
+      break;
     default:
       builder = (BuildContext context) => const WelcomeView();
   }

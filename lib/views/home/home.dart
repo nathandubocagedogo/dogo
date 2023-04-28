@@ -1,4 +1,3 @@
-import 'package:dogo_final_app/models/store/data.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +6,7 @@ import 'package:dogo_final_app/views/login/services/session.dart';
 import 'package:dogo_final_app/routes/animations.dart';
 import 'package:dogo_final_app/components/bottombar/bottombar_custom.dart';
 import 'package:dogo_final_app/models/store/provider.dart';
+import 'package:dogo_final_app/models/store/data.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -80,15 +80,8 @@ class _HomeViewState extends State<HomeView> {
         children: [
           Consumer<DataProvider>(
             builder: (context, dataProvider, child) {
-              DataModel dataModel = dataProvider.dataModel;
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: ListView.builder(
-                  itemCount: dataModel.data.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(dataModel.data[index]),
-                  ),
-                ),
+              return const Scaffold(
+                backgroundColor: Colors.green,
               );
             },
           ),
@@ -98,8 +91,20 @@ class _HomeViewState extends State<HomeView> {
           const Scaffold(
             backgroundColor: Colors.blue,
           ),
-          const Scaffold(
-            backgroundColor: Colors.yellow,
+          Consumer<DataProvider>(
+            builder: (context, dataProvider, child) {
+              return Scaffold(
+                backgroundColor: Colors.yellow,
+                body: Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                    },
+                    child: const Text("Déconnexion"),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

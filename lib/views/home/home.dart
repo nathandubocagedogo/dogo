@@ -1,12 +1,22 @@
+// Flutter
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:dogo_final_app/views/login/services/session.dart';
+
+// Utilities
 import 'package:dogo_final_app/routes/animations.dart';
+
+// Components
 import 'package:dogo_final_app/components/bottombar/bottombar_custom.dart';
-import 'package:dogo_final_app/models/store/provider.dart';
-import 'package:dogo_final_app/models/store/data.dart';
+
+// Services
+import 'package:dogo_final_app/views/login/services/session.dart';
+
+// Firebase
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Provider
+import 'package:dogo_final_app/store/provider.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -59,11 +69,11 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void loadDataForPage(int pageIndex) async {
-    if (!pagesLoaded[pageIndex]) {
-      final dataProvider = Provider.of<DataProvider>(context, listen: false);
-      await dataProvider.fetchData(pageIndex);
-      pagesLoaded[pageIndex] = true;
-    }
+    // if (!pagesLoaded[pageIndex]) {
+    //   final dataProvider = Provider.of<DataProvider>(context, listen: false);
+    //   await dataProvider.fetchData(pageIndex);
+    //   pagesLoaded[pageIndex] = true;
+    // }
   }
 
   void onTap(int index) {

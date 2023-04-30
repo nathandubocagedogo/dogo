@@ -17,7 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Provider
-import 'package:dogo_final_app/store/provider.dart';
+import 'package:dogo_final_app/provider/provider.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -28,12 +28,11 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final SessionService sessionService = SessionService();
+  final PageController pageController = PageController();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   StreamSubscription<User?>? authSubscription;
-
-  SessionService sessionService = SessionService();
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  PageController pageController = PageController();
-
   List<bool> pagesLoaded = [false, false, false, false];
   int currentIndex = 0;
 
@@ -46,9 +45,8 @@ class _HomeViewState extends State<HomeView> {
       context: context,
     );
     pageController.addListener(onPageChanged);
-    loadDataForPage(0);
-
     getCurrentLocation();
+    loadDataForPage(0);
   }
 
   @override
@@ -78,7 +76,7 @@ class _HomeViewState extends State<HomeView> {
     // }
   }
 
-  Future<Position> getCurrentLocation() async {
+  Future<void> getCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
@@ -88,13 +86,11 @@ class _HomeViewState extends State<HomeView> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-
-      print(position);
-
-      return position;
-    } catch (e) {
-      print(e);
-      throw e;
+      // ignore: use_build_context_synchronously
+      Provider.of<DataProvider>(context, listen: false)
+          .updateCurrentPosition(position);
+    } catch (exception) {
+      rethrow;
     }
   }
 

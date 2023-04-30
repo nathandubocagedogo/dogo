@@ -10,10 +10,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dogo_final_app/firebase/firebase_options.dart';
 
 // Utilities
-import 'package:provider/provider.dart';
-import 'package:dogo_final_app/store/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sqflite/sqflite.dart';
+
+// Provider
+import 'package:provider/provider.dart';
+import 'package:dogo_final_app/provider/provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

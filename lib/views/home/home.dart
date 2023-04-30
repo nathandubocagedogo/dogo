@@ -1,9 +1,10 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:dogo_final_app/routes/animations.dart';
 import 'dart:async';
 
 // Utilities
-import 'package:dogo_final_app/routes/animations.dart';
+import 'package:geolocator/geolocator.dart';
 
 // Components
 import 'package:dogo_final_app/components/bottombar/bottombar_custom.dart';
@@ -34,7 +35,6 @@ class _HomeViewState extends State<HomeView> {
   PageController pageController = PageController();
 
   List<bool> pagesLoaded = [false, false, false, false];
-
   int currentIndex = 0;
 
   @override
@@ -47,6 +47,8 @@ class _HomeViewState extends State<HomeView> {
     );
     pageController.addListener(onPageChanged);
     loadDataForPage(0);
+
+    getCurrentLocation();
   }
 
   @override
@@ -74,6 +76,26 @@ class _HomeViewState extends State<HomeView> {
     //   await dataProvider.fetchData(pageIndex);
     //   pagesLoaded[pageIndex] = true;
     // }
+  }
+
+  Future<Position> getCurrentLocation() async {
+    try {
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw Exception("Location permission denied");
+      }
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      print(position);
+
+      return position;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
   }
 
   void onTap(int index) {

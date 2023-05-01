@@ -1,8 +1,4 @@
 // Flutter
-import 'package:dogo_final_app/views/pages/bookmarks/bookmarks.dart';
-import 'package:dogo_final_app/views/pages/groups/groups.dart';
-import 'package:dogo_final_app/views/pages/home/home.dart';
-import 'package:dogo_final_app/views/pages/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/routes/animations.dart';
 import 'dart:async';
@@ -23,6 +19,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // Provider
 import 'package:dogo_final_app/provider/provider.dart';
 import 'package:provider/provider.dart';
+
+// Pages
+import 'package:dogo_final_app/views/pages/bookmarks/bookmarks.dart';
+import 'package:dogo_final_app/views/pages/home/home.dart';
+import 'package:dogo_final_app/views/pages/settings/settings.dart';
+import 'package:dogo_final_app/views/pages/groups/groups.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -108,6 +110,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: PageView(
         controller: pageController,
         children: const [

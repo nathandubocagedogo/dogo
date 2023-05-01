@@ -11,8 +11,7 @@ class SessionService {
   }) async {
     authSubscription = FirebaseAuth.instance.authStateChanges().listen(
       (User? user) {
-        if (user != null) {
-        } else {}
+        if (user != null) {}
       },
     );
   }

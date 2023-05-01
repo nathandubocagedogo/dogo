@@ -5,10 +5,10 @@ class CustomBottomAppBar extends StatelessWidget {
   final int currentIndex;
 
   const CustomBottomAppBar({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.currentIndex,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,25 +32,28 @@ class CustomBottomAppBar extends StatelessWidget {
   }
 
   Widget bottomAppBarItem(int index, IconData icon, String label) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-      child: GestureDetector(
+    return Expanded(
+      child: InkWell(
+        splashColor: Colors.transparent,
         onTap: () => onTap(index),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: currentIndex == index ? Colors.orange : null,
-            ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
                 color: currentIndex == index ? Colors.orange : null,
               ),
-            ),
-          ],
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: currentIndex == index ? Colors.orange : null,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -43,7 +43,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           ),
         ),
       );
-    } catch (exception) {}
+    } catch (exception) {
+      rethrow;
+    }
   }
 
   @override

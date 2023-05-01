@@ -1,4 +1,8 @@
 // Flutter
+import 'package:dogo_final_app/views/pages/bookmarks/bookmarks.dart';
+import 'package:dogo_final_app/views/pages/groups/groups.dart';
+import 'package:dogo_final_app/views/pages/home/home.dart';
+import 'package:dogo_final_app/views/pages/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/routes/animations.dart';
 import 'dart:async';
@@ -28,8 +32,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final SessionService sessionService = SessionService();
   final PageController pageController = PageController();
+  final SessionService sessionService = SessionService();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   StreamSubscription<User?>? authSubscription;
@@ -46,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
     );
     pageController.addListener(onPageChanged);
     getCurrentLocation();
-    loadDataForPage(0);
+    // loadDataForPage(0);
   }
 
   @override
@@ -86,6 +90,7 @@ class _HomeViewState extends State<HomeView> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
+
       // ignore: use_build_context_synchronously
       Provider.of<DataProvider>(context, listen: false)
           .updateCurrentPosition(position);
@@ -94,7 +99,7 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  void onTap(int index) {
+  void changePage(int index) {
     pageController.jumpToPage(
       index,
     );
@@ -105,39 +110,15 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       body: PageView(
         controller: pageController,
-        children: [
-          Consumer<DataProvider>(
-            builder: (context, dataProvider, child) {
-              return const Scaffold(
-                backgroundColor: Colors.green,
-              );
-            },
-          ),
-          const Scaffold(
-            backgroundColor: Colors.red,
-          ),
-          const Scaffold(
-            backgroundColor: Colors.blue,
-          ),
-          Consumer<DataProvider>(
-            builder: (context, dataProvider, child) {
-              return Scaffold(
-                backgroundColor: Colors.yellow,
-                body: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                    },
-                    child: const Text("Déconnexion"),
-                  ),
-                ),
-              );
-            },
-          ),
+        children: const [
+          HomePageView(),
+          GroupsPageView(),
+          BookmarsPageView(),
+          SettingsPageView(),
         ],
       ),
       bottomNavigationBar:
-          CustomBottomAppBar(onTap: onTap, currentIndex: currentIndex),
+          CustomBottomAppBar(onTap: changePage, currentIndex: currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(

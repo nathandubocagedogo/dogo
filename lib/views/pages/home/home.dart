@@ -22,18 +22,7 @@ class HomePageView extends StatefulWidget {
 class _HomePageViewState extends State<HomePageView> {
   final User? user = FirebaseAuth.instance.currentUser;
 
-  List<String> filters = [
-    'Filtre 1',
-    'Filtre 2',
-    'Filtre 3',
-    'Filtre 4',
-    'Filtre 5',
-    'Filtre 6',
-    'Filtre 7',
-    'Filtre 8',
-    'Filtre 9',
-    'Filtre 10',
-  ];
+  List<String> filters = ['Parcs', 'Balades', 'Concours', 'Rencontre', 'Autre'];
 
   @override
   void initState() {

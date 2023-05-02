@@ -19,8 +19,10 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           backgroundColor: Colors.yellow,
           body: Center(
             child: ElevatedButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                // ignore: use_build_context_synchronously
+                Navigator.pushNamed(context, '/welcome');
               },
               child: const Text("Déconnexion"),
             ),

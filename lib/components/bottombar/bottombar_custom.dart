@@ -25,7 +25,7 @@ class CustomBottomAppBar extends StatelessWidget {
             width: 48,
           ),
           bottomAppBarItem(2, Icons.bookmark, 'Favoris'),
-          bottomAppBarItem(3, Icons.settings, 'Paramètres'),
+          bottomAppBarItem(3, Icons.account_circle, 'Profil'),
         ],
       ),
     );

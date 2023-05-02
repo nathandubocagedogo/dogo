@@ -9,13 +9,6 @@ import 'package:geolocator/geolocator.dart';
 // Components
 import 'package:dogo_final_app/components/bottombar/bottombar_custom.dart';
 
-// Services
-import 'package:dogo_final_app/views/login/services/session.dart';
-
-// Firebase
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 // Provider
 import 'package:dogo_final_app/provider/provider.dart';
 import 'package:provider/provider.dart';
@@ -35,21 +28,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final PageController pageController = PageController();
-  final SessionService sessionService = SessionService();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  StreamSubscription<User?>? authSubscription;
   List<bool> pagesLoaded = [false, false, false, false];
   int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    sessionService.listenWhenUserIsLogged(
-      firestore: firestore,
-      authSubscription: authSubscription,
-      context: context,
-    );
     pageController.addListener(onPageChanged);
     getCurrentLocation();
     // loadDataForPage(0);
@@ -58,7 +43,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   void dispose() {
     super.dispose();
-    authSubscription?.cancel();
     pageController.dispose();
     pageController.removeListener(onPageChanged);
   }
@@ -113,6 +97,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       extendBody: true,
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: const [
           HomePageView(),

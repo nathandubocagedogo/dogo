@@ -93,9 +93,10 @@ class _HomeViewState extends State<HomeView> {
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      // ignore: use_build_context_synchronously
-      Provider.of<DataProvider>(context, listen: false)
-          .updateCurrentPosition(position);
+      if (mounted) {
+        Provider.of<DataProvider>(context, listen: false)
+            .updateCurrentPosition(position);
+      }
     } catch (exception) {
       rethrow;
     }

@@ -1,7 +1,10 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:math';
 
 // Firebase
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Provider
@@ -9,7 +12,9 @@ import 'package:dogo_final_app/provider/provider.dart';
 import 'package:provider/provider.dart';
 
 // Utilities
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HomePageView extends StatefulWidget {
@@ -21,105 +26,121 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
   final User? user = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  List<String> filters = ['Parcs', 'Balades', 'Concours', 'Rencontre', 'Autre'];
+  Future<List<Map<String, dynamic>>> fetchNearbyPlaces(
+    LatLng center,
+    double radius,
+  ) async {
+    final String apiKey = dotenv.get('GOOGLE_API_KEY');
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.latitude},${center.longitude}&radius=$radius&key=$apiKey';
+    final response = await http.get(Uri.parse(url));
 
-  @override
-  void initState() {
-    super.initState();
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return List<Map<String, dynamic>>.from(data['results']);
+    } else {
+      throw Exception('Erreur lors de l\'appel à l\'API Google Places');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchNearbyDatabasePlaces(
+    LatLng center,
+    double radius,
+  ) async {
+    final double latitudeDelta = radius / 111.32;
+    final double longitudeDelta =
+        radius / (111.32 * cos(center.latitude * pi / 180));
+
+    QuerySnapshot<Map<String, dynamic>> latitudeFilteredSnapshot =
+        await firestore
+            .collection('places')
+            .where('latitude',
+                isGreaterThanOrEqualTo: center.latitude - latitudeDelta,
+                isLessThanOrEqualTo: center.latitude + latitudeDelta)
+            .get();
+
+    QuerySnapshot<Map<String, dynamic>> longitudeFilteredSnapshot =
+        await firestore
+            .collection('places')
+            .where('longitude',
+                isGreaterThanOrEqualTo: center.longitude - longitudeDelta,
+                isLessThanOrEqualTo: center.longitude + longitudeDelta)
+            .get();
+
+    Set<String> latitudeFilteredIds =
+        latitudeFilteredSnapshot.docs.map((doc) => doc.id).toSet();
+    Set<String> longitudeFilteredIds =
+        longitudeFilteredSnapshot.docs.map((doc) => doc.id).toSet();
+
+    Set<String> filteredIds =
+        latitudeFilteredIds.intersection(longitudeFilteredIds);
+
+    List<Map<String, dynamic>> places = [];
+
+    for (var doc in latitudeFilteredSnapshot.docs) {
+      if (filteredIds.contains(doc.id)) {
+        if (doc['name'] != null &&
+            doc['vicinity'] != null &&
+            doc['latitude'] != null &&
+            doc['longitude'] != null) {
+          places.add({
+            'name': doc['name'],
+            'vicinity': doc['vicinity'],
+            'latitude': doc['latitude'],
+            'longitude': doc['longitude'],
+          });
+        }
+      }
+    }
+
+    return places;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchAllNearbyPlaces(
+    LatLng center,
+    double radius,
+  ) async {
+    List<Map<String, dynamic>> placesFromGoogle =
+        await fetchNearbyPlaces(center, radius);
+    List<Map<String, dynamic>> placesFromDatabase =
+        await fetchNearbyDatabasePlaces(center, radius);
+    List<Map<String, dynamic>> allPlaces = [];
+    allPlaces.addAll(placesFromGoogle);
+    allPlaces.addAll(placesFromDatabase);
+
+    return allPlaces;
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Consumer<DataProvider>(
       builder: (context, dataProvider, child) {
         Position? currentPosition = dataProvider.dataModel.currentPosition;
 
-        return Scaffold(
-          body: SafeArea(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: screenWidth * 0.90,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      if (user?.emailVerified == false)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          child: InkWell(
-                            onTap: () {},
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.envelopesBulk,
-                                      color: Colors.orange,
-                                    ),
-                                    const SizedBox(width: 18),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            'Vérifies ton e-mail',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8.0),
-                                          Text(
-                                            'Nous avons envoyé un e-mail à\n${user?.email}.',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              height: 1.3,
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      SizedBox(
-                        height: 30,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: filters.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 2.0,
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: Text(filters[index]),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+        return FutureBuilder<List<Map<String, dynamic>>>(
+          future: currentPosition != null
+              ? fetchAllNearbyPlaces(
+                  LatLng(currentPosition.latitude, currentPosition.longitude),
+                  1000,
+                )
+              : Future.value([]),
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+          ) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Erreur : ${snapshot.error}'));
+            } else {
+              List<Map<String, dynamic>> nearbyPlaces = snapshot.data!;
+              // ignore: avoid_print
+              print(nearbyPlaces);
+              return const Scaffold();
+            }
+          },
         );
       },
     );

@@ -115,15 +115,15 @@ class _HomePageViewState extends State<HomePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataProvider>(
-      builder: (context, dataProvider, child) {
-        Position? currentPosition = dataProvider.dataModel.currentPosition;
-
+    return Selector<DataProvider, Position?>(
+      selector: (context, dataProvider) =>
+          dataProvider.dataModel.currentPosition,
+      builder: (context, currentPosition, child) {
         return FutureBuilder<List<Map<String, dynamic>>>(
           future: currentPosition != null
               ? fetchAllNearbyPlaces(
                   LatLng(currentPosition.latitude, currentPosition.longitude),
-                  1000,
+                  100,
                 )
               : Future.value([]),
           builder: (

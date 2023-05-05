@@ -3,10 +3,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:dogo_final_app/models/provider/provider_model.dart';
 
 class DataProvider extends ChangeNotifier {
-  ProviderModel dataModel = ProviderModel(currentPosition: null);
+  ProviderModel dataModel = ProviderModel(currentPosition: null, filter: null);
 
-  Future<void> updateCurrentPosition(Position position) async {
+  void updateCurrentPosition(Position position) async {
     dataModel.currentPosition = position;
+    notifyListeners();
+  }
+
+  void updateFilter(String filter) {
+    dataModel.filter = filter;
     notifyListeners();
   }
 }

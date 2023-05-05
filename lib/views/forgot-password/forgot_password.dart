@@ -7,7 +7,7 @@ import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 
 // Services
-import 'package:dogo_final_app/views/forgot-password/services/reset_password.dart';
+import 'package:dogo_final_app/services/reset_password.dart';
 
 class ForgotPassewordView extends StatefulWidget {
   const ForgotPassewordView({super.key});

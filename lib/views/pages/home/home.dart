@@ -1,5 +1,5 @@
 // Flutter
-import 'package:dogo_final_app/views/pages/home/services/places.dart';
+import 'package:dogo_final_app/services/places.dart';
 import 'package:flutter/material.dart';
 
 // Firebase
@@ -26,34 +26,35 @@ class _HomePageViewState extends State<HomePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<DataProvider, Position?>(
-      selector: (context, dataProvider) =>
-          dataProvider.dataModel.currentPosition,
-      builder: (context, currentPosition, child) {
-        return FutureBuilder<List<Map<String, dynamic>>>(
-          future: currentPosition != null
-              ? placesService.fetchAllNearbyPlaces(
-                  LatLng(currentPosition.latitude, currentPosition.longitude),
-                  100,
-                )
-              : Future.value([]),
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
-          ) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Erreur : ${snapshot.error}'));
-            } else {
-              List<Map<String, dynamic>> nearbyPlaces = snapshot.data!;
-              // ignore: avoid_print
-              print(nearbyPlaces);
-              return const Scaffold();
-            }
-          },
-        );
-      },
-    );
+    return const Placeholder();
+    // return Selector<DataProvider, Position?>(
+    //   selector: (context, dataProvider) =>
+    //       dataProvider.dataModel.currentPosition,
+    //   builder: (context, currentPosition, child) {
+    //     return FutureBuilder<List<Map<String, dynamic>>>(
+    //       future: currentPosition != null
+    //           ? placesService.fetchAllNearbyPlaces(
+    //               LatLng(currentPosition.latitude, currentPosition.longitude),
+    //               100,
+    //             )
+    //           : Future.value([]),
+    //       builder: (
+    //         BuildContext context,
+    //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+    //       ) {
+    //         if (snapshot.connectionState == ConnectionState.waiting) {
+    //           return const Center(child: CircularProgressIndicator());
+    //         } else if (snapshot.hasError) {
+    //           return Center(child: Text('Erreur : ${snapshot.error}'));
+    //         } else {
+    //           List<Map<String, dynamic>> nearbyPlaces = snapshot.data!;
+    //           // ignore: avoid_print
+    //           print(nearbyPlaces);
+    //           return const Scaffold();
+    //         }
+    //       },
+    //     );
+    //   },
+    // );
   }
 }

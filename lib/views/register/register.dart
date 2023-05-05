@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Services
-import 'package:dogo_final_app/views/register/services/register.dart';
+import 'package:dogo_final_app/services/register.dart';
 
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';

@@ -1,12 +1,12 @@
-// Firebase
-import 'package:dogo_final_app/components/input/input_rounded_text.dart';
-import 'package:dogo_final_app/views/login/services/auth.dart';
+// Services
+import 'package:dogo_final_app/services/auth.dart';
 
 // Flutter
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/theme/theme.dart';
 
 // Components
+import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 class LoginView extends StatefulWidget {

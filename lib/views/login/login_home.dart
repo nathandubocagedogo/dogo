@@ -2,13 +2,15 @@
 import 'package:dogo_final_app/components/buttons/button_rounded_icon_text.dart';
 import 'package:dogo_final_app/routes/animations.dart';
 
-// Service
-import 'package:dogo_final_app/views/login/services/auth.dart';
+// Services
+import 'package:dogo_final_app/services/auth.dart';
+
+// Firebase
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:dogo_final_app/theme/theme.dart';
 
 // Utilities

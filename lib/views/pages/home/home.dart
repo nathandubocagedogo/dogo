@@ -78,14 +78,17 @@ class _HomePageViewState extends State<HomePageView> {
           children: [
             const Filters(),
             Expanded(
-              child: Selector<DataProvider, Tuple2<String?, Position?>>(
-                selector: (context, dataProvider) => Tuple2(
+              child:
+                  Selector<DataProvider, Tuple3<String?, Position?, double?>>(
+                selector: (context, dataProvider) => Tuple3(
                   dataProvider.dataModel.filter,
                   dataProvider.dataModel.currentPosition,
+                  dataProvider.dataModel.radius,
                 ),
                 builder: (context, tuple, child) {
                   String? filter = tuple.item1;
                   Position? currentPosition = tuple.item2;
+                  double? radius = tuple.item3;
 
                   if (currentPosition == null || filter == null) {
                     return const Center(child: CircularProgressIndicator());

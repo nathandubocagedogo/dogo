@@ -14,41 +14,67 @@ class Filters extends StatelessWidget {
     'Autre'
   ];
 
+  static List<double> radiusOptions = [50, 100, 200, 500, 1000];
+
   const Filters({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Selector<DataProvider, String>(
-      selector: (context, dataProvider) =>
-          dataProvider.dataModel.filter.toString(),
-      builder: (context, filter, child) {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: filters.map((String filterValue) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: TextButton(
-                  onPressed: () {
-                    Provider.of<DataProvider>(context, listen: false)
-                        .updateFilter(filterValue);
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        filter == filterValue ? Colors.blue : Colors.indigo,
-                  ),
-                  child: Text(
-                    filterValue,
-                    style: const TextStyle(
-                      color: Colors.white,
+    return Column(
+      children: [
+        Selector<DataProvider, String>(
+          selector: (context, dataProvider) =>
+              dataProvider.dataModel.filter.toString(),
+          builder: (context, filter, child) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: filters.map((String filterValue) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: TextButton(
+                      onPressed: () {
+                        Provider.of<DataProvider>(context, listen: false)
+                            .updateFilter(filterValue);
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor:
+                            filter == filterValue ? Colors.blue : Colors.indigo,
+                      ),
+                      child: Text(
+                        filterValue,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        );
-      },
+                  );
+                }).toList(),
+              ),
+            );
+          },
+        ),
+        Selector<DataProvider, double?>(
+          selector: (context, dataProvider) => dataProvider.dataModel.radius,
+          builder: (context, radius, child) {
+            return DropdownButton<double>(
+              value: radius,
+              items: radiusOptions.map((double radiusValue) {
+                return DropdownMenuItem<double>(
+                  value: radiusValue,
+                  child: Text('$radiusValue m'),
+                );
+              }).toList(),
+              onChanged: (double? radius) {
+                if (radius != null) {
+                  Provider.of<DataProvider>(context, listen: false)
+                      .updateRadius(radius);
+                }
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }

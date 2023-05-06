@@ -10,8 +10,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class NearbyPlaces extends StatefulWidget {
   final LatLng position;
   final String? filter;
+  final double? radius;
 
-  const NearbyPlaces({super.key, required this.position, this.filter});
+  const NearbyPlaces(
+      {super.key, required this.position, this.filter, this.radius});
 
   @override
   State<NearbyPlaces> createState() => _NearbyPlacesState();
@@ -19,6 +21,7 @@ class NearbyPlaces extends StatefulWidget {
 
 class _NearbyPlacesState extends State<NearbyPlaces> {
   final PlacesService placesService = PlacesService();
+
   late Future<List<Map<String, dynamic>>> nearbyPlacesFuture;
 
   @override
@@ -35,8 +38,9 @@ class _NearbyPlacesState extends State<NearbyPlaces> {
     super.didUpdateWidget(oldWidget);
     bool positionChanged = widget.position != oldWidget.position;
     bool filterChanged = widget.filter != oldWidget.filter;
+    bool radiusChanged = widget.radius != oldWidget.radius;
 
-    if (positionChanged || filterChanged) {
+    if (positionChanged || filterChanged || radiusChanged) {
       nearbyPlacesFuture = placesService.fetchAllNearbyPlaces(
         widget.position,
         100,

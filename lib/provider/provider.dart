@@ -6,7 +6,7 @@ class DataProvider extends ChangeNotifier {
   ProviderModel dataModel = ProviderModel(
     currentPosition: null,
     filter: null,
-    radius: 100,
+    radius: 0,
   );
 
   void updateCurrentPosition(Position position) async {

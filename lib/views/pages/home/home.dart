@@ -54,9 +54,11 @@ class _HomePageViewState extends State<HomePageView>
                 builder: (context, tuple, child) {
                   String? filter = tuple.item1;
                   Position? currentPosition = tuple.item2;
-                  // double? radius = tuple.item3;
+                  double? radius = tuple.item3;
 
-                  if (currentPosition == null || filter == null) {
+                  if (currentPosition == null ||
+                      filter == null ||
+                      radius == 0) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     return NearbyPlaces(
@@ -65,6 +67,7 @@ class _HomePageViewState extends State<HomePageView>
                         currentPosition.longitude,
                       ),
                       filter: filter,
+                      radius: radius,
                     );
                   }
                 },

@@ -26,7 +26,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final PageController pageController = PageController();
+  final PageController pageController = PageController(keepPage: true);
 
   int currentIndex = 0;
 

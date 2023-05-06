@@ -27,17 +27,17 @@ class HomePageView extends StatefulWidget {
   State<HomePageView> createState() => _HomePageViewState();
 }
 
-class _HomePageViewState extends State<HomePageView> {
+class _HomePageViewState extends State<HomePageView>
+    with AutomaticKeepAliveClientMixin {
   final PlacesService placesService = PlacesService();
   final User? user = FirebaseAuth.instance.currentUser;
 
   @override
-  void initState() {
-    super.initState();
-  }
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: Column(

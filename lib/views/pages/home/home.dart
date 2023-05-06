@@ -32,6 +32,51 @@ class _HomePageViewState extends State<HomePageView>
   final PlacesService placesService = PlacesService();
   final User? user = FirebaseAuth.instance.currentUser;
 
+  late bool dataLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeProvider();
+  }
+
+  Future<void> initializeProvider() async {
+    await Future.wait([
+      getCurrentLocation(),
+      setFilter(),
+    ]);
+
+    setState(() {
+      dataLoaded = true;
+    });
+  }
+
+  Future<void> getCurrentLocation() async {
+    try {
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw Exception("Location permission denied");
+      }
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      if (mounted) {
+        Provider.of<DataProvider>(context, listen: false)
+            .updateCurrentPosition(position);
+      }
+    } catch (exception) {
+      rethrow;
+    }
+  }
+
+  Future<void> setFilter() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DataProvider>(context, listen: false).updateFilter("");
+    });
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -56,14 +101,12 @@ class _HomePageViewState extends State<HomePageView>
                   Position? currentPosition = tuple.item2;
                   double? radius = tuple.item3;
 
-                  if (currentPosition == null ||
-                      filter == null ||
-                      radius == 0) {
+                  if (!dataLoaded) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     return NearbyPlaces(
                       position: LatLng(
-                        currentPosition.latitude,
+                        currentPosition!.latitude,
                         currentPosition.longitude,
                       ),
                       filter: filter,

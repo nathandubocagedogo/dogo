@@ -2,15 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/routes/animations.dart';
 
-// Provider
-import 'package:dogo_final_app/provider/provider.dart';
-
 // Components
 import 'package:dogo_final_app/components/bottombar/bottombar_custom.dart';
-
-// Utilities
-import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
 
 // Pages
 import 'package:dogo_final_app/views/pages/bookmarks/bookmarks.dart';
@@ -33,7 +26,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    initializeProvider();
     pageController.addListener(onPageChanged);
   }
 
@@ -58,39 +50,6 @@ class _HomeViewState extends State<HomeView> {
     pageController.jumpToPage(
       index,
     );
-  }
-
-  Future<void> initializeProvider() async {
-    await Future.wait([
-      getCurrentLocation(),
-      setFilter(),
-    ]);
-  }
-
-  Future<void> getCurrentLocation() async {
-    try {
-      LocationPermission permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        throw Exception("Location permission denied");
-      }
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      if (mounted) {
-        Provider.of<DataProvider>(context, listen: false)
-            .updateCurrentPosition(position);
-      }
-    } catch (exception) {
-      rethrow;
-    }
-  }
-
-  Future<void> setFilter() async {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<DataProvider>(context, listen: false).updateFilter("");
-    });
   }
 
   @override

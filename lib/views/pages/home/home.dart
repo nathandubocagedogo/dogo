@@ -13,9 +13,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // Provider
 import 'package:dogo_final_app/provider/provider.dart';
-import 'package:provider/provider.dart';
 
 // Utilities
+import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tuple/tuple.dart';
@@ -34,40 +34,6 @@ class _HomePageViewState extends State<HomePageView> {
   @override
   void initState() {
     super.initState();
-    initialize();
-  }
-
-  Future<void> initialize() async {
-    await Future.wait([
-      getCurrentLocation(),
-      setFilter(),
-    ]);
-  }
-
-  Future<void> getCurrentLocation() async {
-    try {
-      LocationPermission permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        throw Exception("Location permission denied");
-      }
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      if (mounted) {
-        Provider.of<DataProvider>(context, listen: false)
-            .updateCurrentPosition(position);
-      }
-    } catch (exception) {
-      rethrow;
-    }
-  }
-
-  Future<void> setFilter() async {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<DataProvider>(context, listen: false).updateFilter("");
-    });
   }
 
   @override
@@ -88,7 +54,7 @@ class _HomePageViewState extends State<HomePageView> {
                 builder: (context, tuple, child) {
                   String? filter = tuple.item1;
                   Position? currentPosition = tuple.item2;
-                  double? radius = tuple.item3;
+                  // double? radius = tuple.item3;
 
                   if (currentPosition == null || filter == null) {
                     return const Center(child: CircularProgressIndicator());

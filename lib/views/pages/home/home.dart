@@ -41,14 +41,14 @@ class _HomePageViewState extends State<HomePageView>
   }
 
   Future<void> initializeProvider() async {
-    // await Future.wait([
-    //   getCurrentLocation(),
-    //   setFilter(),
-    // ]);
+    await Future.wait([
+      getCurrentLocation(),
+      setFilter(),
+    ]);
 
-    // setState(() {
-    //   dataLoaded = true;
-    // });
+    setState(() {
+      dataLoaded = true;
+    });
   }
 
   Future<void> getCurrentLocation() async {

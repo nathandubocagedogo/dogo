@@ -19,25 +19,29 @@ class CustomBottomAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          bottomAppBarItem(0, Icons.home, 'Accueil'),
-          bottomAppBarItem(1, Icons.group, 'Groupes'),
+          bottomAppBarItem(0, Icons.home, 'Accueil', context),
+          bottomAppBarItem(1, Icons.group, 'Groupes', context),
           const SizedBox(
             width: 48,
           ),
-          bottomAppBarItem(2, Icons.bookmark, 'Favoris'),
-          bottomAppBarItem(3, Icons.account_circle, 'Profil'),
+          bottomAppBarItem(2, Icons.bookmark, 'Favoris', context),
+          bottomAppBarItem(3, Icons.account_circle, 'Profil', context),
         ],
       ),
     );
   }
 
-  Widget bottomAppBarItem(int index, IconData icon, String label) {
+  Widget bottomAppBarItem(
+      int index, IconData icon, String label, BuildContext context) {
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,
         onTap: () => onTap(index),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+          padding: isAndroid
+              ? const EdgeInsets.fromLTRB(0, 16, 0, 16)
+              : const EdgeInsets.fromLTRB(0, 16, 0, 0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

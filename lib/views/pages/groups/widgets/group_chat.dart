@@ -1,32 +1,41 @@
-import 'package:dogo_final_app/models/firebase/message.dart';
-import 'package:dogo_final_app/services/group.dart';
+// Flutter
 import 'package:flutter/material.dart';
+
+// Services
+import 'package:dogo_final_app/services/group.dart';
+
+// Models
+import 'package:dogo_final_app/models/firebase/message.dart';
+
+// Firebase
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupChatPageView extends StatefulWidget {
   final String groupId;
 
-  const GroupChatPageView({Key? key, required this.groupId}) : super(key: key);
+  const GroupChatPageView({super.key, required this.groupId});
 
   @override
   State<GroupChatPageView> createState() => _GroupChatPageViewState();
 }
 
 class _GroupChatPageViewState extends State<GroupChatPageView> {
-  final GroupService _groupService = GroupService();
-  final TextEditingController _messageController = TextEditingController();
+  final GroupService groupService = GroupService();
+  final User? user = FirebaseAuth.instance.currentUser;
+  final TextEditingController messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat de groupe'),
+        title: const Text('Chat de groupe'),
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _groupService.getGroupMessagesStream(widget.groupId),
+              stream: groupService.getGroupMessages(widget.groupId),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -34,7 +43,7 @@ class _GroupChatPageViewState extends State<GroupChatPageView> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 return ListView.builder(
@@ -58,21 +67,19 @@ class _GroupChatPageViewState extends State<GroupChatPageView> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(hintText: "Écrire un message"),
+                    controller: messageController,
+                    decoration:
+                        const InputDecoration(hintText: "Écrire un message"),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () async {
-                    String messageContent = _messageController.text.trim();
+                    String messageContent = messageController.text.trim();
                     if (messageContent.isNotEmpty) {
-                      // Envoyer le message en utilisant _groupService
-                      // Ici, utilisez l'
-                      // ID de l'utilisateur connecté à la place de "senderId"
-                      await _groupService.sendMessage(
-                          widget.groupId, "senderId", messageContent);
-                      _messageController.clear();
+                      await groupService.sendMessage(
+                          widget.groupId, user!.uid, messageContent);
+                      messageController.clear();
                     }
                   },
                 ),

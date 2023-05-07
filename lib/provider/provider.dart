@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:dogo_final_app/models/provider/provider_model.dart';
+import 'package:dogo_final_app/models/provider/provider.dart';
 
 class DataProvider extends ChangeNotifier {
   ProviderModel dataModel = ProviderModel(

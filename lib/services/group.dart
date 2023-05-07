@@ -1,30 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupService {
-  final CollectionReference _groupsRef =
+  final CollectionReference groupsReference =
       FirebaseFirestore.instance.collection('groups');
-  final CollectionReference _messagesRef =
+  final CollectionReference messagesReference =
       FirebaseFirestore.instance.collection('messages');
 
   Stream<QuerySnapshot> getGroupsStream() {
-    return _groupsRef.snapshots();
+    return groupsReference.snapshots();
   }
 
   Future<void> createGroup(String name, String userId) async {
-    DocumentReference groupRef = await _groupsRef.add({
+    await groupsReference.add({
       'name': name,
       'members': [userId],
     });
   }
 
   Future<void> joinGroup(String groupId, String userId) async {
-    await _groupsRef.doc(groupId).update({
+    await groupsReference.doc(groupId).update({
       'members': FieldValue.arrayUnion([userId]),
     });
   }
 
-  Stream<QuerySnapshot> getGroupMessagesStream(String groupId) {
-    return _messagesRef
+  Stream<QuerySnapshot> getUserGroupsStream(String userId) {
+    return groupsReference.where('members', arrayContains: userId).snapshots();
+  }
+
+  Stream<QuerySnapshot> getGroupMessages(String groupId) {
+    return messagesReference
         .where('groupId', isEqualTo: groupId)
         .orderBy('timestamp', descending: true)
         .snapshots();
@@ -32,7 +36,7 @@ class GroupService {
 
   Future<void> sendMessage(
       String groupId, String senderId, String content) async {
-    await _messagesRef.add({
+    await messagesReference.add({
       'groupId': groupId,
       'senderId': senderId,
       'content': content,

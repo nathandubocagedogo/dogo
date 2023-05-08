@@ -1,17 +1,13 @@
 // Flutter
 import 'package:flutter/material.dart';
 
-// Models
-import 'package:dogo_final_app/models/firebase/group.dart';
-
 // Widgets
-import 'package:dogo_final_app/views/pages/groups/widgets/group_chat.dart';
+import 'package:dogo_final_app/views/pages/groups/widgets/groups_grid.dart';
 
 // Services
 import 'package:dogo_final_app/services/group.dart';
 
 // Firebase
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class GroupsPageView extends StatefulWidget {
@@ -75,59 +71,9 @@ class _GroupsPageViewState extends State<GroupsPageView> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: groupService.getGroupsStream(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Erreur: ${snapshot.error}');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return ListView(
-            children: snapshot.data!.docs.map(
-              (DocumentSnapshot document) {
-                Group group = Group.fromMap({
-                  ...document.data() as Map<String, dynamic>,
-                  'id': document.id
-                });
-                bool isMember = group.members.contains(user!.uid);
-
-                return ListTile(
-                  title: Text(group.name),
-                  trailing: isMember
-                      ? null
-                      : ElevatedButton(
-                          onPressed: () async {
-                            await groupService.joinGroup(group.id, user!.uid);
-                          },
-                          child: const Text('Rejoindre'),
-                        ),
-                  onTap: () {
-                    if (isMember) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              GroupChatPageView(groupId: group.id),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content:
-                              Text('Rejoignez le groupe pour accéder au chat.'),
-                        ),
-                      );
-                    }
-                  },
-                );
-              },
-            ).toList(),
-          );
-        },
+      body: GroupsGrid(
+        groupsStream: groupService.getGroupsStream(),
+        userId: user!.uid,
       ),
     );
   }

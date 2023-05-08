@@ -10,6 +10,10 @@ class GroupService {
     return groupsReference.snapshots();
   }
 
+  Stream<DocumentSnapshot> getGroupDetails(String groupId) {
+    return groupsReference.doc(groupId).snapshots();
+  }
+
   Future<void> createGroup(String name, String userId) async {
     await groupsReference.add({
       'name': name,

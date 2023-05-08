@@ -61,29 +61,32 @@ class _GroupChatPageViewState extends State<GroupChatPageView> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: messageController,
-                    decoration:
-                        const InputDecoration(hintText: "Écrire un message"),
+          SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: messageController,
+                      decoration:
+                          const InputDecoration(hintText: "Écrire un message"),
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () async {
-                    String messageContent = messageController.text.trim();
-                    if (messageContent.isNotEmpty) {
-                      await groupService.sendMessage(
-                          widget.groupId, user!.uid, messageContent);
-                      messageController.clear();
-                    }
-                  },
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () async {
+                      String messageContent = messageController.text.trim();
+                      if (messageContent.isNotEmpty) {
+                        await groupService.sendMessage(
+                            widget.groupId, user!.uid, messageContent);
+                        messageController.clear();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

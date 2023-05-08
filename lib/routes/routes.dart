@@ -8,6 +8,8 @@ import 'package:dogo_final_app/views/forgot-password/forgot_password.dart';
 import 'package:dogo_final_app/views/landing/landing.dart';
 import 'package:dogo_final_app/views/home/home.dart';
 import 'package:dogo_final_app/views/map/map.dart';
+import 'package:dogo_final_app/views/pages/groups/subpages/group_chat.dart';
+import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -47,8 +49,19 @@ Route<dynamic> generateRoute(
     case '/map':
       builder = (BuildContext context) => const GoogleMapView();
       break;
-    case '/account':
-      builder = (BuildContext context) => const Placeholder();
+    case '/group-details':
+      builder = (BuildContext context) {
+        final arguments = settings.arguments as Map<String, dynamic>;
+        final groupId = arguments['groupId'] as String;
+        return GroupDetailsPageView(groupId: groupId);
+      };
+      break;
+    case '/group-chat':
+      builder = (BuildContext context) {
+        final arguments = settings.arguments as Map<String, dynamic>;
+        final groupId = arguments['groupId'] as String;
+        return GroupChatPageView(groupId: groupId);
+      };
       break;
     default:
       builder = (BuildContext context) => const WelcomeView();

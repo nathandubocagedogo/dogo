@@ -25,7 +25,7 @@ class HeadingWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Salut,",
+                    "Bonjour,",
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 16,

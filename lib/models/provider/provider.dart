@@ -1,14 +1,17 @@
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ProviderModel {
   Position? currentPosition;
-  Map<String, dynamic>? currentAddress;
+  Placemark? currentAddress;
+  dynamic currentUser;
   String? filter;
   double? radius = 100;
 
   ProviderModel({
     required Position? currentPosition,
-    required Map<String, dynamic>? currentAddress,
+    required Placemark? currentAddress,
+    required dynamic currentUser,
     required String? filter,
     required double? radius,
   });

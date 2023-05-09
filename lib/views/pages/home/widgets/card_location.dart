@@ -1,21 +1,22 @@
 // Flutter
+import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+// Provider
+import 'package:provider/provider.dart';
+import 'package:dogo_final_app/provider/provider.dart';
 
 // Utilities
+import 'package:shimmer/shimmer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CardLocationWidget extends StatelessWidget {
   final Function(GoogleMapController) onMapCreated;
-  final Function initCurrentLocation;
   final Completer<GoogleMapController> controllerCompleter;
 
   const CardLocationWidget({
     super.key,
     required this.onMapCreated,
-    required this.initCurrentLocation,
     required this.controllerCompleter,
   });
 
@@ -23,111 +24,104 @@ class CardLocationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      width: screenWidth * 0.9,
-      height: 250,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          )
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            GoogleMap(
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(48.8566, 2.3522),
-                zoom: 15.0,
+    return Consumer<DataProvider>(
+      builder: (context, dataProvider, child) {
+        final currentPosition = dataProvider.dataModel.currentPosition;
+        final currentAddress = dataProvider.dataModel.currentAddress;
+
+        if (currentPosition == null) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: screenWidth * 0.9,
+              height: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
               ),
-              onMapCreated: onMapCreated,
-              myLocationButtonEnabled: false,
+              child: const SizedBox(),
             ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: InkWell(
-                onTap: () async {
-                  Position position = await initCurrentLocation();
-                  GoogleMapController controller =
-                      await controllerCompleter.future;
-                  controller.animateCamera(
-                    CameraUpdate.newCameraPosition(
-                      CameraPosition(
-                        target: LatLng(
-                          position.latitude,
-                          position.longitude,
-                        ),
-                        zoom: 18.0,
-                      ),
+          );
+        }
+
+        final marker = Marker(
+          markerId: const MarkerId("Position actuelle"),
+          position: LatLng(
+            currentPosition.latitude,
+            currentPosition.longitude,
+          ),
+        );
+
+        return Container(
+          width: screenWidth * 0.9,
+          height: 250,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                GoogleMap(
+                  markers: {marker},
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      currentPosition.latitude,
+                      currentPosition.longitude,
                     ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(25),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
+                    zoom: 15.0,
+                  ),
+                  onMapCreated: onMapCreated,
+                  myLocationButtonEnabled: false,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 80,
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Icon(
-                    Icons.my_location,
-                    color: Colors.black,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Position actuelle",
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          currentAddress?.name ?? "Adresse inconnue",
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-            Container(
-              width: double.infinity,
-              height: 80,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Position actuelle",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "24 Rue de Canteleu, 59480 La Bassée",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

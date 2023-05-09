@@ -1,8 +1,11 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Provider
 import 'package:provider/provider.dart';
 import 'package:dogo_final_app/provider/provider.dart';
 
-class Filters extends StatelessWidget {
+class FiltersWidget extends StatelessWidget {
   static List<String> filters = [
     'Parcs',
     'Balades',
@@ -16,7 +19,7 @@ class Filters extends StatelessWidget {
 
   static List<double> radiusOptions = [50, 100, 200, 500, 1000];
 
-  const Filters({super.key});
+  const FiltersWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

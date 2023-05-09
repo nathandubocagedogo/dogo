@@ -1,4 +1,5 @@
 // Flutter
+import 'package:dogo_final_app/services/location.dart';
 import 'package:flutter/material.dart';
 
 // Utilities
@@ -17,6 +18,8 @@ class GoogleMapView extends StatefulWidget {
 }
 
 class _GoogleMapViewState extends State<GoogleMapView> {
+  final LocationService locationService = LocationService();
+
   late GoogleMapController controller;
   Map<String, Marker> markers = <String, Marker>{};
 
@@ -68,7 +71,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         children: [
           GoogleMap(
             initialCameraPosition: initialPosition,
-            onMapCreated: (GoogleMapController googleMapController) {
+            onMapCreated: (GoogleMapController googleMapController) async {
+              googleMapController.setMapStyle(
+                await locationService.loadMapStyle(
+                  file: "assets/files/map-details.json",
+                ),
+              );
               controller = googleMapController;
             },
             markers: Set<Marker>.of(markers.values),

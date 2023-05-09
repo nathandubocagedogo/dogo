@@ -5,12 +5,18 @@ import 'package:dogo_final_app/models/provider/provider.dart';
 class DataProvider extends ChangeNotifier {
   ProviderModel dataModel = ProviderModel(
     currentPosition: null,
+    currentAddress: null,
     filter: null,
     radius: 0,
   );
 
   void updateCurrentPosition(Position position) async {
     dataModel.currentPosition = position;
+    notifyListeners();
+  }
+
+  void updateCurrentAddress(Map<String, dynamic?> address) async {
+    dataModel.currentAddress = address;
     notifyListeners();
   }
 

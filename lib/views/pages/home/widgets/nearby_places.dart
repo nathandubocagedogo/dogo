@@ -7,19 +7,19 @@ import 'package:dogo_final_app/services/places.dart';
 // Utilities
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class NearbyPlaces extends StatefulWidget {
+class NearbyPlacesWidget extends StatefulWidget {
   final LatLng position;
   final String? filter;
   final double? radius;
 
-  const NearbyPlaces(
+  const NearbyPlacesWidget(
       {super.key, required this.position, this.filter, this.radius});
 
   @override
-  State<NearbyPlaces> createState() => _NearbyPlacesState();
+  State<NearbyPlacesWidget> createState() => _NearbyPlacesWidgetState();
 }
 
-class _NearbyPlacesState extends State<NearbyPlaces> {
+class _NearbyPlacesWidgetState extends State<NearbyPlacesWidget> {
   final PlacesService placesService = PlacesService();
 
   late Future<List<Map<String, dynamic>>> nearbyPlacesFuture;
@@ -34,7 +34,7 @@ class _NearbyPlacesState extends State<NearbyPlaces> {
   }
 
   @override
-  void didUpdateWidget(NearbyPlaces oldWidget) {
+  void didUpdateWidget(NearbyPlacesWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     bool positionChanged = widget.position != oldWidget.position;
     bool filterChanged = widget.filter != oldWidget.filter;

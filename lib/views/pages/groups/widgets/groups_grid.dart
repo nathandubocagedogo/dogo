@@ -29,52 +29,54 @@ class GroupsGrid extends StatelessWidget {
           child: SizedBox(
             width: screenWidth * 0.95,
             child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 10,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                ),
-                padding: EdgeInsets.only(
-                  top: 20,
-                  bottom: isAndroid
-                      ? kBottomNavigationBarHeight + 40
-                      : kBottomNavigationBarHeight + 50,
-                ),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot document = snapshot.data!.docs[index];
-                  Group group = Group.fromMap({
-                    ...document.data() as Map<String, dynamic>,
-                    'id': document.id
-                  });
-                  bool isMember = group.members.contains(userId);
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 10,
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+              ),
+              padding: EdgeInsets.only(
+                top: 20,
+                bottom: isAndroid
+                    ? kBottomNavigationBarHeight + 40
+                    : kBottomNavigationBarHeight + 50,
+              ),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = snapshot.data!.docs[index];
+                Group group = Group.fromMap({
+                  ...document.data() as Map<String, dynamic>,
+                  'id': document.id
+                });
+                bool isMember = group.members.contains(userId);
 
-                  return InkWell(
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      '/group-details',
-                      arguments: {'groupId': group.id},
+                return InkWell(
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    '/group-details',
+                    arguments: {'groupId': group.id},
+                  ),
+                  child: Card(
+                    elevation: 0.5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(group.name),
+                          if (!isMember)
+                            ElevatedButton(
+                              child: const Text("Rejoindre"),
+                              onPressed: () {},
+                            )
+                        ],
+                      ),
                     ),
-                    child: Card(
-                        elevation: 0.5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(group.name),
-                              if (!isMember)
-                                ElevatedButton(
-                                  child: const Text("Rejoindre"),
-                                  onPressed: () {},
-                                )
-                            ],
-                          ),
-                        )),
-                  );
-                }),
+                  ),
+                );
+              },
+            ),
           ),
         );
       },

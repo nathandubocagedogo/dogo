@@ -1,12 +1,16 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 // Services
 import 'package:dogo_final_app/services/places.dart';
+import 'package:dogo_final_app/services/location.dart';
 
 // Components
 import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/heading.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/card_location.dart';
 
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,34 +34,44 @@ class HomePageView extends StatefulWidget {
 class _HomePageViewState extends State<HomePageView>
     with AutomaticKeepAliveClientMixin {
   final PlacesService placesService = PlacesService();
+  final LocationService locationService = LocationService();
   final User? user = FirebaseAuth.instance.currentUser;
+  final Completer<GoogleMapController> controllerCompleter =
+      Completer<GoogleMapController>();
 
+  late GoogleMapController controller;
   late bool dataLoaded = false;
+  String? mapStyle;
 
   @override
   void initState() {
     super.initState();
-    initializeProvider();
+    init();
   }
 
-  Future<void> initializeProvider() async {
+  Future<void> init() async {
     await Future.wait([
-      // getCurrentLocation(),
-      // setFilter(),
+      // initCurrentLocation(),
+      // initFilter(),
     ]);
 
-    setState(() {
-      dataLoaded = true;
-    });
+    mapStyle = await locationService.loadMapStyle(
+      file: "assets/files/map-flat.json",
+    );
+
+    // setState(() {
+    //   dataLoaded = true;
+    // });
   }
 
-  Future<void> getCurrentLocation() async {
+  Future<Position> initCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        throw Exception("Location permission denied");
+        throw Exception("La localisation n'est pas activée.");
       }
+
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -66,15 +80,25 @@ class _HomePageViewState extends State<HomePageView>
         Provider.of<DataProvider>(context, listen: false)
             .updateCurrentPosition(position);
       }
+
+      return position;
     } catch (exception) {
       rethrow;
     }
   }
 
-  Future<void> setFilter() async {
+  Future<void> initFilter() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<DataProvider>(context, listen: false).updateFilter("");
     });
+  }
+
+  void onMapCreated(GoogleMapController controller) {
+    if (!controllerCompleter.isCompleted) {
+      controllerCompleter.complete(controller);
+    }
+
+    controller.setMapStyle(mapStyle);
   }
 
   @override
@@ -87,34 +111,12 @@ class _HomePageViewState extends State<HomePageView>
       body: SafeArea(
         child: Column(
           children: [
-            const Filters(),
-            Expanded(
-              child:
-                  Selector<DataProvider, Tuple3<String?, Position?, double?>>(
-                selector: (context, dataProvider) => Tuple3(
-                  dataProvider.dataModel.filter,
-                  dataProvider.dataModel.currentPosition,
-                  dataProvider.dataModel.radius,
-                ),
-                builder: (context, tuple, child) {
-                  String? filter = tuple.item1;
-                  Position? currentPosition = tuple.item2;
-                  double? radius = tuple.item3;
-
-                  if (!dataLoaded) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
-                    return NearbyPlaces(
-                      position: LatLng(
-                        currentPosition!.latitude,
-                        currentPosition.longitude,
-                      ),
-                      filter: filter,
-                      radius: radius,
-                    );
-                  }
-                },
-              ),
+            const HeadingWidget(),
+            const SizedBox(height: 30),
+            CardLocationWidget(
+              onMapCreated: onMapCreated,
+              controllerCompleter: controllerCompleter,
+              initCurrentLocation: initCurrentLocation,
             ),
           ],
         ),

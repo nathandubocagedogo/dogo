@@ -1,10 +1,13 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Utilities
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CardEmailNotVerified extends StatelessWidget {
+class CardEmailNotVerifiedWidget extends StatelessWidget {
   final String email;
 
-  const CardEmailNotVerified({super.key, required this.email});
+  const CardEmailNotVerifiedWidget({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {

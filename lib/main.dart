@@ -1,4 +1,5 @@
 // Flutter
+import 'package:dogo_final_app/services/places.dart';
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/theme/theme.dart';
 import 'package:dogo_final_app/routes/routes.dart';
@@ -42,8 +43,15 @@ Future main() async {
   database.close();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => DataProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => DataProvider(),
+        ),
+        Provider<PlacesService>(
+          create: (_) => PlacesService(),
+        ),
+      ],
       child: const Dogo(),
     ),
   );

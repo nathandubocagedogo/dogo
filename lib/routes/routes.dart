@@ -10,6 +10,7 @@ import 'package:dogo_final_app/views/home/home.dart';
 import 'package:dogo_final_app/views/map/map.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_chat.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
+import 'package:dogo_final_app/views/pages/home/subpages/change_location.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -48,6 +49,9 @@ Route<dynamic> generateRoute(
       break;
     case '/map':
       builder = (BuildContext context) => const GoogleMapView();
+      break;
+    case '/change-location':
+      builder = (BuildContext context) => const ChangeLocationView();
       break;
     case '/group-details':
       builder = (BuildContext context) {

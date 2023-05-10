@@ -1,4 +1,4 @@
-// Flutter
+// FLutter
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -7,8 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:dogo_final_app/provider/provider.dart';
 
 // Utilities
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tuple/tuple.dart';
 
 class CardLocationWidget extends StatelessWidget {
   final Function(GoogleMapController) onMapCreated;
@@ -24,12 +27,16 @@ class CardLocationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return Consumer<DataProvider>(
-      builder: (context, dataProvider, child) {
-        final currentPosition = dataProvider.dataModel.currentPosition;
-        final currentAddress = dataProvider.dataModel.currentAddress;
+    return Selector<DataProvider, Tuple2<Position?, Placemark?>>(
+      selector: (context, dataProvider) => Tuple2(
+        dataProvider.dataModel.currentPosition,
+        dataProvider.dataModel.currentAddress,
+      ),
+      builder: (context, tuple, child) {
+        final currentPosition = tuple.item1;
+        final currentAddress = tuple.item2;
 
-        if (currentPosition == null) {
+        if (currentPosition == null || currentAddress == null) {
           return Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
@@ -37,20 +44,22 @@ class CardLocationWidget extends StatelessWidget {
               width: screenWidth * 0.9,
               height: 250,
               decoration: BoxDecoration(
+                color: Colors.grey,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const SizedBox(),
             ),
           );
         }
 
-        final marker = Marker(
-          markerId: const MarkerId("Position actuelle"),
-          position: LatLng(
-            currentPosition.latitude,
-            currentPosition.longitude,
+        final markers = {
+          Marker(
+            markerId: const MarkerId("Position actuelle"),
+            position: LatLng(
+              currentPosition.latitude,
+              currentPosition.longitude,
+            ),
           ),
-        );
+        };
 
         return Container(
           width: screenWidth * 0.9,
@@ -72,7 +81,7 @@ class CardLocationWidget extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               children: [
                 GoogleMap(
-                  markers: {marker},
+                  markers: markers,
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
                       currentPosition.latitude,
@@ -82,6 +91,29 @@ class CardLocationWidget extends StatelessWidget {
                   ),
                   onMapCreated: onMapCreated,
                   myLocationButtonEnabled: false,
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/change-location');
+                      },
+                      borderRadius: BorderRadius.circular(50),
+                      child: const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 Container(
                   width: double.infinity,
@@ -107,7 +139,7 @@ class CardLocationWidget extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          currentAddress?.name ?? "Adresse inconnue",
+                          currentAddress.name ?? "Adresse inconnue",
                           style: const TextStyle(
                             color: Colors.black54,
                             fontSize: 14,

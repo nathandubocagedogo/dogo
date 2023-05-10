@@ -7,8 +7,8 @@ import 'package:dogo_final_app/services/places.dart';
 import 'package:dogo_final_app/services/location.dart';
 
 // Components
-// import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
-// import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/heading.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/card_location.dart';
 
@@ -22,7 +22,7 @@ import 'package:dogo_final_app/provider/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-// import 'package:tuple/tuple.dart';
+import 'package:tuple/tuple.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({super.key});
@@ -41,23 +41,25 @@ class _HomePageViewState extends State<HomePageView>
 
   late GoogleMapController controller;
   late bool dataLoaded = false;
-  String? mapStyle;
+  late String? mapStyle;
 
   @override
   void initState() {
     super.initState();
     init();
+    Provider.of<DataProvider>(context, listen: false).onPositionChange =
+        onPositionChanged;
   }
 
   Future<void> init() async {
     await Future.wait([
       initCurrentLocation(),
-      // initFilter(),
+      initFilter(),
     ]);
 
-    // setState(() {
-    //   dataLoaded = true;
-    // });
+    setState(() {
+      dataLoaded = true;
+    });
   }
 
   Future<Position> initCurrentLocation() async {
@@ -101,52 +103,129 @@ class _HomePageViewState extends State<HomePageView>
     controller.setMapStyle(mapStyle);
   }
 
+  Future<void> updateCameraPosition(Position position) async {
+    if (controllerCompleter.isCompleted) {
+      GoogleMapController mapController = await controllerCompleter.future;
+      CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(
+        LatLng(position.latitude, position.longitude),
+        15.0,
+      );
+      mapController.animateCamera(cameraUpdate);
+    }
+  }
+
+  void onPositionChanged() {
+    DataProvider dataProvider =
+        Provider.of<DataProvider>(context, listen: false);
+    Position currentPosition = dataProvider.dataModel.currentPosition!;
+    updateCameraPosition(currentPosition);
+  }
+
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            const HeadingWidget(),
-            const SizedBox(height: 30),
-            CardLocationWidget(
-              onMapCreated: onMapCreated,
-              controllerCompleter: controllerCompleter,
-            ),
-            // const FiltersWidget(),
-            // Expanded(
-            //   child:
-            //       Selector<DataProvider, Tuple3<String?, Position?, double?>>(
-            //     selector: (context, dataProvider) => Tuple3(
-            //       dataProvider.dataModel.filter,
-            //       dataProvider.dataModel.currentPosition,
-            //       dataProvider.dataModel.radius,
-            //     ),
-            //     builder: (context, tuple, child) {
-            //       String? filter = tuple.item1;
-            //       Position? currentPosition = tuple.item2;
-            //       double? radius = tuple.item3;
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const HeadingWidget(),
+              const SizedBox(height: 30),
+              CardLocationWidget(
+                onMapCreated: onMapCreated,
+                controllerCompleter: controllerCompleter,
+              ),
+              const SizedBox(height: 40),
+              Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: screenWidth * 0.9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Catégories",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, "/map");
+                            },
+                            child: const Text(
+                              "Voir la carte",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                            color: Colors.orange,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    left: screenWidth * 0.05,
+                    right: screenWidth * 0.05,
+                  ),
+                  child: const FiltersWidget(),
+                ),
+              ),
 
-            //       if (!dataLoaded) {
-            //         return const Center(child: CircularProgressIndicator());
-            //       } else {
-            //         return NearbyPlacesWidget(
-            //           position: LatLng(
-            //             currentPosition!.latitude,
-            //             currentPosition.longitude,
-            //           ),
-            //           filter: filter,
-            //           radius: radius,
-            //         );
-            //       }
-            //     },
-            //   ),
-            // ),
-          ],
+              // SizedBox(
+              //   child:
+              //       Selector<DataProvider, Tuple3<String?, Position?, double?>>(
+              //     selector: (context, dataProvider) => Tuple3(
+              //       dataProvider.dataModel.filter,
+              //       dataProvider.dataModel.currentPosition,
+              //       dataProvider.dataModel.radius,
+              //     ),
+              //     builder: (context, tuple, child) {
+              //       String? filter = tuple.item1;
+              //       Position? currentPosition = tuple.item2;
+              //       double? radius = tuple.item3;
+
+              //       if (!dataLoaded) {
+              //         return const Center(child: CircularProgressIndicator());
+              //       } else {
+              //         return NearbyPlacesWidget(
+              //           position: LatLng(
+              //             currentPosition!.latitude,
+              //             currentPosition.longitude,
+              //           ),
+              //           filter: filter,
+              //           radius: radius,
+              //         );
+              //       }
+              //     },
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );

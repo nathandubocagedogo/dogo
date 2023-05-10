@@ -3,21 +3,27 @@ import 'dart:convert';
 import 'dart:math';
 
 // Utilities
+import 'package:dogo_final_app/provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class PlacesService {
+  final String apiKey = dotenv.get('GOOGLE_API_KEY');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Map<String, String> placeIdMap = {};
 
   Future<List<Map<String, dynamic>>> fetchNearbyPlaces(
     LatLng center,
     double radius,
   ) async {
-    final String apiKey = dotenv.get('GOOGLE_API_KEY');
     final String url =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.latitude},${center.longitude}&radius=$radius&key=$apiKey';
     final response = await http.get(Uri.parse(url));
@@ -96,5 +102,68 @@ class PlacesService {
     allPlaces.addAll(placesFromDatabase);
 
     return allPlaces;
+  }
+
+  Future<List<String>> getPlacesSuggestions({required String query}) async {
+    if (query.isEmpty) {
+      return [];
+    }
+
+    final url =
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=$apiKey&sessiontoken=1234567890&types=(cities)";
+
+    final response = await http.get(Uri.parse(url));
+    final jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      List<String> suggestions = [];
+      placeIdMap.clear();
+      for (var prediction in jsonResponse['predictions']) {
+        final description = prediction['description'].toString();
+        final placeId = prediction['place_id'].toString();
+        placeIdMap[description] = placeId;
+        suggestions.add(description);
+      }
+      return suggestions;
+    } else {
+      return [];
+    }
+  }
+
+  Position latLngToPosition(LatLng latLng) {
+    return Position(
+      latitude: latLng.latitude,
+      longitude: latLng.longitude,
+      timestamp: DateTime.now(),
+      accuracy: 0,
+      altitude: 0,
+      heading: 0,
+      speed: 0,
+      speedAccuracy: 0,
+    );
+  }
+
+  Future<void> getCoordinatesFromPlace(
+      String? placeId, BuildContext context) async {
+    final String url =
+        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$apiKey&fields=geometry";
+
+    final response = await http.get(Uri.parse(url));
+    final jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      final double latitude =
+          jsonResponse['result']['geometry']['location']['lat'];
+      final double longitude =
+          jsonResponse['result']['geometry']['location']['lng'];
+      final Position position = latLngToPosition(LatLng(latitude, longitude));
+
+      // ignore: use_build_context_synchronously
+      Provider.of<DataProvider>(context, listen: false)
+          .updateCurrentPosition(position);
+
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    }
   }
 }

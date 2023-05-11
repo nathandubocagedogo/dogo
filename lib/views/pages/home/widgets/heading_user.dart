@@ -1,4 +1,5 @@
 // Flutter
+import 'package:dogo_final_app/utils/manipulate_string.dart';
 import 'package:flutter/material.dart';
 
 // Firebase
@@ -8,8 +9,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 // Utilities
 import 'package:shimmer/shimmer.dart';
 
-class HeadingUserWidget extends StatelessWidget {
+class HeadingUserWidget extends StatefulWidget {
   const HeadingUserWidget({super.key});
+
+  @override
+  State<HeadingUserWidget> createState() => _HeadingUserWidgetState();
+}
+
+class _HeadingUserWidgetState extends State<HeadingUserWidget> {
+  late Future<DocumentSnapshot<Map<String, dynamic>>> userData;
+
+  @override
+  void initState() {
+    super.initState();
+    userData = getUserData();
+  }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -28,7 +42,7 @@ class HeadingUserWidget extends StatelessWidget {
         child: SizedBox(
           width: screenWidth * 0.9,
           child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            future: getUserData(),
+            future: userData,
             builder: (
               BuildContext context,
               AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,
@@ -47,8 +61,9 @@ class HeadingUserWidget extends StatelessWidget {
                             width: 50,
                             height: 18,
                             decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(4)),
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -59,8 +74,9 @@ class HeadingUserWidget extends StatelessWidget {
                             width: 100,
                             height: 18,
                             decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(4)),
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                           ),
                         ),
                       ],
@@ -76,11 +92,12 @@ class HeadingUserWidget extends StatelessWidget {
                   ],
                 );
               } else {
-                final String? name = snapshot.data?.data()?['name'];
+                final String name = convertFullNameInFirstName(
+                  name: snapshot.data?.data()?['name'],
+                );
                 final String? picture = snapshot.data?.data()?['picture'];
-                final String firstLetter = name != null && name.isNotEmpty
-                    ? name[0].toUpperCase()
-                    : "";
+                final String firstLetter =
+                    name.isNotEmpty ? name[0].toUpperCase() : "";
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,7 +125,7 @@ class HeadingUserWidget extends StatelessWidget {
                     InkWell(
                       child: CircleAvatar(
                         backgroundColor: Colors.grey[300],
-                        radius: 25, // Couleur de fond du CircleAvatar
+                        radius: 25,
                         child: picture != null && picture.isNotEmpty
                             ? ClipOval(
                                 child: Image.network(
@@ -137,3 +154,5 @@ class HeadingUserWidget extends StatelessWidget {
     );
   }
 }
+
+// Builder 

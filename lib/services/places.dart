@@ -130,7 +130,7 @@ class PlacesService {
     }
   }
 
-  Position latLngToPosition(LatLng latLng) {
+  Position latitudeLongitudeToPosition(LatLng latLng) {
     return Position(
       latitude: latLng.latitude,
       longitude: latLng.longitude,
@@ -156,7 +156,8 @@ class PlacesService {
           jsonResponse['result']['geometry']['location']['lat'];
       final double longitude =
           jsonResponse['result']['geometry']['location']['lng'];
-      final Position position = latLngToPosition(LatLng(latitude, longitude));
+      final Position position =
+          latitudeLongitudeToPosition(LatLng(latitude, longitude));
 
       // ignore: use_build_context_synchronously
       Provider.of<DataProvider>(context, listen: false)

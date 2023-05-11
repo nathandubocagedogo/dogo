@@ -37,6 +37,8 @@ class _HomePageViewState extends State<HomePageView>
   final Completer<GoogleMapController> controllerCompleter =
       Completer<GoogleMapController>();
 
+  Set<Marker> markers = {};
+
   late GoogleMapController controller;
   late bool dataLoaded = false;
   late String? mapStyle;
@@ -57,9 +59,9 @@ class _HomePageViewState extends State<HomePageView>
     Provider.of<DataProvider>(context, listen: false).onPositionChange =
         onPositionChanged;
 
-    // setState(() {
-    //   dataLoaded = true;
-    // });
+    setState(() {
+      dataLoaded = true;
+    });
   }
 
   Future<Position> initCurrentLocation() async {
@@ -108,14 +110,22 @@ class _HomePageViewState extends State<HomePageView>
         Provider.of<DataProvider>(context, listen: false);
     Position currentPosition = dataProvider.dataModel.currentPosition!;
     updateCameraPosition(currentPosition);
+
+    Marker marker = Marker(
+      markerId: const MarkerId('Position actuelle'),
+      position: LatLng(currentPosition.latitude, currentPosition.longitude),
+    );
+
+    setState(() {
+      markers = {marker};
+    });
   }
 
   Future<void> updateCameraPosition(Position position) async {
     if (controllerCompleter.isCompleted) {
       GoogleMapController mapController = await controllerCompleter.future;
-      CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(
+      CameraUpdate cameraUpdate = CameraUpdate.newLatLng(
         LatLng(position.latitude, position.longitude),
-        15.0,
       );
       mapController.animateCamera(cameraUpdate);
     }
@@ -139,6 +149,7 @@ class _HomePageViewState extends State<HomePageView>
               CardLocationWidget(
                 onMapCreated: onMapCreated,
                 controllerCompleter: controllerCompleter,
+                markers: markers,
               ),
               const SizedBox(height: 40),
               Align(

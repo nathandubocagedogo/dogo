@@ -1,4 +1,5 @@
 // Flutter
+import 'package:dogo_final_app/views/pages/home/widgets/results_heading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -253,6 +254,8 @@ class _HomePageViewState extends State<HomePageView>
               const SizedBox(height: 20),
               const FiltersWidget(),
               const SizedBox(height: 20),
+              const ResultsHeadingWidget(),
+              const SizedBox(height: 20),
               SizedBox(
                 height: 200,
                 child: Selector<DataProvider, Tuple3<String?, Position?, int?>>(
@@ -308,7 +311,7 @@ class _HomePageViewState extends State<HomePageView>
                     }
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),

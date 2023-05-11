@@ -8,8 +8,7 @@ import 'package:dogo_final_app/services/location.dart';
 
 // Components
 import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
-import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
-import 'package:dogo_final_app/views/pages/home/widgets/heading.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/heading_user.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/card_location.dart';
 
 // Firebase
@@ -19,10 +18,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dogo_final_app/provider/provider.dart';
 
 // Utilities
-import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tuple/tuple.dart';
+import 'package:provider/provider.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({super.key});
@@ -47,8 +45,6 @@ class _HomePageViewState extends State<HomePageView>
   void initState() {
     super.initState();
     init();
-    Provider.of<DataProvider>(context, listen: false).onPositionChange =
-        onPositionChanged;
   }
 
   Future<void> init() async {
@@ -57,9 +53,13 @@ class _HomePageViewState extends State<HomePageView>
       initFilter(),
     ]);
 
-    setState(() {
-      dataLoaded = true;
-    });
+    // ignore: use_build_context_synchronously
+    Provider.of<DataProvider>(context, listen: false).onPositionChange =
+        onPositionChanged;
+
+    // setState(() {
+    //   dataLoaded = true;
+    // });
   }
 
   Future<Position> initCurrentLocation() async {
@@ -91,7 +91,7 @@ class _HomePageViewState extends State<HomePageView>
     });
   }
 
-  void onMapCreated(GoogleMapController controller) async {
+  Future<void> onMapCreated(GoogleMapController controller) async {
     mapStyle = await locationService.loadMapStyle(
       file: "assets/files/map-flat.json",
     );
@@ -103,6 +103,13 @@ class _HomePageViewState extends State<HomePageView>
     controller.setMapStyle(mapStyle);
   }
 
+  void onPositionChanged() {
+    DataProvider dataProvider =
+        Provider.of<DataProvider>(context, listen: false);
+    Position currentPosition = dataProvider.dataModel.currentPosition!;
+    updateCameraPosition(currentPosition);
+  }
+
   Future<void> updateCameraPosition(Position position) async {
     if (controllerCompleter.isCompleted) {
       GoogleMapController mapController = await controllerCompleter.future;
@@ -112,13 +119,6 @@ class _HomePageViewState extends State<HomePageView>
       );
       mapController.animateCamera(cameraUpdate);
     }
-  }
-
-  void onPositionChanged() {
-    DataProvider dataProvider =
-        Provider.of<DataProvider>(context, listen: false);
-    Position currentPosition = dataProvider.dataModel.currentPosition!;
-    updateCameraPosition(currentPosition);
   }
 
   @override
@@ -134,7 +134,7 @@ class _HomePageViewState extends State<HomePageView>
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const HeadingWidget(),
+              const HeadingUserWidget(),
               const SizedBox(height: 30),
               CardLocationWidget(
                 onMapCreated: onMapCreated,

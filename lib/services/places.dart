@@ -163,7 +163,7 @@ class PlacesService {
           .updateCurrentPosition(position);
 
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      Navigator.of(context).pop();
     }
   }
 }

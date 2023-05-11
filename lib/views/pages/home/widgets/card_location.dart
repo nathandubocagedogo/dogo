@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 // Provider
-import 'package:provider/provider.dart';
 import 'package:dogo_final_app/provider/provider.dart';
 
 // Utilities
+import 'package:provider/provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shimmer/shimmer.dart';

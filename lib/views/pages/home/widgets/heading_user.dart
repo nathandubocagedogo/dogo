@@ -8,13 +8,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 // Utilities
 import 'package:shimmer/shimmer.dart';
 
-class HeadingWidget extends StatelessWidget {
-  const HeadingWidget({super.key});
+class HeadingUserWidget extends StatelessWidget {
+  const HeadingUserWidget({super.key});
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
     return await firestore.collection("users").doc(user?.uid).get();
   }
 

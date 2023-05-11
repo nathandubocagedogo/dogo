@@ -93,13 +93,14 @@ class PlacesService {
     LatLng center,
     double radius,
   ) async {
-    List<Map<String, dynamic>> placesFromGoogle =
-        await fetchNearbyPlaces(center, radius);
-    List<Map<String, dynamic>> placesFromDatabase =
-        await fetchNearbyDatabasePlaces(center, radius);
+    List<List<Map<String, dynamic>>> results = await Future.wait([
+      fetchNearbyPlaces(center, radius),
+      // fetchNearbyDatabasePlaces(center, radius),
+    ]);
+
     List<Map<String, dynamic>> allPlaces = [];
-    allPlaces.addAll(placesFromGoogle);
-    allPlaces.addAll(placesFromDatabase);
+    allPlaces.addAll(results[0]);
+    allPlaces.addAll(results[1]);
 
     return allPlaces;
   }

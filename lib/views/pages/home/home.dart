@@ -1,6 +1,4 @@
 // Flutter
-import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
-import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -10,9 +8,12 @@ import 'package:dogo_final_app/services/places.dart';
 import 'package:dogo_final_app/services/location.dart';
 
 // Components
+import 'package:dogo_final_app/views/pages/home/widgets/nearby_places_shimmer.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/heading_user.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/card_location.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
+import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/category_heading.dart';
 
 // Firebase
@@ -208,12 +209,26 @@ class _HomePageViewState extends State<HomePageView>
     );
   }
 
+  Future<List<Map<String, dynamic>>> fetchPlaces(
+    String? filter,
+    Position position,
+    int? radius,
+  ) async {
+    await Future.delayed(const Duration(seconds: 4));
+    return await placesService.fetchAllNearbyPlaces(
+      LatLng(position.latitude, position.longitude),
+      radius?.toDouble() ?? 5,
+    );
+  }
+
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -237,8 +252,9 @@ class _HomePageViewState extends State<HomePageView>
               const CategoryHeadingWidget(),
               const SizedBox(height: 20),
               const FiltersWidget(),
+              const SizedBox(height: 20),
               SizedBox(
-                height: 500,
+                height: 200,
                 child: Selector<DataProvider, Tuple3<String?, Position?, int?>>(
                   selector: (context, dataProvider) => Tuple3(
                     dataProvider.dataModel.filter,
@@ -250,21 +266,49 @@ class _HomePageViewState extends State<HomePageView>
                     Position? currentPosition = tuple.item2;
                     int? radius = tuple.item3;
 
-                    if (!dataLoaded) {
-                      return const Center(child: CircularProgressIndicator());
+                    if (dataLoaded) {
+                      return FutureBuilder<List<Map<String, dynamic>>>(
+                        future: fetchPlaces(filter, currentPosition!, radius),
+                        builder: (
+                          BuildContext context,
+                          AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+                        ) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 2,
+                              itemBuilder: (BuildContext context, int index) {
+                                return NearbyPlacesShimmerWidget(
+                                  index: index,
+                                  screenWidth: screenWidth,
+                                );
+                              },
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Erreur : ${snapshot.error}'),
+                            );
+                          } else {
+                            return NearbyPlacesWidget(places: snapshot.data!);
+                          }
+                        },
+                      );
                     } else {
-                      return NearbyPlacesWidget(
-                        position: LatLng(
-                          currentPosition!.latitude,
-                          currentPosition.longitude,
-                        ),
-                        filter: filter,
-                        radius: radius,
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 2,
+                        itemBuilder: (BuildContext context, int index) {
+                          return NearbyPlacesShimmerWidget(
+                            index: index,
+                            screenWidth: screenWidth,
+                          );
+                        },
                       );
                     }
                   },
                 ),
-              ),
+              )
             ],
           ),
         ),

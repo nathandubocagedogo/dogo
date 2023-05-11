@@ -47,7 +47,6 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
       height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.grey,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -68,27 +67,22 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
                           ),
                           zoom: 15.0,
                         ),
-                        onMapCreated: (GoogleMapController controller) {
-                          onMapCreated(controller);
-                          setState(() {
-                            mapIsLoaded = true;
-                          });
-                        },
+                        onMapCreated: onMapCreated,
                         myLocationButtonEnabled: false,
                       )
-                    : mapIsLoaded
-                        ? Container()
-                        : Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Colors.white,
-                            ),
-                          );
+                    : Container();
               },
             ),
+            if (!mapIsLoaded)
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
             Positioned(
               top: 10,
               right: 10,

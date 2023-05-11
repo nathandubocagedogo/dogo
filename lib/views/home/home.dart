@@ -64,11 +64,16 @@ class _HomeViewState extends State<HomeView>
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
-        children: const [
-          HomePageView(key: PageStorageKey('homePage')),
-          GroupsPageView(key: PageStorageKey('groupsPage')),
-          BookmarsPageView(key: PageStorageKey('bookmarksPage')),
-          SettingsPageView(key: PageStorageKey('settingsPage')),
+        children: [
+          HomePageView(
+            key: const PageStorageKey('homePage'),
+            onPageChange: (int pageIndex) {
+              pageController.jumpToPage(pageIndex);
+            },
+          ),
+          const GroupsPageView(key: PageStorageKey('groupsPage')),
+          const BookmarsPageView(key: PageStorageKey('bookmarksPage')),
+          const SettingsPageView(key: PageStorageKey('settingsPage')),
         ],
       ),
       bottomNavigationBar:

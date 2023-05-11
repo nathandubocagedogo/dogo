@@ -8,17 +8,18 @@ class ButtonRoundedText extends StatefulWidget {
   final Color textColor;
   final double elevation;
   final bool isActive;
+  final double spacing;
 
-  const ButtonRoundedText({
-    super.key,
-    this.width = double.infinity,
-    required this.content,
-    required this.callback,
-    required this.backgroundColor,
-    this.textColor = Colors.black,
-    this.elevation = 0,
-    this.isActive = false,
-  });
+  const ButtonRoundedText(
+      {super.key,
+      this.width = double.infinity,
+      required this.content,
+      required this.callback,
+      required this.backgroundColor,
+      this.textColor = Colors.black,
+      this.elevation = 0,
+      this.isActive = false,
+      this.spacing = 18});
 
   @override
   State<ButtonRoundedText> createState() => _ButtonRoundedTextState();
@@ -37,10 +38,10 @@ class _ButtonRoundedTextState extends State<ButtonRoundedText> {
               : MaterialStateProperty.all(
                   widget.backgroundColor.withOpacity(0.5),
                 ),
-          elevation: MaterialStateProperty.all(0),
-          padding: const MaterialStatePropertyAll(
+          elevation: MaterialStateProperty.all(widget.elevation),
+          padding: MaterialStatePropertyAll(
             EdgeInsets.symmetric(
-              vertical: 18,
+              vertical: widget.spacing,
             ),
           ),
           shape: MaterialStatePropertyAll(

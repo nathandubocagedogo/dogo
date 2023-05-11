@@ -13,12 +13,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CardLocationWidget extends StatefulWidget {
+  final Function() onRadiusButtonTap;
   final Function(GoogleMapController) onMapCreated;
   final Completer<GoogleMapController> controllerCompleter;
   final Set<Marker> markers;
 
   const CardLocationWidget({
     super.key,
+    required this.onRadiusButtonTap,
     required this.onMapCreated,
     required this.controllerCompleter,
     required this.markers,
@@ -97,10 +99,33 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
                   },
                   borderRadius: BorderRadius.circular(50),
                   child: const Padding(
-                    padding: EdgeInsets.all(12.0),
+                    padding: EdgeInsets.all(10.0),
                     child: Icon(
                       Icons.edit,
                       color: Colors.orange,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 65,
+              right: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: InkWell(
+                  onTap: widget.onRadiusButtonTap,
+                  borderRadius: BorderRadius.circular(50),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Icon(
+                      Icons.adjust,
+                      color: Colors.orange,
+                      size: 24,
                     ),
                   ),
                 ),

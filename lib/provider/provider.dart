@@ -19,7 +19,6 @@ class DataProvider extends ChangeNotifier {
   ProviderModel dataModel = ProviderModel(
     currentPosition: null,
     currentAddress: null,
-    currentUser: null,
     filter: null,
     radius: 0,
   );
@@ -48,7 +47,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateRadius(double radius) {
+  void updateRadius(int radius) {
     dataModel.radius = radius;
     notifyListeners();
   }

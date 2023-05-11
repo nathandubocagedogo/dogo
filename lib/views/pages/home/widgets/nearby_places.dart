@@ -10,10 +10,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class NearbyPlacesWidget extends StatefulWidget {
   final LatLng position;
   final String? filter;
-  final double? radius;
+  final int? radius;
 
-  const NearbyPlacesWidget(
-      {super.key, required this.position, this.filter, this.radius});
+  const NearbyPlacesWidget({
+    super.key,
+    required this.position,
+    this.filter,
+    this.radius,
+  });
 
   @override
   State<NearbyPlacesWidget> createState() => _NearbyPlacesWidgetState();

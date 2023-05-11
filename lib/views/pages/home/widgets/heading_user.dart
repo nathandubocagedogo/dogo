@@ -1,6 +1,8 @@
 // Flutter
-import 'package:dogo_final_app/utils/manipulate_string.dart';
 import 'package:flutter/material.dart';
+
+// Utils
+import 'package:dogo_final_app/utils/manipulate_string.dart';
 
 // Firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,7 +12,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HeadingUserWidget extends StatefulWidget {
-  const HeadingUserWidget({super.key});
+  final Function() onAvatarTap;
+
+  const HeadingUserWidget({
+    super.key,
+    required this.onAvatarTap,
+  });
 
   @override
   State<HeadingUserWidget> createState() => _HeadingUserWidgetState();
@@ -123,6 +130,7 @@ class _HeadingUserWidgetState extends State<HeadingUserWidget> {
                       ],
                     ),
                     InkWell(
+                      onTap: widget.onAvatarTap,
                       child: CircleAvatar(
                         backgroundColor: Colors.grey[300],
                         radius: 25,
@@ -143,7 +151,7 @@ class _HeadingUserWidgetState extends State<HeadingUserWidget> {
                                 ),
                               ),
                       ),
-                    ),
+                    )
                   ],
                 );
               }

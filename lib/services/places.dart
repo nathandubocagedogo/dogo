@@ -100,7 +100,7 @@ class PlacesService {
 
     List<Map<String, dynamic>> allPlaces = [];
     allPlaces.addAll(results[0]);
-    allPlaces.addAll(results[1]);
+    // allPlaces.addAll(results[1]);
 
     return allPlaces;
   }

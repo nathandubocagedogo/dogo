@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shimmer/shimmer.dart';
 
 class CardLocationWidget extends StatefulWidget {
   final Function() onRadiusButtonTap;
@@ -76,15 +75,10 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
               },
             ),
             if (!mapIsLoaded)
-              Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                period: const Duration(seconds: 3),
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.white,
-                ),
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.grey[300],
               ),
             Positioned(
               top: 10,
@@ -167,15 +161,10 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
                                   fontSize: 14,
                                 ),
                               )
-                            : Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                period: const Duration(seconds: 3),
-                                highlightColor: Colors.grey[100]!,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 20.0,
-                                  color: Colors.white,
-                                ),
+                            : Container(
+                                width: double.infinity,
+                                height: 20.0,
+                                color: Colors.white,
                               );
                       },
                     ),

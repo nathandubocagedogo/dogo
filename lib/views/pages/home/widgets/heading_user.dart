@@ -8,9 +8,6 @@ import 'package:dogo_final_app/utils/manipulate_string.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// Utilities
-import 'package:shimmer/shimmer.dart';
-
 class HeadingUserWidget extends StatefulWidget {
   final Function() onAvatarTap;
 
@@ -61,41 +58,28 @@ class _HeadingUserWidgetState extends State<HeadingUserWidget> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          period: const Duration(seconds: 3),
-                          child: Container(
-                            width: 50,
-                            height: 18,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                        Container(
+                          width: 50,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            width: 100,
-                            height: 18,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                        Container(
+                          width: 100,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
                       ],
                     ),
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        radius: 25,
-                      ),
+                    CircleAvatar(
+                      backgroundColor: Colors.grey[300],
+                      radius: 25,
                     ),
                   ],
                 );

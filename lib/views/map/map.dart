@@ -28,7 +28,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       LocationPermission permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        throw Exception("Location permission denied");
+        throw Exception("La localisation n'est pas activée.");
       }
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -82,6 +82,16 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             markers: Set<Marker>.of(markers.values),
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
+            circles: {
+              Circle(
+                circleId: const CircleId("Rayon"),
+                center: LatLng(
+                  currentPosition!.latitude,
+                  currentPosition.longitude,
+                ),
+                radius: 430,
+              )
+            },
           ),
           Positioned(
             bottom: 16,

@@ -215,7 +215,6 @@ class _HomePageViewState extends State<HomePageView>
     Position position,
     int? radius,
   ) async {
-    await Future.delayed(const Duration(seconds: 4));
     return await placesService.fetchAllNearbyPlaces(
       LatLng(position.latitude, position.longitude),
       radius?.toDouble() ?? 5,
@@ -278,15 +277,8 @@ class _HomePageViewState extends State<HomePageView>
                         ) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 2,
-                              itemBuilder: (BuildContext context, int index) {
-                                return NearbyPlacesShimmerWidget(
-                                  index: index,
-                                  screenWidth: screenWidth,
-                                );
-                              },
+                            return NearbyPlacesShimmerWidget(
+                              screenWidth: screenWidth,
                             );
                           } else if (snapshot.hasError) {
                             return Center(
@@ -298,15 +290,8 @@ class _HomePageViewState extends State<HomePageView>
                         },
                       );
                     } else {
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 2,
-                        itemBuilder: (BuildContext context, int index) {
-                          return NearbyPlacesShimmerWidget(
-                            index: index,
-                            screenWidth: screenWidth,
-                          );
-                        },
+                      return NearbyPlacesShimmerWidget(
+                        screenWidth: screenWidth,
                       );
                     }
                   },

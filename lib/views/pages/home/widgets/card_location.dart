@@ -79,6 +79,7 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
               Shimmer.fromColors(
                 baseColor: Colors.grey[300]!,
                 highlightColor: Colors.grey[100]!,
+                period: const Duration(seconds: 3),
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
@@ -168,6 +169,7 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
                               )
                             : Shimmer.fromColors(
                                 baseColor: Colors.grey[300]!,
+                                period: const Duration(seconds: 3),
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(
                                   width: double.infinity,

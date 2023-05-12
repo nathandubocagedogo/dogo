@@ -64,6 +64,7 @@ class _HeadingUserWidgetState extends State<HeadingUserWidget> {
                         Shimmer.fromColors(
                           baseColor: Colors.grey[300]!,
                           highlightColor: Colors.grey[100]!,
+                          period: const Duration(seconds: 3),
                           child: Container(
                             width: 50,
                             height: 18,

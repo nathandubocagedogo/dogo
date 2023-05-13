@@ -14,11 +14,18 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const Text("Changer de localisation"),
+        ),
         body: SafeArea(
           child: Autocomplete<String>(
             optionsBuilder: (TextEditingValue textEditingValue) {
@@ -42,19 +49,58 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
               VoidCallback onFieldSubmitted,
             ) {
               textEditingController = textEditingController;
-              return TextField(
-                controller: textEditingController,
-                focusNode: focusNode,
-                decoration: const InputDecoration(
-                    hintText: "Entrez une ville ou un lieu"),
-                onSubmitted: (String value) {
-                  onFieldSubmitted();
-                },
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: screenWidth * 0.05,
+                  right: screenWidth * 0.05,
+                  top: 10,
+                ),
+                child: TextField(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    hintText: "Entrez une ville ou un lieu",
+                    suffixIcon: Theme(
+                      data: Theme.of(context).copyWith(
+                        iconTheme: const IconThemeData(
+                          color: Colors.black54,
+                        ),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          placesService.setCurrentLocation(context);
+                        },
+                        child: const Icon(
+                          (Icons.my_location),
+                        ),
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 16.0,
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                    ),
+                  ),
+                  onSubmitted: (String value) {
+                    onFieldSubmitted();
+                  },
+                ),
               );
             },
-            optionsViewBuilder: (BuildContext context,
-                AutocompleteOnSelected<String> onSelected,
-                Iterable<String> options) {
+            optionsViewBuilder: (
+              BuildContext context,
+              AutocompleteOnSelected<String> onSelected,
+              Iterable<String> options,
+            ) {
               return Align(
                 alignment: Alignment.topLeft,
                 child: Material(
@@ -67,7 +113,17 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                           onSelected(option);
                         },
                         child: ListTile(
-                          title: Text(option),
+                          title: Text(
+                            option,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                          ),
                         ),
                       );
                     }).toList(),

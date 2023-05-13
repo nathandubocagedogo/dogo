@@ -175,4 +175,27 @@ class PlacesService {
       Navigator.of(context).pop();
     }
   }
+
+  Future<void> setCurrentLocation(BuildContext context) async {
+    try {
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw Exception("La localisation n'est pas activée.");
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // ignore: use_build_context_synchronously
+      Provider.of<DataProvider>(context, listen: false)
+          .updateCurrentPosition(position);
+
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+    } catch (exception) {
+      rethrow;
+    }
+  }
 }

@@ -9,12 +9,9 @@ class FiltersWidget extends StatelessWidget {
   static List<String> filters = [
     'Parcs',
     'Balades',
-    'Concours',
-    'Rencontre',
     'Shop',
     'Vétérinaire',
     'Toiletteur',
-    'Autre'
   ];
 
   const FiltersWidget({super.key});

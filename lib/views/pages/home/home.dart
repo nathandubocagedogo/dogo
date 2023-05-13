@@ -1,4 +1,5 @@
 // Flutter
+import 'package:dogo_final_app/models/firebase/place.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/results_heading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,8 @@ import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/heading_user.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/card_location.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
-import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/category_heading.dart';
+import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
@@ -210,15 +211,15 @@ class _HomePageViewState extends State<HomePageView>
     );
   }
 
-  Future<List<Map<String, dynamic>>> fetchPlaces(
+  Future<List<Place>> fetchPlaces(
     String? filter,
     Position position,
     int? radius,
   ) async {
-    return await placesService.fetchAllNearbyPlaces(
-      LatLng(position.latitude, position.longitude),
-      radius?.toDouble() ?? 5,
-    );
+    return await placesService.fetchNearbyPlaces(
+        LatLng(position.latitude, position.longitude),
+        radius?.toDouble() ?? 5,
+        filter ?? "");
   }
 
   @override
@@ -248,7 +249,7 @@ class _HomePageViewState extends State<HomePageView>
                 markers: markers,
                 onRadiusButtonTap: showRadiusBottomSheet,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               const CategoryHeadingWidget(),
               const SizedBox(height: 20),
               const FiltersWidget(),
@@ -256,7 +257,7 @@ class _HomePageViewState extends State<HomePageView>
               const ResultsHeadingWidget(),
               const SizedBox(height: 20),
               SizedBox(
-                height: 200,
+                height: 300,
                 child: Selector<DataProvider, Tuple3<String?, Position?, int?>>(
                   selector: (context, dataProvider) => Tuple3(
                     dataProvider.dataModel.filter,
@@ -269,11 +270,11 @@ class _HomePageViewState extends State<HomePageView>
                     int? radius = tuple.item3;
 
                     if (dataLoaded) {
-                      return FutureBuilder<List<Map<String, dynamic>>>(
+                      return FutureBuilder<List<Place>>(
                         future: fetchPlaces(filter, currentPosition!, radius),
                         builder: (
                           BuildContext context,
-                          AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+                          AsyncSnapshot<List<Place>> snapshot,
                         ) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -285,7 +286,10 @@ class _HomePageViewState extends State<HomePageView>
                               child: Text('Erreur : ${snapshot.error}'),
                             );
                           } else {
-                            return NearbyPlacesWidget(places: snapshot.data!);
+                            return NearbyPlacesWidget(
+                              places: snapshot.data!,
+                              screenWidth: screenWidth,
+                            );
                           }
                         },
                       );
@@ -297,6 +301,7 @@ class _HomePageViewState extends State<HomePageView>
                   },
                 ),
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

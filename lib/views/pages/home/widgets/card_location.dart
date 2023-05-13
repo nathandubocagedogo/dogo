@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:dogo_final_app/utils/manipulate_string.dart';
 
 class CardLocationWidget extends StatefulWidget {
   final Function() onRadiusButtonTap;
@@ -46,7 +46,7 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
 
     return Container(
       width: screenWidth * 0.9,
-      height: 250,
+      height: 270,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -76,108 +76,167 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
               },
             ),
             if (!mapIsLoaded)
-              Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                period: const Duration(seconds: 3),
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.grey[300],
+              ),
+            if (mapIsLoaded) ...[
+              Positioned(
+                top: 10,
+                right: 10,
                 child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.grey[300],
-                ),
-              ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/change-location');
-                  },
-                  borderRadius: BorderRadius.circular(50),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.orange,
-                      size: 24,
-                    ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 65,
-              right: 10,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: InkWell(
-                  onTap: widget.onRadiusButtonTap,
-                  borderRadius: BorderRadius.circular(50),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.adjust,
-                      color: Colors.orange,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 80,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Position actuelle",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/change-location');
+                    },
+                    borderRadius: BorderRadius.circular(50),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.orange,
+                        size: 24,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Selector<DataProvider, Placemark?>(
-                      selector: (context, dataProvider) =>
-                          dataProvider.dataModel.currentAddress,
-                      builder: (context, currentAddress, child) {
-                        return currentAddress != null
-                            ? Text(
-                                '${currentAddress.street}, ${currentAddress.locality}',
-                                style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                ),
-                              )
-                            : Container(
-                                width: double.infinity,
-                                height: 20.0,
-                                color: Colors.white,
-                              );
-                      },
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                top: 65,
+                right: 10,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: InkWell(
+                    onTap: widget.onRadiusButtonTap,
+                    borderRadius: BorderRadius.circular(50),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.adjust,
+                        color: Colors.orange,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                left: 10,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Selector<DataProvider, dynamic>(
+                      selector: (context, dataProvider) =>
+                          dataProvider.dataModel.currentWeather,
+                      builder: (context, currentWeather, child) {
+                        return currentWeather != null
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/weather/${currentWeather['weather'][0]['icon'].toString()}.png",
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: <InlineSpan>[
+                                        TextSpan(
+                                          text: capitalize(
+                                              currentWeather['weather'][0]
+                                                      ['description']
+                                                  .toString()),
+                                          style: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        const WidgetSpan(
+                                          child: SizedBox(
+                                            width: 4,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              "${currentWeather['main']['temp'].toString()}°C",
+                                          style: const TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 12,
+                                            color: Colors.black38,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Container();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 80,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Position actuelle",
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Selector<DataProvider, Placemark?>(
+                        selector: (context, dataProvider) =>
+                            dataProvider.dataModel.currentAddress,
+                        builder: (context, currentAddress, child) {
+                          return currentAddress != null
+                              ? Text(
+                                  '${currentAddress.street}, ${currentAddress.locality}',
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
+                                )
+                              : Container(
+                                  width: double.infinity,
+                                  height: 20.0,
+                                  color: Colors.white,
+                                );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

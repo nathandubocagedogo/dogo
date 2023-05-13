@@ -33,7 +33,7 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
               FocusScope.of(context).unfocus();
               final String? placeId =
                   context.read<PlacesService>().placeIdMap[selected];
-              placesService.getCoordinatesFromPlace(placeId, context);
+              placesService.getCoordinatesFromPlace(placeId!, context);
             },
             fieldViewBuilder: (
               BuildContext context,

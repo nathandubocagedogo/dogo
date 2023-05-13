@@ -12,7 +12,7 @@ class ResultsHeadingWidget extends StatelessWidget {
       child: SizedBox(
         width: screenWidth * 0.9,
         child: const Text(
-          "Conseillés par Google",
+          "Résultats trouvés",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,

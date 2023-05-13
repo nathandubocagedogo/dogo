@@ -11,6 +11,8 @@ import 'package:dogo_final_app/views/map/map.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_chat.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/change_location.dart';
+import 'package:dogo_final_app/views/pages/home/subpages/place_details.dart';
+import 'package:dogo_final_app/models/firebase/place.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -65,6 +67,13 @@ Route<dynamic> generateRoute(
         final arguments = settings.arguments as Map<String, dynamic>;
         final groupId = arguments['groupId'] as String;
         return GroupChatPageView(groupId: groupId);
+      };
+      break;
+    case '/place-details':
+      builder = (BuildContext context) {
+        final arguments = settings.arguments as Map<String, dynamic>;
+        final place = arguments['place'] as Place;
+        return PlaceDetailsPageView(place: place);
       };
       break;
     default:

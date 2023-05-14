@@ -76,7 +76,9 @@ class PlacesService {
 
     for (var doc in latitudeFilteredSnapshot.docs) {
       if (filteredIds.contains(doc.id)) {
-        if (doc['name'] != null &&
+        if (doc['id'] != null &&
+            doc['name'] != null &&
+            doc['description'] != null &&
             doc['pictures'] != null &&
             doc['city'] != null &&
             doc['address'] != null &&
@@ -84,8 +86,10 @@ class PlacesService {
             doc['latitude'] != null &&
             doc['longitude'] != null) {
           places.add({
+            'id': doc['id'],
             'name': doc['name'],
             'latitude': doc['latitude'],
+            'description': doc['description'],
             'longitude': doc['longitude'],
             'city': doc['city'],
             'address': doc['address'],

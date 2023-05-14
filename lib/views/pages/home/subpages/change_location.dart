@@ -54,7 +54,7 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                   left: screenWidth * 0.05,
                   right: screenWidth * 0.05,
                   top: 10,
-                  bottom: 10,
+                  bottom: 20,
                 ),
                 child: TextField(
                   controller: textEditingController,

@@ -45,29 +45,29 @@ class NearbyPlacesWidget extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () {
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => PlaceDetailsPageView(
-                    place: place,
-                  ),
-                ),
+                '/place-details',
+                arguments: {'place': place, 'heroTag': place.id},
               );
             },
             child: Stack(
               children: [
-                Container(
-                  width: 350,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        place.pictures.isNotEmpty
-                            ? place.pictures[0]
-                            : "https://cdn.pixabay.com/photo/2016/08/11/23/48/mountains-1587287_1280.jpg",
+                Hero(
+                  tag: place.id,
+                  child: Container(
+                    width: 350,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          place.pictures.isNotEmpty
+                              ? place.pictures[0]
+                              : "https://cdn.pixabay.com/photo/2016/08/11/23/48/mountains-1587287_1280.jpg",
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

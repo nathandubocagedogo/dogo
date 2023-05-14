@@ -73,7 +73,8 @@ Route<dynamic> generateRoute(
       builder = (BuildContext context) {
         final arguments = settings.arguments as Map<String, dynamic>;
         final place = arguments['place'] as Place;
-        return PlaceDetailsPageView(place: place);
+        final heroTag = arguments['heroTag'] as dynamic;
+        return PlaceDetailsPageView(place: place, heroTag: heroTag);
       };
       break;
     default:

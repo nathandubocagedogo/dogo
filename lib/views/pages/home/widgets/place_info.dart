@@ -1,8 +1,14 @@
-import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
+// Flutter
 import 'package:flutter/material.dart';
+
+// Components
+import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
+
+// Models
 import 'package:dogo_final_app/models/firebase/place.dart';
+
+// Utilities
 import 'package:readmore/readmore.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class PlaceInfo extends StatelessWidget {

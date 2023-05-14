@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/models/firebase/group.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupsGrid extends StatelessWidget {
-  final Stream<QuerySnapshot> groupsStream;
+  final Stream<List<Group>>? groupsStream;
   final String userId;
 
   const GroupsGrid({
@@ -17,12 +16,14 @@ class GroupsGrid extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isAndroid = Theme.of(context).platform == TargetPlatform.android;
 
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<List<Group>>(
       stream: groupsStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<Group>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
+
+        List<Group> groups = snapshot.data!;
 
         return Align(
           alignment: Alignment.topCenter,
@@ -41,14 +42,9 @@ class GroupsGrid extends StatelessWidget {
                     ? kBottomNavigationBarHeight + 40
                     : kBottomNavigationBarHeight + 50,
               ),
-              itemCount: snapshot.data!.docs.length,
+              itemCount: groups.length,
               itemBuilder: (context, index) {
-                DocumentSnapshot document = snapshot.data!.docs[index];
-                Group group = Group.fromMap({
-                  ...document.data() as Map<String, dynamic>,
-                  'id': document.id
-                });
-                bool isMember = group.members.contains(userId);
+                Group group = groups[index];
 
                 return InkWell(
                   onTap: () => Navigator.pushNamed(
@@ -65,11 +61,6 @@ class GroupsGrid extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(group.name),
-                          if (!isMember)
-                            ElevatedButton(
-                              child: const Text("Rejoindre"),
-                              onPressed: () {},
-                            )
                         ],
                       ),
                     ),

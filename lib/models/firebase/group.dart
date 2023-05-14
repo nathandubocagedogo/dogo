@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Group {
   final String id;
   final String name;
@@ -13,6 +15,9 @@ class Group {
       : id = map['id'] as String? ?? '',
         name = map['name'] as String? ?? '',
         members = List<String>.from(map['members'] as List<dynamic>);
+
+  Group.fromDocument(DocumentSnapshot doc)
+      : this.fromMap(doc.data() as Map<String, dynamic>);
 
   Map<String, dynamic> toMap() {
     return {

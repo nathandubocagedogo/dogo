@@ -1,6 +1,5 @@
 // Flutter
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dogo_final_app/views/pages/home/subpages/place_details.dart';
 import 'package:flutter/material.dart';
 
 // Models

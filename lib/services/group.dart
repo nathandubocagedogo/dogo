@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dogo_final_app/models/firebase/group.dart';
 
 class GroupService {
   final CollectionReference groupsReference =
@@ -6,8 +7,29 @@ class GroupService {
   final CollectionReference messagesReference =
       FirebaseFirestore.instance.collection('messages');
 
-  Stream<QuerySnapshot> getGroupsStream() {
-    return groupsReference.snapshots();
+  Stream<List<Group>> getGroupsStream() {
+    return groupsReference.snapshots().map((snapshot) => snapshot.docs
+        .map((doc) => Group.fromMap(
+            {...doc.data() as Map<String, dynamic>, 'id': doc.id}))
+        .toList());
+  }
+
+  Stream<List<Group>> getUserGroupsStream(String userId) {
+    return groupsReference
+        .where('members', arrayContains: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Group.fromMap(
+                {...doc.data() as Map<String, dynamic>, 'id': doc.id}))
+            .toList());
+  }
+
+  Stream<List<Group>> getNonUserGroupsStream(String userId) {
+    return groupsReference.snapshots().map((snapshot) => snapshot.docs
+        .map((doc) => Group.fromMap(
+            {...doc.data() as Map<String, dynamic>, 'id': doc.id}))
+        .where((group) => !group.members.contains(userId))
+        .toList());
   }
 
   Stream<DocumentSnapshot> getGroupDetails(String groupId) {
@@ -25,10 +47,6 @@ class GroupService {
     await groupsReference.doc(groupId).update({
       'members': FieldValue.arrayUnion([userId]),
     });
-  }
-
-  Stream<QuerySnapshot> getUserGroupsStream(String userId) {
-    return groupsReference.where('members', arrayContains: userId).snapshots();
   }
 
   Stream<QuerySnapshot> getGroupMessages(String groupId) {

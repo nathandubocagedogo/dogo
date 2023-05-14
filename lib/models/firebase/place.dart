@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Place {
   final dynamic id;
   final String name;
@@ -31,6 +33,20 @@ class Place {
       description: map['description'] ?? "",
       type: map['type'] ?? "",
       pictures: map['pictures'] ?? [],
+    );
+  }
+
+  factory Place.fromDocument(DocumentSnapshot doc) {
+    return Place(
+      id: doc.id,
+      name: doc.get('name') ?? "",
+      city: doc.get('city') ?? "",
+      address: doc.get('address') ?? "",
+      latitude: doc.get('latitude') ?? 0.0,
+      longitude: doc.get('longitude') ?? 0.0,
+      description: doc.get('description') ?? "",
+      type: doc.get('type') ?? "",
+      pictures: doc.get('pictures') ?? [],
     );
   }
 

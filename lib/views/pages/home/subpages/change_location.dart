@@ -54,6 +54,7 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                   left: screenWidth * 0.05,
                   right: screenWidth * 0.05,
                   top: 10,
+                  bottom: 10,
                 ),
                 child: TextField(
                   controller: textEditingController,
@@ -105,9 +106,14 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                 alignment: Alignment.topLeft,
                 child: Material(
                   elevation: 4.0,
-                  child: ListView(
+                  child: ListView.separated(
                     padding: const EdgeInsets.all(8.0),
-                    children: options.map<Widget>((String option) {
+                    itemCount: options.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider();
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      String option = options.elementAt(index);
                       return GestureDetector(
                         onTap: () {
                           onSelected(option);
@@ -126,7 +132,7 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                           ),
                         ),
                       );
-                    }).toList(),
+                    },
                   ),
                 ),
               );

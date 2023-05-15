@@ -10,8 +10,8 @@ class FiltersWidget extends StatelessWidget {
     'Parcs',
     'Balades',
     'Shop',
-    'Vétérinaire',
-    'Toiletteur',
+    'Vétérinaires',
+    'Toiletteurs',
   ];
 
   const FiltersWidget({super.key});

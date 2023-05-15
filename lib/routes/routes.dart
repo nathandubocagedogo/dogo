@@ -1,5 +1,7 @@
+import 'package:dogo_final_app/views/create-places/create_walk_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/routes/animations.dart';
+import 'package:dogo_final_app/models/firebase/place.dart';
 import 'package:dogo_final_app/views/welcome/welcome.dart';
 import 'package:dogo_final_app/views/login/login_home.dart';
 import 'package:dogo_final_app/views/login/login.dart';
@@ -12,7 +14,8 @@ import 'package:dogo_final_app/views/pages/groups/subpages/group_chat.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/change_location.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/place_details.dart';
-import 'package:dogo_final_app/models/firebase/place.dart';
+import 'package:dogo_final_app/views/create-places/create_location.dart';
+import 'package:dogo_final_app/views/create-places/create_walk.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -54,6 +57,13 @@ Route<dynamic> generateRoute(
       break;
     case '/change-location':
       builder = (BuildContext context) => const ChangeLocationView();
+      break;
+    case '/create-walk':
+      // builder = (BuildContext context) => const CreateWalkView();
+      builder = (BuildContext context) => const CreateWalkTracker();
+      break;
+    case '/create-location':
+      builder = (BuildContext context) => const CreateLocationView();
       break;
     case '/group-details':
       builder = (BuildContext context) {

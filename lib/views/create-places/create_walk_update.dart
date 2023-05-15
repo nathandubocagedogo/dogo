@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class CreateWalkTracker extends StatefulWidget {
-  const CreateWalkTracker({Key? key}) : super(key: key);
+class CreateWalkUpdate extends StatefulWidget {
+  const CreateWalkUpdate({Key? key}) : super(key: key);
 
   @override
-  State<CreateWalkTracker> createState() => _CreateWalkTrackerState();
+  State<CreateWalkUpdate> createState() => _CreateWalkUpdateState();
 }
 
-class _CreateWalkTrackerState extends State<CreateWalkTracker> {
+class _CreateWalkUpdateState extends State<CreateWalkUpdate> {
   GoogleMapController? mapController;
-  Set<Polyline> _polylines = Set<Polyline>();
-  List<LatLng> _routePoints = [];
+
+  Set<Polyline> polylines = {};
+  List<LatLng> routePoints = [];
 
   @override
   void initState() {
     super.initState();
-    _initLocation();
+    initLocation();
   }
 
-  Future<void> _initLocation() async {
+  Future<void> initLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -39,30 +40,21 @@ class _CreateWalkTrackerState extends State<CreateWalkTracker> {
     }
 
     Geolocator.getPositionStream().listen((Position position) {
-      _addPointToRoute(LatLng(position.latitude, position.longitude));
+      addPointToRoute(LatLng(position.latitude, position.longitude));
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GoogleMap(
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
-      polylines: _polylines,
-    );
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
+  void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  void _addPointToRoute(LatLng position) {
-    if (_routePoints.isEmpty) {
-      _routePoints.add(position);
+  void addPointToRoute(LatLng position) {
+    if (routePoints.isEmpty) {
+      routePoints.add(position);
     } else {
       double distance = Geolocator.distanceBetween(
-        _routePoints.last.latitude,
-        _routePoints.last.longitude,
+        routePoints.last.latitude,
+        routePoints.last.longitude,
         position.latitude,
         position.longitude,
       );
@@ -70,21 +62,30 @@ class _CreateWalkTrackerState extends State<CreateWalkTracker> {
       double minDistance = 5;
 
       if (distance >= minDistance) {
-        _routePoints.add(position);
+        routePoints.add(position);
       }
     }
 
-    _updateRoute();
+    updateRoute();
   }
 
-  void _updateRoute() {
+  void updateRoute() {
     Polyline polyline = Polyline(
-      polylineId: PolylineId('route1'),
+      polylineId: const PolylineId('Route principale'),
       visible: true,
-      points: _routePoints,
+      points: routePoints,
       color: Colors.blue,
     );
 
-    _polylines.add(polyline);
+    polylines.add(polyline);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GoogleMap(
+      onMapCreated: onMapCreated,
+      initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
+      polylines: polylines,
+    );
   }
 }

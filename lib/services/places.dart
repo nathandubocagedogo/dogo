@@ -37,17 +37,21 @@ class PlacesService {
     QuerySnapshot<Map<String, dynamic>> latitudeFilteredSnapshot =
         await firestore
             .collection('places')
-            .where('latitude',
-                isGreaterThanOrEqualTo: position.latitude - latitudeDelta,
-                isLessThanOrEqualTo: position.latitude + latitudeDelta)
+            .where(
+              'latitude',
+              isGreaterThanOrEqualTo: position.latitude - latitudeDelta,
+              isLessThanOrEqualTo: position.latitude + latitudeDelta,
+            )
             .get();
 
     QuerySnapshot<Map<String, dynamic>> longitudeFilteredSnapshot =
         await firestore
             .collection('places')
-            .where('longitude',
-                isGreaterThanOrEqualTo: position.longitude - longitudeDelta,
-                isLessThanOrEqualTo: position.longitude + longitudeDelta)
+            .where(
+              'longitude',
+              isGreaterThanOrEqualTo: position.longitude - longitudeDelta,
+              isLessThanOrEqualTo: position.longitude + longitudeDelta,
+            )
             .get();
 
     Set<String> latitudeFilteredIds =
@@ -76,25 +80,27 @@ class PlacesService {
 
     for (var doc in latitudeFilteredSnapshot.docs) {
       if (filteredIds.contains(doc.id)) {
-        if (doc['id'] != null &&
-            doc['name'] != null &&
-            doc['description'] != null &&
-            doc['pictures'] != null &&
-            doc['city'] != null &&
-            doc['address'] != null &&
-            doc['type'] != null &&
-            doc['latitude'] != null &&
-            doc['longitude'] != null) {
+        if (doc.get('id') != null &&
+            doc.get('name') != null &&
+            doc.get('description') != null &&
+            doc.get('pictures') != null &&
+            doc.get('city') != null &&
+            doc.get('address') != null &&
+            doc.get('type') != null &&
+            doc.get('latitude') != null &&
+            doc.get('longitude') != null &&
+            doc.get('routes') != null) {
           places.add({
-            'id': doc['id'],
-            'name': doc['name'],
-            'latitude': doc['latitude'],
-            'description': doc['description'],
-            'longitude': doc['longitude'],
-            'city': doc['city'],
-            'address': doc['address'],
-            'type': doc['type'],
-            'pictures': doc['pictures'],
+            'id': doc.get('id'),
+            'name': doc.get('name'),
+            'latitude': doc.get('latitude'),
+            'description': doc.get('description'),
+            'longitude': doc.get('longitude'),
+            'city': doc.get('city'),
+            'address': doc.get('address'),
+            'type': doc.get('type'),
+            'pictures': doc.get('pictures'),
+            'routes': doc.get('routes')
           });
         }
       }

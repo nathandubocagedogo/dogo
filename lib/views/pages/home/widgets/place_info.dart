@@ -228,7 +228,15 @@ class PlaceInfo extends StatelessWidget {
               backgroundColor: Colors.orange,
               textColor: Colors.white,
               content: 'Faire la balade',
-              callback: () {},
+              callback: () {
+                Navigator.pushNamed(
+                  context,
+                  '/make-activity',
+                  arguments: {
+                    'place': place,
+                  },
+                );
+              },
             ),
           ],
         ),

@@ -51,6 +51,7 @@ class RegisterService {
                     "name": nameValue,
                     "email": emailValue,
                     "picture": "",
+                    "bookmarks": []
                   },
                 )
               }

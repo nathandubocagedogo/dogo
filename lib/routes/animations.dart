@@ -1,3 +1,4 @@
+// Flutter
 import 'package:flutter/material.dart';
 
 enum AnimationType { fadeIn, slideRight, slideLeft, slideBottom, slideTop }

@@ -1,5 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Flutter
 import 'package:flutter/material.dart';
+
+// Firebase
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Utilities
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CreateWalkView extends StatefulWidget {
@@ -11,38 +16,38 @@ class CreateWalkView extends StatefulWidget {
 
 class _CreateWalkViewState extends State<CreateWalkView> {
   GoogleMapController? mapController;
-  Set<Polyline> _polylines = Set<Polyline>();
-  List<LatLng> _routePoints = [];
 
-  void _onMapCreated(GoogleMapController controller) {
+  Set<Polyline> polylines = {};
+  List<LatLng> routePoints = [];
+
+  void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  void _addPointToRoute(LatLng position) {
+  void addPointToRoute(LatLng position) {
     setState(() {
-      _routePoints.add(position);
-      _updateRoute();
+      routePoints.add(position);
+      updateRoute();
     });
   }
 
-  void _updateRoute() {
+  void updateRoute() {
     Polyline polyline = Polyline(
-      polylineId: PolylineId('route1'),
+      polylineId: const PolylineId('Route principale'),
       visible: true,
-      points: _routePoints,
+      points: routePoints,
       color: Colors.blue,
     );
 
-    _polylines.add(polyline);
+    polylines.add(polyline);
   }
 
-  void _saveRoute() {
-    // Convert _routePoints to a List of GeoPoints
-    List<GeoPoint> routePoints = _routePoints
+  void saveRoute() {
+    List<GeoPoint> routePoints = this
+        .routePoints
         .map((latLng) => GeoPoint(latLng.latitude, latLng.longitude))
         .toList();
 
-    // Save routePoints in Firestore
     FirebaseFirestore.instance.collection('routes').add({
       'points': routePoints,
     });
@@ -51,19 +56,27 @@ class _CreateWalkViewState extends State<CreateWalkView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange,
       appBar: AppBar(
         title: const Text("Créer une balade"),
         leading: const BackButton(),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.save,
+              color: Colors.red,
+            ),
+            onPressed: saveRoute,
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
             child: GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
-              onTap: _addPointToRoute,
-              polylines: _polylines,
+              onMapCreated: onMapCreated,
+              initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
+              onTap: addPointToRoute,
+              polylines: polylines,
             ),
           )
         ],

@@ -1,3 +1,4 @@
+// Firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Place {
@@ -10,17 +11,20 @@ class Place {
   final List<dynamic> pictures;
   final String type;
   final String description;
+  final List<GeoPoint> routes;
 
-  Place(
-      {required this.id,
-      required this.name,
-      required this.city,
-      required this.address,
-      required this.latitude,
-      required this.longitude,
-      required this.description,
-      required this.type,
-      required this.pictures});
+  Place({
+    required this.id,
+    required this.name,
+    required this.city,
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+    required this.description,
+    required this.type,
+    required this.pictures,
+    required this.routes,
+  });
 
   factory Place.fromMap(Map<String, dynamic> map) {
     return Place(
@@ -33,6 +37,12 @@ class Place {
       description: map['description'] ?? "",
       type: map['type'] ?? "",
       pictures: map['pictures'] ?? [],
+      routes: (map['routes'] as List<dynamic>)
+          .map((route) => GeoPoint(
+                route.latitude as double? ?? 0.0,
+                route.longitude as double? ?? 0.0,
+              ))
+          .toList(),
     );
   }
 
@@ -47,20 +57,12 @@ class Place {
       description: doc.get('description') ?? "",
       type: doc.get('type') ?? "",
       pictures: doc.get('pictures') ?? [],
+      routes: (doc.get('routes') as List<dynamic>)
+          .map((route) => GeoPoint(
+                route.latitude as double? ?? 0.0,
+                route.longitude as double? ?? 0.0,
+              ))
+          .toList(),
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'city': city,
-      'address': address,
-      'latitude': latitude,
-      'description': description,
-      'longitude': longitude,
-      'type': type,
-      'pictures': pictures,
-    };
   }
 }

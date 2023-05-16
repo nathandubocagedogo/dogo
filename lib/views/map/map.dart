@@ -34,20 +34,36 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   Set<Marker> markers = {};
   Set<String> markerIds = {};
 
+  late VoidCallback listener;
+  late DataProvider dataProvider;
+
+  bool placesLoaded = false;
+
   @override
-  initState() {
+  void initState() {
     super.initState();
+
     fetchAllPlaces();
-    Provider.of<DataProvider>(context, listen: false).addListener(() {
-      String filter =
-          Provider.of<DataProvider>(context, listen: false).dataModel.filter!;
+    dataProvider = Provider.of<DataProvider>(context, listen: false);
+
+    listener = () {
+      String filter = dataProvider.dataModel.filter!;
       updateMarkers(filter);
-    });
+    };
+    dataProvider.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    dataProvider.removeListener(listener);
+    super.dispose();
   }
 
   Future<void> fetchAllPlaces() async {
     QuerySnapshot placesSnapshot = await placesCollection.get();
     allPlaces = placesSnapshot.docs;
+    placesLoaded = true;
+    setState(() {});
   }
 
   Future<void> onMapCreated(GoogleMapController mapController) async {
@@ -80,23 +96,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       LatLng placeLatLng = LatLng(placeLatitude, placeLongitude);
 
       if (visibleRegion.contains(placeLatLng)) {
-        String iconPath = 'assets/icons/default.png';
-
-        if (doc['type'] == 'Parcs') {
-          iconPath = 'assets/map/default.png';
-        } else if (doc['type'] == 'Balades') {
-          iconPath = 'assets/map/default.png';
-        }
-
-        BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
-          const ImageConfiguration(devicePixelRatio: 2.0),
-          iconPath,
-        );
-
         Marker marker = Marker(
           markerId: MarkerId(doc.id),
           position: placeLatLng,
-          icon: icon,
           infoWindow: InfoWindow(title: doc['name']),
           onTap: () {},
         );
@@ -149,6 +151,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         .removeWhere((marker) => !newMarkerIds.contains(marker.markerId.value));
 
     markerIds = newMarkerIds;
+
+    setState(() {});
   }
 
   Future<void> updateCurrentLocation() async {
@@ -201,18 +205,55 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             initialCameraPosition: initialPosition,
             onMapCreated: onMapCreated,
             onCameraMove: onCameraMove,
-            markers: markers,
+            markers: placesLoaded ? markers : {},
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
+          ),
+          SafeArea(
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 16,
+                  child: Material(
+                    shape: const CircleBorder(),
+                    color: Colors.orangeAccent,
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () async {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Positioned(
+                  right: 0,
+                  child: SizedBox(
+                    height: 50,
+                    child: FiltersWidget(type: 'map'),
+                  ),
+                )
+              ],
+            ),
           ),
           Positioned(
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
+              backgroundColor: Colors.orange,
               onPressed: () async {
                 await updateCurrentLocation();
               },
-              child: const Icon(Icons.my_location),
+              child: const Icon(
+                Icons.my_location,
+                color: Colors.white,
+              ),
             ),
           ),
           Positioned(
@@ -220,41 +261,164 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             right: 16,
             child: Material(
               shape: const CircleBorder(),
-              color: Colors.blue,
+              color: Colors.orange,
               child: InkWell(
                 customBorder: const CircleBorder(),
                 onTap: () async {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Choisissez une option'),
-                        content: SingleChildScrollView(
-                          child: ListBody(
+                      return Dialog(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              GestureDetector(
-                                child: const Text("Créer un emplacement"),
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/create-location',
-                                  );
-                                },
+                              const Text(
+                                'Que souhaitez-vous créer ? 🤔',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
-                              const Padding(padding: EdgeInsets.all(8.0)),
-                              GestureDetector(
-                                child: const Text("Créer une balade"),
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/create-walk',
-                                  );
-                                },
+                              const SizedBox(height: 10),
+                              SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 14,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: const Text(
+                                          "Un parc 🌳",
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/create-location',
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 6),
+                                    GestureDetector(
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 14,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: const Text(
+                                          "Un trajet avec la main 🖐️",
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/create-walk',
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 6),
+                                    GestureDetector(
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 14,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: const Text(
+                                          "Un trajet avec la position 📍",
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/create-walk-update',
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
                       );
+
+                      // return const Dialog(
+                      // title: const Text(
+                      //   'Que souhaitez-vous créer ? 🤔',
+                      //   style: TextStyle(
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 18,
+                      //   ),
+                      // ),
+                      // content: SingleChildScrollView(
+                      //   child: ListBody(
+                      //     children: <Widget>[
+                      //       GestureDetector(
+                      //         child: Container(
+                      //           padding: const EdgeInsets.symmetric(
+                      //             horizontal: 10,
+                      //             vertical: 14,
+                      //           ),
+                      //           decoration: BoxDecoration(
+                      //             color: Colors.grey[200],
+                      //             borderRadius: BorderRadius.circular(8.0),
+                      //           ),
+                      //           child: const Text("Un parc"),
+                      //         ),
+                      //         onTap: () {
+                      //           Navigator.pushNamed(
+                      //             context,
+                      //             '/create-location',
+                      //           );
+                      //         },
+                      //       ),
+                      //       const Padding(padding: EdgeInsets.all(8.0)),
+                      //       GestureDetector(
+                      //         child: Container(
+                      //             padding: const EdgeInsets.symmetric(
+                      //               horizontal: 10,
+                      //               vertical: 14,
+                      //             ),
+                      //             decoration: BoxDecoration(
+                      //               color: Colors.grey[200],
+                      //               borderRadius: BorderRadius.circular(8.0),
+                      //             ),
+                      //             child: const Text("Un trajet")),
+                      //         onTap: () {
+                      //           Navigator.pushNamed(
+                      //             context,
+                      //             '/create-walk',
+                      //           );
+                      //         },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // );
                     },
                   );
                 },
@@ -262,15 +426,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   padding: EdgeInsets.all(16.0),
                   child: Icon(Icons.add, color: Colors.white),
                 ),
-              ),
-            ),
-          ),
-          const SafeArea(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                height: 50,
-                child: FiltersWidget(),
               ),
             ),
           ),

@@ -1,4 +1,5 @@
 // Flutter
+import 'package:dogo_final_app/provider/provider.dart';
 import 'package:flutter/material.dart';
 
 // Utilities
@@ -6,8 +7,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 // Models
 import 'package:dogo_final_app/models/firebase/place.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
-class NearbyPlacesWidget extends StatelessWidget {
+class NearbyPlacesWidget extends StatefulWidget {
   final double screenWidth;
   final List<Place> places;
 
@@ -18,8 +21,23 @@ class NearbyPlacesWidget extends StatelessWidget {
   });
 
   @override
+  State<NearbyPlacesWidget> createState() => _NearbyPlacesWidgetState();
+}
+
+class _NearbyPlacesWidgetState extends State<NearbyPlacesWidget> {
+  late dynamic currentPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPosition = Provider.of<DataProvider>(context, listen: false)
+        .dataModel
+        .currentPosition;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (places.isEmpty) {
+    if (widget.places.isEmpty) {
       return const Center(
         child: Text("Aucun lieu trouvé à proximité"),
       );
@@ -27,21 +45,27 @@ class NearbyPlacesWidget extends StatelessWidget {
 
     return CarouselSlider.builder(
       options: CarouselOptions(
-        viewportFraction: 0.99,
+        viewportFraction: 1,
         height: 300,
         enableInfiniteScroll: false,
       ),
-      itemCount: places.length,
+      itemCount: widget.places.length,
       itemBuilder: (BuildContext context, int index, int realIndex) {
-        Place place = places[index];
+        Place place = widget.places[index];
+        double distanceInKilometers = Geolocator.distanceBetween(
+                currentPosition.latitude,
+                currentPosition.longitude,
+                place.latitude,
+                place.longitude) /
+            1000;
 
         return Padding(
           padding: EdgeInsets.fromLTRB(
-            index == 0 ? screenWidth * 0.05 : 0,
+            index == 0 ? widget.screenWidth * 0.05 : 0,
             0,
-            index == places.length - 1
-                ? screenWidth * 0.04
-                : screenWidth * 0.04,
+            index == widget.places.length - 1
+                ? widget.screenWidth * 0.04
+                : widget.screenWidth * 0.04,
             0,
           ),
           child: InkWell(
@@ -78,8 +102,15 @@ class NearbyPlacesWidget extends StatelessWidget {
                   right: 10,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withOpacity(1),
                       borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -99,14 +130,26 @@ class NearbyPlacesWidget extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            place.city,
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontStyle: FontStyle.italic,
-                              fontSize: 14,
-                            ),
-                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${place.city} - ${place.type}",
+                                style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                "à ${distanceInKilometers.toStringAsFixed(2)} km",
+                                style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),

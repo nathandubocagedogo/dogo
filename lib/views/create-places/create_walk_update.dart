@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class CreateWalkUpdate extends StatefulWidget {
-  const CreateWalkUpdate({Key? key}) : super(key: key);
+class CreateWalkUpdateView extends StatefulWidget {
+  const CreateWalkUpdateView({Key? key}) : super(key: key);
 
   @override
-  State<CreateWalkUpdate> createState() => _CreateWalkUpdateState();
+  State<CreateWalkUpdateView> createState() => _CreateWalkUpdateViewState();
 }
 
-class _CreateWalkUpdateState extends State<CreateWalkUpdate> {
+class _CreateWalkUpdateViewState extends State<CreateWalkUpdateView> {
   GoogleMapController? mapController;
 
   Set<Polyline> polylines = {};

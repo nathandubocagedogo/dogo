@@ -63,7 +63,12 @@ class DataProvider extends ChangeNotifier {
   }
 
   void updateFilter(String filter) {
-    dataModel.filter = filter;
+    if (dataModel.filter == filter) {
+      dataModel.filter = "";
+    } else {
+      dataModel.filter = filter;
+    }
+
     notifyListeners();
   }
 

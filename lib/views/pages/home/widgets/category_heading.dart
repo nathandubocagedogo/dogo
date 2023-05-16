@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:dogo_final_app/routes/animations.dart';
 
 class CategoryHeadingWidget extends StatelessWidget {
   const CategoryHeadingWidget({super.key});
@@ -29,7 +30,13 @@ class CategoryHeadingWidget extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, "/map");
+                    Navigator.pushNamed(
+                      context,
+                      "/map",
+                      arguments: {
+                        'animationType': AnimationType.slideBottom,
+                      },
+                    );
                   },
                   child: const Text(
                     "Voir la carte",

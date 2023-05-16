@@ -1,6 +1,11 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// Services
 import 'package:dogo_final_app/services/group.dart';
 
 class GroupDetailsPageView extends StatefulWidget {

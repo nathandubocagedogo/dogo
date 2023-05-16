@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/routes/animations.dart';
 
-// Components
+// Models
 import 'package:dogo_final_app/models/firebase/place.dart';
+
+// Components
 import 'package:dogo_final_app/views/welcome/welcome.dart';
 import 'package:dogo_final_app/views/login/login_home.dart';
 import 'package:dogo_final_app/views/login/login.dart';

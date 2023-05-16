@@ -1,21 +1,22 @@
 // Flutter
-import 'package:dogo_final_app/services/places.dart';
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/theme/theme.dart';
 import 'package:dogo_final_app/routes/routes.dart';
 import 'dart:async';
 
+// Services
+import 'package:dogo_final_app/services/places.dart';
+
 // Firebase
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dogo_final_app/firebase/firebase_options.dart';
 
 // Utilities
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:provider/provider.dart';
 
 // Provider
-import 'package:provider/provider.dart';
 import 'package:dogo_final_app/provider/provider.dart';
 
 Future main() async {
@@ -25,22 +26,6 @@ Future main() async {
   );
 
   await dotenv.load(fileName: ".env");
-
-  Database database = await openDatabase(
-    'dogo.db',
-    version: 1,
-    onCreate: (database, version) async => {
-      await database.execute(
-        'CREATE TABLE preferences (id INTEGER PRIMARY KEY, type TEXT, value TEXT)',
-      ),
-      await database.insert('preferences', {'type': 'mode', 'value': 'light'}),
-      await database.execute(
-        'CREATE TABLE actions (id INTEGER PRIMARY KEY, isAlreadyComed INTEGER)',
-      ),
-      await database.insert('actions', {'isAlreadyComed': 0})
-    },
-  );
-  database.close();
 
   runApp(
     MultiProvider(

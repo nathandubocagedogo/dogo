@@ -2,16 +2,15 @@
 import 'package:flutter/material.dart';
 
 // Provider
-import 'package:provider/provider.dart';
 import 'package:dogo_final_app/provider/provider.dart';
+
+// Utilities
+import 'package:provider/provider.dart';
 
 class FiltersWidget extends StatelessWidget {
   static List<String> filters = [
     'Parcs',
     'Balades',
-    'Shop',
-    'Vétérinaires',
-    'Toiletteurs',
   ];
 
   const FiltersWidget({super.key});

@@ -1,12 +1,12 @@
+// Flutter
+import 'package:flutter/material.dart';
+import 'package:dogo_final_app/routes/animations.dart';
+
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
-// Routes
-import 'package:dogo_final_app/routes/animations.dart';
+// Utilities
 import 'package:firebase_auth/firebase_auth.dart';
-
-// Flutter
-import 'package:flutter/material.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key});

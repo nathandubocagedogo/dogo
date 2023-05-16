@@ -1,3 +1,8 @@
+// Flutter
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:dogo_final_app/theme/theme.dart';
+
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_icon_text.dart';
 import 'package:dogo_final_app/routes/animations.dart';
@@ -5,15 +10,8 @@ import 'package:dogo_final_app/routes/animations.dart';
 // Services
 import 'package:dogo_final_app/services/auth.dart';
 
-// Firebase
-import 'package:firebase_auth/firebase_auth.dart';
-
-// Flutter
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:dogo_final_app/theme/theme.dart';
-
 // Utilities
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginHomeView extends StatefulWidget {

@@ -1,5 +1,10 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Services
 import 'package:dogo_final_app/services/places.dart';
+
+// Utilities
 import 'package:provider/provider.dart';
 
 class ChangeLocationView extends StatefulWidget {

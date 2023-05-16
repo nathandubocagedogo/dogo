@@ -7,7 +7,7 @@ String convertFullNameInFirstName({required String name}) {
   }
 }
 
-String capitalize(String text) {
+String capitalize({required String text}) {
   if (text.isEmpty) {
     return text;
   }

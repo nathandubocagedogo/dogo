@@ -1,5 +1,10 @@
-import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
+// Flutter
 import 'package:flutter/material.dart';
+
+// Components
+import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
+
+// Utilities
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ResetPasswordService {

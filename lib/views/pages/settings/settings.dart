@@ -1,7 +1,12 @@
+// Flutter
 import 'package:flutter/material.dart';
-import 'package:dogo_final_app/provider/provider.dart';
+
+// Utilities
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// Provider
+import 'package:dogo_final_app/provider/provider.dart';
 
 class SettingsPageView extends StatefulWidget {
   const SettingsPageView({super.key});

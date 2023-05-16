@@ -1,6 +1,5 @@
 // Flutter
 import 'package:dogo_final_app/models/firebase/place.dart';
-import 'package:dogo_final_app/views/pages/home/widgets/results_heading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -16,15 +15,14 @@ import 'package:dogo_final_app/views/pages/home/widgets/heading_user.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/card_location.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/nearby_places.dart';
 import 'package:dogo_final_app/views/pages/home/widgets/category_heading.dart';
+import 'package:dogo_final_app/views/pages/home/widgets/results_heading.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
-
-// Firebase
-import 'package:firebase_auth/firebase_auth.dart';
 
 // Provider
 import 'package:dogo_final_app/provider/provider.dart';
 
 // Utilities
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';

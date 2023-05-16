@@ -1,11 +1,9 @@
 // Flutter
 import 'package:flutter/material.dart';
 
-// Firebase
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 // Utilities
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateWalkView extends StatefulWidget {
   const CreateWalkView({super.key});
@@ -36,7 +34,7 @@ class _CreateWalkViewState extends State<CreateWalkView> {
       polylineId: const PolylineId('Route principale'),
       visible: true,
       points: routePoints,
-      color: Colors.blue,
+      color: Colors.orange,
     );
 
     polylines.add(polyline);

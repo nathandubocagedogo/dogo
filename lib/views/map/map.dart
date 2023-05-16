@@ -1,9 +1,8 @@
 // Flutter
-import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
 import 'package:flutter/material.dart';
 
-// Firebase
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Components
+import 'package:dogo_final_app/views/pages/home/widgets/filters.dart';
 
 // Services
 import 'package:dogo_final_app/services/location.dart';
@@ -11,6 +10,7 @@ import 'package:dogo_final_app/services/location.dart';
 // Utilities
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // Provider
@@ -29,6 +29,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       FirebaseFirestore.instance.collection('places');
 
   GoogleMapController? controller;
+
   List<DocumentSnapshot> allPlaces = [];
   Set<Marker> markers = {};
   Set<String> markerIds = {};
@@ -275,41 +276,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class FiltersBar extends StatelessWidget {
-  const FiltersBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        FilterButton(filter: 'Parcs'),
-        FilterButton(filter: 'Balades'),
-        FilterButton(filter: 'Shop'),
-        FilterButton(filter: 'Vétérinaires'),
-        FilterButton(filter: 'Toiletteurs'),
-      ],
-    );
-  }
-}
-
-class FilterButton extends StatelessWidget {
-  final String filter;
-
-  const FilterButton({super.key, required this.filter});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Provider.of<DataProvider>(context, listen: false).dataModel.filter =
-            filter;
-      },
-      child: Text(filter),
     );
   }
 }

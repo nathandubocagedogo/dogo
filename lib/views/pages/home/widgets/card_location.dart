@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+// Utils
 import 'package:dogo_final_app/utils/manipulate_string.dart';
 
 class CardLocationWidget extends StatefulWidget {
@@ -157,9 +159,10 @@ class _CardLocationWidgetState extends State<CardLocationWidget> {
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text: capitalize(
-                                              currentWeather['weather'][0]
-                                                      ['description']
-                                                  .toString()),
+                                            text: currentWeather['weather'][0]
+                                                    ['description']
+                                                .toString(),
+                                          ),
                                           style: const TextStyle(
                                             color: Colors.black54,
                                             fontSize: 14,

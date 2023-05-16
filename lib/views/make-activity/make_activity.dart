@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 // Models
 import 'package:dogo_final_app/models/firebase/place.dart';
@@ -18,71 +19,105 @@ class MakeActivityView extends StatefulWidget {
 }
 
 class _MakeActivityViewState extends State<MakeActivityView> {
-  GoogleMapController? mapController;
-  Marker? userMarker;
-  Stream<Position>? positionStream;
+  late GoogleMapController mapController;
+  late Position currentPosition;
+  StreamSubscription<Position>? positionStreamSubscription;
 
+  Set<Marker> markers = {};
   Set<Polyline> polylines = {};
 
   @override
   void initState() {
     super.initState();
-    createPolylines();
-    startLocationUpdates();
+    setUpPolyline();
+    initCurrentPosition().then((_) => startLocationTracking());
   }
 
-  void createPolylines() {
-    List<LatLng> points = widget.place.routes
-        .map((geoPoint) => LatLng(geoPoint.latitude, geoPoint.longitude))
+  @override
+  void dispose() {
+    super.dispose();
+    stopLocationTracking();
+  }
+
+  void setUpPolyline() {
+    List<LatLng> polylineCoordinates = widget.place.routes
+        .map((geopoint) => LatLng(geopoint.latitude, geopoint.longitude))
         .toList();
 
     Polyline polyline = Polyline(
-      polylineId: const PolylineId('Route principale'),
-      visible: true,
-      points: points,
-      color: Colors.orange,
+      polylineId: const PolylineId("Route principale"),
+      color: Colors.red,
+      points: polylineCoordinates,
     );
 
-    setState(() {
-      polylines.add(polyline);
-    });
+    polylines.add(polyline);
   }
 
-  void startLocationUpdates() {
-    positionStream = Geolocator.getPositionStream();
-    positionStream?.listen((Position position) {
-      updateUserMarker(position);
-    });
-  }
-
-  void updateUserMarker(Position position) {
-    LatLng userPosition = LatLng(position.latitude, position.longitude);
+  Future<void> initCurrentPosition() async {
+    currentPosition = await Geolocator.getCurrentPosition();
 
     setState(() {
-      userMarker = Marker(
-        markerId: const MarkerId('Position de l\'utilisateur'),
-        position: userPosition,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      markers.add(
+        Marker(
+          markerId: const MarkerId("Ma position"),
+          position: LatLng(currentPosition.latitude, currentPosition.longitude),
+          infoWindow: const InfoWindow(title: "Ma position"),
+        ),
       );
     });
-
-    mapController?.animateCamera(
-      CameraUpdate.newLatLng(userPosition),
-    );
   }
 
-  void onMapCreated(GoogleMapController controller) {
+  void startLocationTracking() {
+    positionStreamSubscription =
+        Geolocator.getPositionStream().listen((Position position) {
+      double distanceInMeters = Geolocator.distanceBetween(
+          currentPosition.latitude,
+          currentPosition.longitude,
+          position.latitude,
+          position.longitude);
+
+      if (distanceInMeters > 4) {
+        setState(() {
+          currentPosition = position;
+
+          markers.removeWhere(
+              (marker) => marker.markerId.value == "currentLocation");
+
+          markers.add(
+            Marker(
+              markerId: const MarkerId("Ma position"),
+              position: LatLng(position.latitude, position.longitude),
+              infoWindow: const InfoWindow(title: "Ma position"),
+            ),
+          );
+        });
+      }
+    });
+  }
+
+  void stopLocationTracking() {
+    positionStreamSubscription?.cancel();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GoogleMap(
-        onMapCreated: onMapCreated,
-        initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
-        polylines: polylines,
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(
+          widget.place.routes[0].latitude,
+          widget.place.routes[0].longitude,
+        ),
+        zoom: 11,
       ),
+      markers: markers,
+      polylines: polylines,
+      myLocationButtonEnabled: true,
+      myLocationEnabled: true,
     );
   }
 }

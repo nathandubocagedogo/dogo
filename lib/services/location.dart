@@ -1,4 +1,7 @@
+// Services
 import 'package:flutter/services.dart';
+
+// Utilities
 import 'package:geocoding/geocoding.dart';
 
 class LocationService {

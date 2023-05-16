@@ -1,4 +1,7 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Models
 import 'package:dogo_final_app/models/firebase/group.dart';
 
 class GroupsGrid extends StatelessWidget {

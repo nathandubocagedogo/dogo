@@ -7,7 +7,7 @@ import 'package:dogo_final_app/services/group.dart';
 // Models
 import 'package:dogo_final_app/models/firebase/message.dart';
 
-// Firebase
+// Utilities
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

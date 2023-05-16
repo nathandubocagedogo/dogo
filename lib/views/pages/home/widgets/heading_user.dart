@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Utils
 import 'package:dogo_final_app/utils/manipulate_string.dart';
 
-// Firebase
+// Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

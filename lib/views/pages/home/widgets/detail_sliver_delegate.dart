@@ -1,5 +1,8 @@
-import 'package:dogo_final_app/models/firebase/place.dart';
+// Flutter
 import 'package:flutter/material.dart';
+
+// Models
+import 'package:dogo_final_app/models/firebase/place.dart';
 
 class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   final Place place;

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 // Utilities
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-
-// Firebase
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Provider
 import 'package:dogo_final_app/provider/provider.dart';
 
 // Components

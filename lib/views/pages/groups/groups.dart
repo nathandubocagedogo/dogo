@@ -7,7 +7,7 @@ import 'package:dogo_final_app/views/pages/groups/widgets/groups_grid.dart';
 // Services
 import 'package:dogo_final_app/services/group.dart';
 
-// Firebase
+// Utilities
 import 'package:firebase_auth/firebase_auth.dart';
 
 class GroupsPageView extends StatefulWidget {

@@ -1,4 +1,7 @@
+// Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Models
 import 'package:dogo_final_app/models/firebase/place.dart';
 
 class BookmarksService {

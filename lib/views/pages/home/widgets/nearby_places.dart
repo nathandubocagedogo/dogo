@@ -1,6 +1,8 @@
 // Flutter
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+
+// Utilities
+import 'package:carousel_slider/carousel_slider.dart';
 
 // Models
 import 'package:dogo_final_app/models/firebase/place.dart';

@@ -1,8 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
+// Flutter
 import 'package:flutter/material.dart';
+
+// Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// Components
 import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 
 class RegisterService {

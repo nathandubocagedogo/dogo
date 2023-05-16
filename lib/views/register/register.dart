@@ -1,4 +1,8 @@
-// Firebase
+// Flutter
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+
+// Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Services
@@ -7,10 +11,6 @@ import 'package:dogo_final_app/services/register.dart';
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
-
-// Flutter
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

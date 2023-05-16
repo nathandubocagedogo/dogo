@@ -1,4 +1,7 @@
+// Flutter
 import 'package:flutter/material.dart';
+
+// Utilities
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -74,7 +77,7 @@ class _CreateWalkUpdateState extends State<CreateWalkUpdate> {
       polylineId: const PolylineId('Route principale'),
       visible: true,
       points: routePoints,
-      color: Colors.blue,
+      color: Colors.orange,
     );
 
     polylines.add(polyline);

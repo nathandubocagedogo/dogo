@@ -1,7 +1,14 @@
-import 'package:dogo_final_app/models/firebase/place.dart';
-import 'package:dogo_final_app/services/bookmarks.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter
 import 'package:flutter/material.dart';
+
+// Models
+import 'package:dogo_final_app/models/firebase/place.dart';
+
+// Services
+import 'package:dogo_final_app/services/bookmarks.dart';
+
+// Utilities
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BookmarsPageView extends StatefulWidget {
   const BookmarsPageView({super.key});

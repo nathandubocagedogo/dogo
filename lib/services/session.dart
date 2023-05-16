@@ -1,7 +1,10 @@
+// Flutter
 import 'package:flutter/material.dart';
+import 'dart:async';
+
+// Utilities
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:async';
 
 class SessionService {
   Future<void> listenWhenUserIsLogged({

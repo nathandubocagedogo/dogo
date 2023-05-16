@@ -80,10 +80,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
-    - assets/files/map-flat.json
-    - assets/files/map-details.json
+    - assets/files/
     - assets/weather/
-    - assets/map/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

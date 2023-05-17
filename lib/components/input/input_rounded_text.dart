@@ -7,6 +7,7 @@ class InputRoundedText extends StatefulWidget {
   final bool obscureText;
   final String? helperText;
   final bool validator;
+  final bool? isTextarea;
 
   const InputRoundedText({
     super.key,
@@ -15,6 +16,7 @@ class InputRoundedText extends StatefulWidget {
     this.textInputAction = TextInputAction.none,
     this.obscureText = false,
     this.validator = false,
+    this.isTextarea = false,
   });
 
   @override
@@ -39,6 +41,8 @@ class _InputRoundedTextState extends State<InputRoundedText> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      minLines: widget.isTextarea! ? 10 : 1,
+      maxLines: widget.isTextarea! ? 20 : 1,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.validator
           ? (value) => value!.isEmpty ? 'Le champ est obligatoire.' : null

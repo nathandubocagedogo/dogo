@@ -1,8 +1,13 @@
 // Flutter
 import 'package:flutter/material.dart';
 
+// Utilities
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+
 // Components
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
+import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 class CreateLocationView extends StatefulWidget {
   const CreateLocationView({super.key});
@@ -21,6 +26,9 @@ class _CreateLocationViewState extends State<CreateLocationView> {
   final TextEditingController typeController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
 
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  final picker = ImagePicker();
+
   @override
   void dispose() {
     super.dispose();
@@ -30,6 +38,11 @@ class _CreateLocationViewState extends State<CreateLocationView> {
     difficultyController.dispose();
     typeController.dispose();
     timeController.dispose();
+  }
+
+  void submitForm() {
+    if (formKey.currentState!.validate()) {
+    } else {}
   }
 
   @override
@@ -58,43 +71,47 @@ class _CreateLocationViewState extends State<CreateLocationView> {
           child: SizedBox(
             width: screenWidth * 0.85,
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // Nom du parc
-                // Description du parc
-                // Alerte
-                // Une image
-                // Difficulté
-                // Typlogie
-                // Durée moyenne
-                children: [
-                  const SizedBox(height: 20),
-                  const Text("Nom du parc"),
-                  const SizedBox(height: 6),
-                  InputRoundedText(
-                    controller: nameController,
-                    textInputAction: TextInputAction.next,
-                    validator: true,
-                  ),
-                  const SizedBox(height: 12),
-                  const Text("Description du parc"),
-                  const SizedBox(height: 6),
-                  InputRoundedText(
-                    controller: descriptionController,
-                    textInputAction: TextInputAction.next,
-                    validator: true,
-                    isTextarea: true,
-                  ),
-                  const SizedBox(height: 12),
-                  const Text("Remarque sur le parc"),
-                  const SizedBox(height: 6),
-                  InputRoundedText(
-                    controller: warningController,
-                    textInputAction: TextInputAction.next,
-                    helperText: 'Exemple : Beaucoup de boue en hiver',
-                    validator: true,
-                  ),
-                ],
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // Une image
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text("Nom du parc"),
+                    const SizedBox(height: 6),
+                    InputRoundedText(
+                      controller: nameController,
+                      textInputAction: TextInputAction.next,
+                      validator: true,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text("Description du parc"),
+                    const SizedBox(height: 6),
+                    InputRoundedText(
+                      controller: descriptionController,
+                      textInputAction: TextInputAction.next,
+                      validator: true,
+                      isTextarea: true,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text("Remarque sur le parc"),
+                    const SizedBox(height: 6),
+                    InputRoundedText(
+                      controller: warningController,
+                      textInputAction: TextInputAction.next,
+                      helperText: 'Exemple : Beaucoup de boue en hiver',
+                      validator: true,
+                    ),
+                    const SizedBox(height: 20),
+                    ButtonRoundedText(
+                      backgroundColor: Colors.orange,
+                      textColor: Colors.white,
+                      content: "Valider et choisir un point",
+                      callback: submitForm,
+                    )
+                  ],
+                ),
               ),
             ),
           ),

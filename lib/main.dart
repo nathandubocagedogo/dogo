@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 
 // Provider
 import 'package:dogo_final_app/provider/provider.dart';
+import 'package:dogo_final_app/provider/form_provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,9 @@ Future main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => DataProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FormProvider(),
         ),
         Provider<PlacesService>(
           create: (_) => PlacesService(),

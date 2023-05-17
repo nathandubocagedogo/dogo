@@ -1,4 +1,5 @@
 // Flutter
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 // Services
@@ -7,7 +8,6 @@ import 'package:dogo_final_app/services/location.dart';
 
 // Models
 import 'package:dogo_final_app/models/provider/provider.dart';
-import 'package:flutter/material.dart';
 
 // Utilities
 import 'package:geocoding/geocoding.dart';

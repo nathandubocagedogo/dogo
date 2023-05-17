@@ -103,7 +103,21 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                       iconSize: 20,
                       gap: 18,
                       callback: () async {
-                        await authService.signInWithApple();
+                        await authService.signInWithApple().then(
+                              (UserCredential? userCredential) => {
+                                if (userCredential != null)
+                                  {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/home',
+                                      arguments: {
+                                        'animationType':
+                                            AnimationType.slideLeft,
+                                      },
+                                    ),
+                                  }
+                              },
+                            );
                       },
                     ),
                     const SizedBox(height: 20),

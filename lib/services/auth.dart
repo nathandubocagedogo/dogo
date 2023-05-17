@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 // Components
 import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
@@ -97,5 +98,48 @@ class AuthService {
     }
   }
 
-  Future<void> signInWithApple() async {}
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+      User? user = userCredential.user;
+
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(user?.uid)
+          .get()
+          .then((value) => {
+                if (!value.exists)
+                  {
+                    FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(user?.uid)
+                        .set(
+                      {
+                        "name": user?.displayName ?? "Utilisateur Apple",
+                        "email": user?.email,
+                        "picture": user?.photoURL,
+                      },
+                    )
+                  }
+              });
+
+      return userCredential;
+    } catch (exception) {
+      rethrow;
+    }
+  }
 }

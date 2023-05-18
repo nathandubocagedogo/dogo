@@ -1,9 +1,14 @@
 // Flutter
+import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+
+// Provider
+import 'package:dogo_final_app/provider/form_provider.dart';
 
 // Utilities
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 // Components
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
@@ -22,12 +27,10 @@ class _CreateLocationViewState extends State<CreateLocationView> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController warningController = TextEditingController();
-  final TextEditingController difficultyController = TextEditingController();
-  final TextEditingController typeController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
 
-  final FirebaseStorage storage = FirebaseStorage.instance;
   final picker = ImagePicker();
+
+  File? selectedImage;
 
   @override
   void dispose() {
@@ -35,14 +38,57 @@ class _CreateLocationViewState extends State<CreateLocationView> {
     nameController.dispose();
     descriptionController.dispose();
     warningController.dispose();
-    difficultyController.dispose();
-    typeController.dispose();
-    timeController.dispose();
   }
 
-  void submitForm() {
+  void submitForm() async {
     if (formKey.currentState!.validate()) {
-    } else {}
+      if (selectedImage != null) {
+        var formProvider = context.read<FormProvider>();
+        formProvider.updateModel(
+          name: nameController.text,
+          description: descriptionController.text,
+          warning: warningController.text,
+          image: selectedImage,
+        );
+
+        Navigator.of(context).pushNamed("/create-location-map");
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          snackbarCustom(
+            message: "Veuillez remplir tous les champs.",
+            backgroundColor: Colors.red[100],
+            textColor: Colors.red[900],
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<File?> pickImage() async {
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+
+    if (pickedImage != null) {
+      return File(pickedImage.path);
+    } else {
+      return null;
+    }
+  }
+
+  Future<File?> takePicture() async {
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+
+    if (pickedImage != null) {
+      return File(pickedImage.path);
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -59,12 +105,6 @@ class _CreateLocationViewState extends State<CreateLocationView> {
           backgroundColor: Colors.transparent,
           title: const Text("Ajouter un parc 🌳"),
           elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.check),
-            ),
-          ],
         ),
         body: Align(
           alignment: Alignment.topCenter,
@@ -103,13 +143,83 @@ class _CreateLocationViewState extends State<CreateLocationView> {
                       helperText: 'Exemple : Beaucoup de boue en hiver',
                       validator: true,
                     ),
+                    const SizedBox(height: 12),
+                    const Text("Image du parc"),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
+                        elevation: 0.2,
+                        backgroundColor: Colors.grey[200],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                      onPressed: () async {
+                        File? image = await pickImage();
+                        setState(() {
+                          selectedImage = image;
+                        });
+                      },
+                      child: const Text("Choisir dans la galerie 🏞️"),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
+                        elevation: 0.2,
+                        backgroundColor: Colors.grey[200],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                      onPressed: () async {
+                        File? image = await takePicture();
+                        setState(() {
+                          selectedImage = image;
+                        });
+                      },
+                      child: const Text("Prendre une photo 📸"),
+                    ),
+                    if (selectedImage != null)
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Aperçu de l'image"),
+                            const SizedBox(height: 8),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                selectedImage!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 300,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     const SizedBox(height: 20),
                     ButtonRoundedText(
+                      content: 'Valider et choisir un point',
+                      callback: submitForm,
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
-                      content: "Valider et choisir un point",
-                      callback: submitForm,
-                    )
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),

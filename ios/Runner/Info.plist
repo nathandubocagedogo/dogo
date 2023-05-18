@@ -64,5 +64,9 @@
 	<string>App needs access to your location to show your position on the map.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>App needs access to your location to show your position on the map.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Nous avons besoin d'accéder à votre bibliothèque de photos pour vous permettre de choisir une image pour votre formulaire.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Nous avons besoin d'accéder à votre caméra pour vous permettre de prendre une photo pour votre formulaire.</string>
 </dict>
 </plist>

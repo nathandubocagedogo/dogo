@@ -1,11 +1,23 @@
 // Flutter
+import 'dart:io';
 import 'package:flutter/material.dart';
 
-// Models
-import 'package:dogo_final_app/models/provider/form_provider.dart';
+class FormProvider with ChangeNotifier {
+  String? name;
+  String? description;
+  String? warning;
+  File? image;
 
-class FormProvider extends ChangeNotifier {
-  FormProviderModel dataModel = FormProviderModel(
-    city: null,
-  );
+  void updateModel({
+    String? name,
+    String? description,
+    String? warning,
+    File? image,
+  }) {
+    this.name = name;
+    this.description = description;
+    this.warning = warning;
+    this.image = image;
+    notifyListeners();
+  }
 }

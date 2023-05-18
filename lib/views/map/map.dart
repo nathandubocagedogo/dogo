@@ -365,60 +365,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                           ),
                         ),
                       );
-
-                      // return const Dialog(
-                      // title: const Text(
-                      //   'Que souhaitez-vous créer ? 🤔',
-                      //   style: TextStyle(
-                      //     fontWeight: FontWeight.bold,
-                      //     fontSize: 18,
-                      //   ),
-                      // ),
-                      // content: SingleChildScrollView(
-                      //   child: ListBody(
-                      //     children: <Widget>[
-                      //       GestureDetector(
-                      //         child: Container(
-                      //           padding: const EdgeInsets.symmetric(
-                      //             horizontal: 10,
-                      //             vertical: 14,
-                      //           ),
-                      //           decoration: BoxDecoration(
-                      //             color: Colors.grey[200],
-                      //             borderRadius: BorderRadius.circular(8.0),
-                      //           ),
-                      //           child: const Text("Un parc"),
-                      //         ),
-                      //         onTap: () {
-                      //           Navigator.pushNamed(
-                      //             context,
-                      //             '/create-location',
-                      //           );
-                      //         },
-                      //       ),
-                      //       const Padding(padding: EdgeInsets.all(8.0)),
-                      //       GestureDetector(
-                      //         child: Container(
-                      //             padding: const EdgeInsets.symmetric(
-                      //               horizontal: 10,
-                      //               vertical: 14,
-                      //             ),
-                      //             decoration: BoxDecoration(
-                      //               color: Colors.grey[200],
-                      //               borderRadius: BorderRadius.circular(8.0),
-                      //             ),
-                      //             child: const Text("Un trajet")),
-                      //         onTap: () {
-                      //           Navigator.pushNamed(
-                      //             context,
-                      //             '/create-walk',
-                      //           );
-                      //         },
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // );
                     },
                   );
                 },

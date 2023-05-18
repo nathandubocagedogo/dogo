@@ -157,6 +157,32 @@ class PlacesService {
     );
   }
 
+  Future<Map<String, String>> getPlace(
+      double latitude, double longitude) async {
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey'));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      var result = data['results'][0];
+
+      String formattedAddress = result['formatted_address'];
+      String city = '';
+
+      var addressComponents = result['address_components'];
+      for (var component in addressComponents) {
+        if (component['types'].contains('locality')) {
+          city = component['long_name'];
+          break;
+        }
+      }
+
+      return {'address': formattedAddress, 'city': city};
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   Future<void> getCoordinatesFromPlace(
     String placeId,
     BuildContext context,

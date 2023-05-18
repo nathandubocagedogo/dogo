@@ -8,6 +8,7 @@ class InputRoundedText extends StatefulWidget {
   final String? helperText;
   final bool validator;
   final bool? isTextarea;
+  final bool? isNumeric;
 
   const InputRoundedText({
     super.key,
@@ -17,6 +18,7 @@ class InputRoundedText extends StatefulWidget {
     this.obscureText = false,
     this.validator = false,
     this.isTextarea = false,
+    this.isNumeric = false,
   });
 
   @override
@@ -41,6 +43,8 @@ class _InputRoundedTextState extends State<InputRoundedText> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType:
+          widget.isNumeric! ? TextInputType.number : TextInputType.text,
       minLines: widget.isTextarea! ? 10 : 1,
       maxLines: widget.isTextarea! ? 20 : 1,
       autovalidateMode: AutovalidateMode.onUserInteraction,

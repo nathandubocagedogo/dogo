@@ -219,7 +219,7 @@ class _CreateLocationViewState extends State<CreateLocationView> {
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),

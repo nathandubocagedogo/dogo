@@ -19,10 +19,11 @@ import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/change_location.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/place_details.dart';
 import 'package:dogo_final_app/views/create-places/create_location.dart';
-import 'package:dogo_final_app/views/create-places/create_walk.dart';
+import 'package:dogo_final_app/views/create-places/create_walk_map.dart';
 import 'package:dogo_final_app/views/make-activity/make_activity.dart';
 import 'package:dogo_final_app/views/create-places/create_walk_update.dart';
 import 'package:dogo_final_app/views/create-places/create_location_map.dart';
+import 'package:dogo_final_app/views/create-places/create_walk.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -67,6 +68,9 @@ Route<dynamic> generateRoute(
       break;
     case '/create-walk':
       builder = (BuildContext context) => const CreateWalkView();
+      break;
+    case '/create-walk-map':
+      builder = (BuildContext context) => const CreateWalkMapView();
       break;
     case '/create-walk-update':
       builder = (BuildContext context) => const CreateWalkUpdateView();

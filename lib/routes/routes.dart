@@ -24,6 +24,7 @@ import 'package:dogo_final_app/views/make-activity/make_activity.dart';
 import 'package:dogo_final_app/views/create-places/create_walk_update.dart';
 import 'package:dogo_final_app/views/create-places/create_location_map.dart';
 import 'package:dogo_final_app/views/create-places/create_walk.dart';
+import 'package:dogo_final_app/views/create-places/create_walk_update_map.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -74,6 +75,9 @@ Route<dynamic> generateRoute(
       break;
     case '/create-walk-update':
       builder = (BuildContext context) => const CreateWalkUpdateView();
+      break;
+    case '/create-walk-update-map':
+      builder = (BuildContext context) => const CreateWalkUpdateMapView();
       break;
     case '/create-location':
       builder = (BuildContext context) => const CreateLocationView();

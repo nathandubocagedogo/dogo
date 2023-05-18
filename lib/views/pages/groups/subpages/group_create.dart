@@ -1,56 +1,72 @@
 // Flutter
-import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-// Provider
-import 'package:dogo_final_app/provider/form_provider.dart';
+// Components
+import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
+import 'package:dogo_final_app/components/input/input_rounded_text.dart';
+import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
+
+// Services
+import 'package:dogo_final_app/services/group.dart';
 
 // Utilities
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
-// Components
-import 'package:dogo_final_app/components/input/input_rounded_text.dart';
-import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
-
-class CreateLocationView extends StatefulWidget {
-  const CreateLocationView({super.key});
+class GroupCreateView extends StatefulWidget {
+  const GroupCreateView({super.key});
 
   @override
-  State<CreateLocationView> createState() => _CreateLocationViewState();
+  State<GroupCreateView> createState() => _GroupCreateViewState();
 }
 
-class _CreateLocationViewState extends State<CreateLocationView> {
+class _GroupCreateViewState extends State<GroupCreateView> {
+  final GroupService groupService = GroupService();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController warningController = TextEditingController();
+  final TextEditingController privacyController = TextEditingController();
 
-  final picker = ImagePicker();
+  final User? user = FirebaseAuth.instance.currentUser;
+  final ImagePicker picker = ImagePicker();
 
+  ValueNotifier<bool> isCreating = ValueNotifier<bool>(false);
+  FirebaseStorage storage = FirebaseStorage.instance;
+  CollectionReference places = FirebaseFirestore.instance.collection('groups');
   File? selectedImage;
+  List<String> privacyOptions = ['Public', 'Privé'];
+  String? selectedPrivacy = 'Public';
 
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
     descriptionController.dispose();
-    warningController.dispose();
+    privacyController.dispose();
   }
 
   void submitForm() async {
     if (formKey.currentState!.validate()) {
       if (selectedImage != null) {
-        var formProvider = context.read<FormProvider>();
-        formProvider.updateModel(
-          name: nameController.text,
-          description: descriptionController.text,
-          warning: warningController.text,
-          image: selectedImage,
+        isCreating.value = true;
+        String pictureUrl = await uploadImage(selectedImage!);
+        await groupService.createGroup(
+          nameController.text,
+          descriptionController.text,
+          selectedPrivacy! == 'Private' ? true : false,
+          pictureUrl,
+          user!.uid,
         );
 
-        Navigator.of(context).pushNamed("/create-location-map");
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
+        isCreating.value = false;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           snackbarCustom(
@@ -62,6 +78,16 @@ class _CreateLocationViewState extends State<CreateLocationView> {
         );
       }
     }
+  }
+
+  Future<String> uploadImage(File image) async {
+    Reference storageReference =
+        storage.ref().child("images/${path.basename(image.path)}");
+
+    UploadTask uploadTask = storageReference.putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    return downloadUrl;
   }
 
   Future<File?> pickImage() async {
@@ -102,7 +128,7 @@ class _CreateLocationViewState extends State<CreateLocationView> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           backgroundColor: Colors.transparent,
-          title: const Text("Ajouter un parc 🌳"),
+          title: const Text("Ajouter un groupe 🐶"),
           elevation: 0,
         ),
         body: Align(
@@ -117,7 +143,7 @@ class _CreateLocationViewState extends State<CreateLocationView> {
                   // Une image
                   children: [
                     const SizedBox(height: 20),
-                    const Text("Nom du parc"),
+                    const Text("Nom du groupe"),
                     const SizedBox(height: 6),
                     InputRoundedText(
                       controller: nameController,
@@ -125,7 +151,7 @@ class _CreateLocationViewState extends State<CreateLocationView> {
                       validator: true,
                     ),
                     const SizedBox(height: 12),
-                    const Text("Description du parc"),
+                    const Text("Description du groupe"),
                     const SizedBox(height: 6),
                     InputRoundedText(
                       controller: descriptionController,
@@ -134,13 +160,35 @@ class _CreateLocationViewState extends State<CreateLocationView> {
                       isTextarea: true,
                     ),
                     const SizedBox(height: 12),
-                    const Text("Remarque sur le parc"),
+                    const Text("Confidentialité du groupe"),
                     const SizedBox(height: 6),
-                    InputRoundedText(
-                      controller: warningController,
-                      textInputAction: TextInputAction.next,
-                      helperText: 'Exemple : Beaucoup de boue en hiver',
-                      validator: true,
+                    DropdownButtonFormField<String>(
+                      value: selectedPrivacy,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedPrivacy = newValue;
+                        });
+                      },
+                      items: privacyOptions
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 10),
+                      ),
+                      dropdownColor: Colors.grey[200],
+                      icon: const Icon(Icons.arrow_drop_down),
+                      elevation: 2,
                     ),
                     const SizedBox(height: 12),
                     const Text("Image du parc"),
@@ -212,11 +260,44 @@ class _CreateLocationViewState extends State<CreateLocationView> {
                         ),
                       ),
                     const SizedBox(height: 20),
-                    ButtonRoundedText(
-                      content: 'Valider et choisir un point',
-                      callback: submitForm,
-                      backgroundColor: Colors.orange,
-                      textColor: Colors.white,
+                    ValueListenableBuilder<bool>(
+                      valueListenable: isCreating,
+                      builder: (context, isCreating, child) {
+                        if (isCreating) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.orange),
+                                elevation: MaterialStateProperty.all(0),
+                                padding: const MaterialStatePropertyAll(
+                                  EdgeInsets.symmetric(vertical: 18),
+                                ),
+                                shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                              ),
+                              child: const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return ButtonRoundedText(
+                          content: 'Créer le groupe',
+                          callback: submitForm,
+                          backgroundColor: Colors.orange,
+                          textColor: Colors.white,
+                        );
+                      },
                     ),
                     const SizedBox(height: 40),
                   ],

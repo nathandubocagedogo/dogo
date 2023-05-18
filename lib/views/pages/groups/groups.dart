@@ -21,50 +21,6 @@ class _GroupsPageViewState extends State<GroupsPageView> {
   final GroupService groupService = GroupService();
   final User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> createBottomSheet() async {
-    TextEditingController groupNameController = TextEditingController();
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useRootNavigator: true,
-      builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.8,
-          child: Container(
-            color: Colors.white,
-            child: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text('Créer un groupe'),
-                  TextField(
-                    controller: groupNameController,
-                    decoration:
-                        const InputDecoration(hintText: "Nom du groupe"),
-                  ),
-                  ElevatedButton(
-                    child: const Text('Créer'),
-                    onPressed: () async {
-                      String groupName = groupNameController.text.trim();
-
-                      if (groupName.isNotEmpty) {
-                        await groupService.createGroup(groupName, user!.uid);
-                      }
-
-                      // ignore: use_build_context_synchronously
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -76,9 +32,10 @@ class _GroupsPageViewState extends State<GroupsPageView> {
           elevation: 0,
           actions: [
             IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: createBottomSheet,
-            ),
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/group-create');
+                }),
           ],
           automaticallyImplyLeading: false,
           title: const Text('Groupes'),

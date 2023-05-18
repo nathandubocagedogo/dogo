@@ -18,6 +18,7 @@ import 'package:dogo_final_app/views/pages/groups/subpages/group_chat.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/change_location.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/place_details.dart';
+import 'package:dogo_final_app/views/pages/groups/subpages/group_create.dart';
 import 'package:dogo_final_app/views/create-places/create_location.dart';
 import 'package:dogo_final_app/views/create-places/create_walk_map.dart';
 import 'package:dogo_final_app/views/make-activity/make_activity.dart';
@@ -84,6 +85,9 @@ Route<dynamic> generateRoute(
       break;
     case '/create-location-map':
       builder = (BuildContext context) => const CreateLocationMapView();
+      break;
+    case '/group-create':
+      builder = (BuildContext context) => const GroupCreateView();
       break;
     case '/make-activity':
       builder = (BuildContext context) {

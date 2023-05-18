@@ -39,9 +39,13 @@ class GroupService {
     return groupsReference.doc(groupId).snapshots();
   }
 
-  Future<void> createGroup(String name, String userId) async {
+  Future<void> createGroup(String name, String description, bool isPrivate,
+      String picture, String userId) async {
     await groupsReference.add({
       'name': name,
+      'description': description,
+      'isPrivate': isPrivate,
+      'picure': picture,
       'members': [userId],
     });
   }

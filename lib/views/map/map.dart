@@ -213,7 +213,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
     return GestureDetector(
       onTap: () {
-        print("ouais");
         setState(() {
           isCardDisplayed = false;
         });

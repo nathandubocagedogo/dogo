@@ -38,12 +38,24 @@ class PlaceInfo extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Text(
-              "${place.city} | à ${distance.toStringAsFixed(2)} km d'ici",
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  place.city,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                Text(
+                  "à ${distance.toStringAsFixed(2)} km d'ici",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             IntrinsicWidth(
@@ -54,19 +66,19 @@ class PlaceInfo extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                   color: Colors.deepOrange[100],
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.info,
                       size: 12,
                       color: Colors.deepOrange,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
-                      "Souvent beaucoup de monde",
-                      style: TextStyle(
+                      place.warning,
+                      style: const TextStyle(
                         color: Colors.red,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -113,88 +125,67 @@ class PlaceInfo extends StatelessWidget {
             const SizedBox(height: 6),
             SizedBox(
               width: double.infinity,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        text: TextSpan(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 15,
+                      ),
+                      children: [
+                        const TextSpan(text: "Adresse : "),
+                        TextSpan(
+                          text: place.address,
                           style: const TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
                           ),
-                          children: [
-                            const TextSpan(text: "Adresse : "),
-                            TextSpan(
-                              text: place.address,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ],
                         ),
-                      ),
-                      RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
-                          ),
-                          children: [
-                            TextSpan(text: "Difficulté "),
-                            TextSpan(
-                              text: "Facile",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
-                          ),
-                          children: [
-                            TextSpan(text: "Durée moyenne "),
-                            TextSpan(
-                              text: "25 minutes",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
-                          ),
-                          children: [
-                            TextSpan(text: "Typologie : "),
-                            TextSpan(
-                              text: "Route, Herbe, Terre",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                  if (place.type == 'Balades')
+                    RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        ),
+                        children: [
+                          TextSpan(text: "Difficulté "),
+                          TextSpan(
+                            text: "Facile",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (place.type == 'Balades')
+                    RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        ),
+                        children: [
+                          TextSpan(text: "Durée moyenne "),
+                          TextSpan(
+                            text: "25 minutes",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
@@ -207,12 +198,8 @@ class PlaceInfo extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            ButtonRoundedText(
-              spacing: 12,
-              backgroundColor: Colors.orange,
-              textColor: Colors.white,
-              content: 'Me rendre sur le lieu',
-              callback: () async {
+            ElevatedButton(
+              onPressed: () async {
                 final url =
                     'https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}';
                 if (await canLaunchUrlString(url)) {
@@ -221,23 +208,33 @@ class PlaceInfo extends StatelessWidget {
                   throw 'Impossible de lancer $url';
                 }
               },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                "Me rendre sur le lieu",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 4),
-            ButtonRoundedText(
-              spacing: 12,
-              backgroundColor: Colors.orange,
-              textColor: Colors.white,
-              content: 'Faire la balade',
-              callback: () {
-                Navigator.pushNamed(
-                  context,
-                  '/make-activity',
-                  arguments: {
-                    'place': place,
-                  },
-                );
-              },
-            ),
+            if (place.type == 'Balades')
+              ButtonRoundedText(
+                spacing: 12,
+                backgroundColor: Colors.orange,
+                textColor: Colors.white,
+                content: 'Faire la balade',
+                callback: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/make-activity',
+                    arguments: {
+                      'place': place,
+                    },
+                  );
+                },
+              ),
           ],
         ),
       ),

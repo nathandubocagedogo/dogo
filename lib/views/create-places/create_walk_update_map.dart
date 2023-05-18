@@ -206,6 +206,7 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
       'name': formProvider.name,
       'difficulty': formProvider.difficulty,
       'duration': formProvider.time,
+      'warning': formProvider.warning,
       'type': 'Balades',
       'pictures': [
         pictureUrl,

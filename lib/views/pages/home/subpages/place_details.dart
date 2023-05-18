@@ -88,7 +88,7 @@ class _PlaceDetailsPageViewState extends State<PlaceDetailsPageView> {
             delegate: DetailSliverDelegate(
               heroTag: widget.heroTag,
               place: widget.place,
-              expandedHeight: 260,
+              expandedHeight: 300,
               roundedContainerHeight: 30,
               isBookmarked: isBookmarked,
               onBookmarkTapped: onBookmarkTapped,

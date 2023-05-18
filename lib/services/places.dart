@@ -87,6 +87,9 @@ class PlacesService {
             doc.get('type') != null &&
             doc.get('latitude') != null &&
             doc.get('longitude') != null &&
+            doc.get('difficulty') != null &&
+            doc.get('warning') != null &&
+            doc.get('duration') != null &&
             doc.get('routes') != null) {
           places.add({
             'id': doc.get('id'),
@@ -96,6 +99,9 @@ class PlacesService {
             'longitude': doc.get('longitude'),
             'city': doc.get('city'),
             'address': doc.get('address'),
+            'warning': doc.get('warning'),
+            'difficulty': doc.get('difficulty'),
+            'duration': doc.get('duration'),
             'type': doc.get('type'),
             'pictures': doc.get('pictures'),
             'routes': doc.get('routes')

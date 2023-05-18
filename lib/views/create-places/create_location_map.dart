@@ -120,6 +120,9 @@ class _CreateLocationMapViewState extends State<CreateLocationMapView> {
       'latitude': position.latitude,
       'longitude': position.longitude,
       'name': formProvider.name,
+      'warning': formProvider.warning,
+      'difficulty': '',
+      'duration': '',
       'type': 'Parcs',
       'pictures': [
         pictureUrl,

@@ -45,7 +45,7 @@ class GroupService {
       'name': name,
       'description': description,
       'isPrivate': isPrivate,
-      'picure': picture,
+      'picture': picture,
       'members': [userId],
     });
   }

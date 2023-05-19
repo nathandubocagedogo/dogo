@@ -71,12 +71,19 @@ class GroupService {
 
   // Sauvegarde d'un message dans Firestore
   Future<void> sendMessage(
-      String groupId, String senderId, String content) async {
+    String groupId,
+    String senderId,
+    String content,
+    String userName,
+    String? userPicture,
+  ) async {
     await messagesReference.add({
       'groupId': groupId,
       'senderId': senderId,
       'content': content,
       'timestamp': Timestamp.fromDate(DateTime.now()),
+      'userName': userName,
+      'userPhotoUrl': userPicture ?? "",
     });
   }
 }

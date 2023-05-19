@@ -113,7 +113,7 @@ class _RegisterViewState extends State<RegisterView> {
                     InputRoundedText(
                       controller: emailController,
                       textInputAction: TextInputAction.next,
-                      helperText: 'Tu devras confirmer cet email plus tard.',
+                      helperText: 'Tu devras confirmer cet e-mail plus tard',
                       validator: true,
                     ),
                     const SizedBox(height: 12),

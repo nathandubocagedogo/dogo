@@ -13,10 +13,11 @@ import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 class AuthService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  // Connexion basique de l'utilisateur à Firebase puis redirection vers la page d'accueil
   Future<void> signInBasically({
+    required BuildContext context,
     required TextEditingController emailController,
     required TextEditingController passwordController,
-    required BuildContext context,
   }) async {
     String emailValue = emailController.value.text;
     String passwordValue = passwordController.value.text;
@@ -33,33 +34,11 @@ class AuthService {
             },
           );
     } on FirebaseAuthException catch (exception) {
-      late String errorMessage;
-
-      switch (exception.code) {
-        case 'user-not-found':
-          errorMessage = "L'utilisateur ne semble pas exister.";
-          break;
-        case 'wrong-password':
-          errorMessage = "Le mot de passe n'est pas correct.";
-          break;
-        case 'invalid-email':
-          errorMessage = "Le format de l'adresse email n'est pas valide.";
-          break;
-        default:
-          errorMessage = "Il est impossible de vous authentifier.";
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        snackbarCustom(
-          message: errorMessage,
-          backgroundColor: Colors.red[100],
-          textColor: Colors.red[900],
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      displayErrors(exception, context);
     }
   }
 
+  // Connexion de l'utilisateur à Firebase avec Google puis redirection vers la page d'accueil
   Future<UserCredential?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -76,18 +55,9 @@ class AuthService {
             await FirebaseAuth.instance.signInWithCredential(credential);
         User? user = userCredential.user;
 
-        firestore.collection("users").doc(user?.uid).get().then((value) => {
-              if (!value.exists)
-                {
-                  firestore.collection("users").doc(user?.uid).set(
-                    {
-                      "name": user?.displayName,
-                      "email": user?.email,
-                      "picture": user?.photoURL,
-                    },
-                  )
-                }
-            });
+        // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
+        // S'il n'existe pas, je l'ajoute
+        await addUserToFirestore(user);
 
         return userCredential;
       } else {
@@ -98,6 +68,7 @@ class AuthService {
     }
   }
 
+  // Connexion de l'utilisateur à Firebase avec Apple puis redirection vers la page d'accueil
   Future<UserCredential?> signInWithApple() async {
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -117,29 +88,55 @@ class AuthService {
 
       User? user = userCredential.user;
 
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc(user?.uid)
-          .get()
-          .then((value) => {
-                if (!value.exists)
-                  {
-                    FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(user?.uid)
-                        .set(
-                      {
-                        "name": user?.displayName ?? "Utilisateur Apple",
-                        "email": user?.email,
-                        "picture": user?.photoURL,
-                      },
-                    )
-                  }
-              });
+      // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
+      await addUserToFirestore(user);
 
       return userCredential;
     } catch (exception) {
       rethrow;
     }
+  }
+
+  Future<void> addUserToFirestore(User? user) async {
+    firestore.collection("users").doc(user?.uid).get().then((value) => {
+          if (!value.exists)
+            {
+              firestore.collection("users").doc(user?.uid).set(
+                {
+                  "name": user?.displayName ?? "Utilisateur inconnu",
+                  "email": user?.email,
+                  "picture": user?.photoURL,
+                  "bookmarks": []
+                },
+              )
+            }
+        });
+  }
+
+  void displayErrors(FirebaseAuthException exception, BuildContext context) {
+    late String errorMessage;
+
+    switch (exception.code) {
+      case 'user-not-found':
+        errorMessage = "L'utilisateur ne semble pas exister.";
+        break;
+      case 'wrong-password':
+        errorMessage = "Le mot de passe n'est pas correct.";
+        break;
+      case 'invalid-email':
+        errorMessage = "Le format de l'adresse e-mail n'est pas valide.";
+        break;
+      default:
+        errorMessage = "Il est impossible de t'authentifier.";
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      snackbarCustom(
+        message: errorMessage,
+        backgroundColor: Colors.red[100],
+        textColor: Colors.red[900],
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }

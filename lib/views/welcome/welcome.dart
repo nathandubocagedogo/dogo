@@ -7,6 +7,7 @@ import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
 // Utilities
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottie/lottie.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key});
@@ -24,53 +25,66 @@ class _WelcomeViewState extends State<WelcomeView> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SizedBox(
-          width: screenWidth * 0.85,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Bienvenue sur Dogo !',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
+      body: SafeArea(
+        child: Center(
+          child: SizedBox(
+            width: screenWidth * 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 50),
+                const Text(
+                  'Bienvenue sur Dogo !',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Explorez les meilleurs itinéraires de promenade pour votre compagnon à quatre pattes avec notre application mobile, et partagez vos découvertes avec une communauté de passionnés de chiens !',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  height: 1.2,
-                  color: Colors.black54,
-                  fontSize: 15,
+                const SizedBox(height: 20),
+                const Text(
+                  'Explorez les meilleurs itinéraires de promenade pour votre compagnon à quatre pattes et partagez vos découvertes avec la communauté !',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    height: 1.3,
+                    color: Colors.black54,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ButtonRoundedText(
-                content: 'Commencer',
-                callback: () => Navigator.pushNamed(context, '/landing'),
-                backgroundColor: Colors.orange,
-                textColor: Colors.white,
-              ),
-              if (user == null)
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Container(
+                    child: Lottie.asset(
+                      'assets/lottie/welcome.json',
+                      repeat: false,
+                      reverse: false,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ButtonRoundedText(
+                  content: 'Commencer',
+                  callback: () => Navigator.pushNamed(context, '/landing'),
+                  backgroundColor: Colors.orange,
+                  textColor: Colors.white,
+                ),
+                if (user == null)
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(
                       context,
                       '/login-home',
                       arguments: {
                         'animationType': AnimationType.slideBottom,
                       },
-                    );
-                  },
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    ),
+                    style: ButtonStyle(
+                      overlayColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                    ),
+                    child: const Text('Connexion'),
                   ),
-                  child: const Text('Connexion'),
-                )
-            ],
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

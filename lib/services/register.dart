@@ -38,7 +38,7 @@ class RegisterService {
       ScaffoldMessenger.of(context).showSnackBar(
         snackbarCustom(
           message:
-              "L'inscription a été effectuée avec succès. Veuillez vérifier votre boîte mail pour confirmer votre adresse email.",
+              "L'inscription a été effectuée avec succès. Vérifies ta boîte mail pour confirmer ton adresse e-mail.",
           backgroundColor: Colors.green[100],
           textColor: Colors.green[900],
           duration: const Duration(seconds: 3),
@@ -69,10 +69,10 @@ class RegisterService {
           errorMessage = "Le mot de passe est trop faible.";
           break;
         case 'email-already-in-use':
-          errorMessage = "L'adresse email est déjà utilisée.";
+          errorMessage = "L'adresse e-mail est déjà utilisée.";
           break;
         default:
-          errorMessage = "Le format de l'adresse email est invalide.";
+          errorMessage = "Le format de l'adresse e-mail est invalide.";
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

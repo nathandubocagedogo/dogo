@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dogo_final_app/services/register.dart';
 
 // Components
+import 'package:dogo_final_app/components/buttons/button_back.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 
@@ -20,15 +21,13 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  final RegisterService registerService = RegisterService();
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final RegisterService registerService = RegisterService();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   bool isLoading = false;
 
@@ -68,9 +67,7 @@ class _RegisterViewState extends State<RegisterView> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
@@ -78,18 +75,12 @@ class _RegisterViewState extends State<RegisterView> {
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new_outlined,
-              size: 20,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
+          leading: const ButtonBack(),
         ),
         body: Align(
           alignment: Alignment.topCenter,
           child: SizedBox(
-            width: screenWidth * 0.85,
+            width: screenWidth * 0.90,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Form(
@@ -109,7 +100,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    const Text("Quel est votre prénom ?"),
+                    const Text("Quel est ton prénom ?"),
                     const SizedBox(height: 12),
                     InputRoundedText(
                       controller: nameController,
@@ -117,27 +108,27 @@ class _RegisterViewState extends State<RegisterView> {
                       validator: true,
                     ),
                     const SizedBox(height: 12),
-                    const Text("Quel est votre email ?"),
+                    const Text("Quel est ton e-mail ?"),
                     const SizedBox(height: 12),
                     InputRoundedText(
                       controller: emailController,
                       textInputAction: TextInputAction.next,
-                      helperText: 'Vous devrez confirmer cet email plus tard.',
+                      helperText: 'Tu devras confirmer cet email plus tard.',
                       validator: true,
                     ),
                     const SizedBox(height: 12),
-                    const Text("Crée un mot de passe ?"),
+                    const Text("Créer un mot de passe ?"),
                     const SizedBox(height: 12),
                     InputRoundedText(
                       controller: passwordController,
                       textInputAction: TextInputAction.next,
                       obscureText: true,
-                      helperText: 'Vous devez utilisez au moins 6 caractères',
+                      helperText: 'Tu dois utiliser au moins 6 caractères',
                       validator: true,
                     ),
                     const SizedBox(height: 30),
                     ButtonRoundedText(
-                      content: 'Crée un compte',
+                      content: 'Créer un compte',
                       callback: submitRegister,
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,
@@ -164,24 +155,8 @@ class _RegisterViewState extends State<RegisterView> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(context, '/privacy-policy');
-                              },
-                          ),
-                          const TextSpan(
-                            text: ' et les ',
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          TextSpan(
-                            text: 'conditions d\'utilisation',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(context, '/terms');
-                              },
+                              ..onTap = () => Navigator.pushNamed(
+                                  context, '/privacy-policy'),
                           ),
                           const TextSpan(
                             text: ' de Dogo.',

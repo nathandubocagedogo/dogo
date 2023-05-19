@@ -84,11 +84,17 @@ class _InputRoundedTextState extends State<InputRoundedText> {
         filled: true,
         fillColor: Colors.grey[200],
         suffixIcon: widget.obscureText
-            ? IconButton(
-                icon: Icon(
-                  obscureText ? Icons.visibility : Icons.visibility_off,
+            ? Theme(
+                data: Theme.of(context).copyWith(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                 ),
-                onPressed: toggleObscureText,
+                child: IconButton(
+                  icon: Icon(
+                    obscureText ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: toggleObscureText,
+                ),
               )
             : null,
         helperText: widget.helperText,

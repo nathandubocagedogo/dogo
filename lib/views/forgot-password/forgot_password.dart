@@ -4,6 +4,7 @@ import 'package:dogo_final_app/theme/theme.dart';
 
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
+import 'package:dogo_final_app/components/buttons/button_back.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 
 // Services
@@ -32,7 +33,6 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
         isLoading = true;
       });
       await resetPasswordService.resetPassword(
-        formKey: formKey,
         emailController: emailController,
         context: context,
       );
@@ -60,37 +60,31 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new_outlined,
-              size: 20,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
+          leading: const ButtonBack(),
         ),
         body: Align(
           alignment: Alignment.topCenter,
           child: SizedBox(
-            width: screenWidth * 0.85,
+            width: screenWidth * 0.90,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Column(
                 children: [
                   const Text(
-                    'Avez-vous oublié le mot de passe ?',
+                    'As-tu oublié ton mot de passe ?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'Saisissez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
+                    'Saisis ton adresse e-mail et nous t\'enverrons un lien pour réinitialiser ton mot de passe.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      height: 1.5,
-                      fontSize: 15,
+                      height: 1.4,
+                      fontSize: 14,
                       color: Colors.black54,
                     ),
                   ),
@@ -101,7 +95,7 @@ class _ForgotPassewordViewState extends State<ForgotPassewordView> {
                       children: [
                         const Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("Quel est votre email ?"),
+                          child: Text("Quel est ton e-mail ?"),
                         ),
                         const SizedBox(
                           height: 12,

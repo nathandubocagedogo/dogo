@@ -1,11 +1,12 @@
-// Services
-import 'package:dogo_final_app/services/auth.dart';
-
 // Flutter
 import 'package:flutter/material.dart';
 import 'package:dogo_final_app/theme/theme.dart';
 
+// Services
+import 'package:dogo_final_app/services/auth.dart';
+
 // Components
+import 'package:dogo_final_app/components/buttons/button_back.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
@@ -33,8 +34,10 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> submitLogin() async {
+    // On vient enlever le focus du clavier
     FocusScope.of(context).unfocus();
 
+    // Vérification des champs et connexion basique
     if (formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -58,9 +61,7 @@ class _LoginViewState extends State<LoginView> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
@@ -68,18 +69,12 @@ class _LoginViewState extends State<LoginView> {
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new_outlined,
-              size: 20,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
+          leading: const ButtonBack(),
         ),
         body: Align(
           alignment: Alignment.topCenter,
           child: SizedBox(
-            width: screenWidth * 0.85,
+            width: screenWidth * 0.90,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Column(
@@ -89,7 +84,7 @@ class _LoginViewState extends State<LoginView> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -127,14 +122,14 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 30),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/forgot-password');
-                    },
-                    child: const Text(
-                      'Avez-vous oublié le mot de passe ?',
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/forgot-password'),
+                    child: Text(
+                      'As-tu oublié ton mot de passe ?',
                       style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 15,
+                        color: themeData.primaryColor,
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),

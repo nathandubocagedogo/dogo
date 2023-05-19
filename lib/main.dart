@@ -4,10 +4,7 @@ import 'package:dogo_final_app/theme/theme.dart';
 import 'package:dogo_final_app/routes/routes.dart';
 import 'dart:async';
 
-// Services
-import 'package:dogo_final_app/services/places.dart';
-
-// Firebase
+// Settings
 import 'package:dogo_final_app/firebase/firebase_options.dart';
 
 // Utilities
@@ -37,9 +34,6 @@ Future main() async {
         ChangeNotifierProvider(
           create: (context) => FormProvider(),
         ),
-        Provider<PlacesService>(
-          create: (_) => PlacesService(),
-        ),
       ],
       child: const Dogo(),
     ),
@@ -57,11 +51,7 @@ class _DogoState extends State<Dogo> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   Future<String> checkIfUserIsLoggedInAndReturnRoute() async {
-    if (user == null) {
-      return '/welcome';
-    } else {
-      return '/home';
-    }
+    return user == null ? '/welcome' : '/home';
   }
 
   @override

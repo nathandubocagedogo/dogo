@@ -9,9 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ResetPasswordService {
   Future<void> resetPassword({
-    required GlobalKey<FormState> formKey,
-    required TextEditingController emailController,
     required BuildContext context,
+    required TextEditingController emailController,
   }) async {
     String emailValue = emailController.value.text;
 

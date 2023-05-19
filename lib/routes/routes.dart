@@ -26,6 +26,7 @@ import 'package:dogo_final_app/views/create-places/create_walk_update.dart';
 import 'package:dogo_final_app/views/create-places/create_location_map.dart';
 import 'package:dogo_final_app/views/create-places/create_walk.dart';
 import 'package:dogo_final_app/views/create-places/create_walk_update_map.dart';
+import 'package:dogo_final_app/views/privacy/privacy_policy.dart';
 
 Route<dynamic> generateRoute(
   RouteSettings settings, {
@@ -88,6 +89,10 @@ Route<dynamic> generateRoute(
       break;
     case '/group-create':
       builder = (BuildContext context) => const GroupCreateView();
+      break;
+
+    case '/privacy-policy':
+      builder = (BuildContext context) => const PrivacyPolicyView();
       break;
     case '/make-activity':
       builder = (BuildContext context) {

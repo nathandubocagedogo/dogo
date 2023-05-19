@@ -1,8 +1,15 @@
 // Flutter
+import 'package:dogo_final_app/views/landing/landing_first.dart';
+import 'package:dogo_final_app/views/landing/landing_second.dart';
+import 'package:dogo_final_app/views/landing/landing_third.dart';
 import 'package:flutter/material.dart';
 
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
+import 'package:dogo_final_app/components/buttons/button_back.dart';
+
+// Utilities
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LandingView extends StatefulWidget {
   const LandingView({super.key});
@@ -12,9 +19,14 @@ class LandingView extends StatefulWidget {
 }
 
 class _LandingViewState extends State<LandingView> {
+  // Utilisation d'un PageController pour gérer les trois pages et les défilements
   PageController pageController = PageController();
+
+  User? user = FirebaseAuth.instance.currentUser;
+
   int currentIndex = 0;
   String buttonText = 'Suivant';
+  bool popCalled = false;
 
   @override
   void initState() {
@@ -24,9 +36,9 @@ class _LandingViewState extends State<LandingView> {
 
   @override
   void dispose() {
-    super.dispose();
     pageController.dispose();
     pageController.removeListener(onPageChanged);
+    super.dispose();
   }
 
   void onPageChanged() {
@@ -36,14 +48,19 @@ class _LandingViewState extends State<LandingView> {
         double scrollThreshold = 50;
         currentIndex = pageController.page!.round();
 
+        // Si je mets swipe vers la droite à la dernière page, on va sur la page d'accueil de l'application mais il faut être connecté
         if (currentIndex == 2 &&
             previousIndex == 2 &&
             pageController.position.pixels >
                 pageController.position.maxScrollExtent + scrollThreshold) {
-          Navigator.pushNamed(context, '/home');
+          if (user != null) {
+            Navigator.pushNamed(context, '/home');
+          }
         } else {
-          if (currentIndex == 2) {
+          if (currentIndex == 2 && user != null) {
             buttonText = 'Démarrer';
+          } else if (currentIndex == 2 && user == null) {
+            buttonText = 'Connexion';
           } else {
             buttonText = 'Suivant';
           }
@@ -57,15 +74,23 @@ class _LandingViewState extends State<LandingView> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const ButtonBack(),
+      ),
       body: Stack(
         children: [
           PageView(
             physics: const BouncingScrollPhysics(),
             controller: pageController,
             children: const [
-              Center(child: Text('Explication de la fonctionnalité 1')),
-              Center(child: Text('Explication de la fonctionnalité 2')),
-              Center(child: Text('Explication de la fonctionnalité 3')),
+              LandingFirst(),
+              LandingSecond(),
+              LandingThird(),
             ],
           ),
           SafeArea(
@@ -74,7 +99,7 @@ class _LandingViewState extends State<LandingView> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
-                  width: screenWidth * 0.85,
+                  width: screenWidth * 0.9,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -103,8 +128,10 @@ class _LandingViewState extends State<LandingView> {
                             } else if (currentIndex == 1) {
                               currentIndex++;
                               buttonText = 'Démarrer';
-                            } else {
+                            } else if (user != null) {
                               Navigator.pushNamed(context, '/home');
+                            } else {
+                              Navigator.pushNamed(context, '/login-home');
                             }
                             pageController.animateToPage(
                               currentIndex,

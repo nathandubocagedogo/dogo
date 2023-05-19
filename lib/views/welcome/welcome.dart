@@ -42,7 +42,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'Explorez les meilleurs itinéraires de promenade pour votre compagnon à quatre pattes et partagez vos découvertes avec la communauté !',
+                  'Explore les meilleurs itinéraires de promenade pour ton compagnon à quatre pattes et partage tes découvertes avec la communauté !',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     height: 1.3,
@@ -63,7 +63,13 @@ class _WelcomeViewState extends State<WelcomeView> {
                 const SizedBox(height: 20),
                 ButtonRoundedText(
                   content: 'Commencer',
-                  callback: () => Navigator.pushNamed(context, '/landing'),
+                  callback: () => Navigator.pushNamed(
+                    context,
+                    '/landing',
+                    arguments: {
+                      'animationType': AnimationType.slideLeft,
+                    },
+                  ),
                   backgroundColor: Colors.orange,
                   textColor: Colors.white,
                 ),
@@ -82,7 +88,6 @@ class _WelcomeViewState extends State<WelcomeView> {
                     ),
                     child: const Text('Connexion'),
                   ),
-                const SizedBox(height: 40),
               ],
             ),
           ),

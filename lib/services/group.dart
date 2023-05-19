@@ -10,6 +10,7 @@ class GroupService {
   final CollectionReference messagesReference =
       FirebaseFirestore.instance.collection('messages');
 
+  // Récupérer tous les groupes
   Stream<List<Group>> getGroupsStream() {
     return groupsReference.snapshots().map((snapshot) => snapshot.docs
         .map((doc) => Group.fromMap(
@@ -17,6 +18,7 @@ class GroupService {
         .toList());
   }
 
+  // Récupérer les groupes auxquels l'utilisateur appartient
   Stream<List<Group>> getUserGroupsStream(String userId) {
     return groupsReference
         .where('members', arrayContains: userId)
@@ -27,6 +29,7 @@ class GroupService {
             .toList());
   }
 
+  // Récupérer les groupes auxquels l'utilisateur n'appartient pas
   Stream<List<Group>> getNonUserGroupsStream(String userId) {
     return groupsReference.snapshots().map((snapshot) => snapshot.docs
         .map((doc) => Group.fromMap(
@@ -39,6 +42,7 @@ class GroupService {
     return groupsReference.doc(groupId).snapshots();
   }
 
+  // Création d'un groupe
   Future<void> createGroup(String name, String description, bool isPrivate,
       String picture, String userId) async {
     await groupsReference.add({
@@ -50,12 +54,14 @@ class GroupService {
     });
   }
 
+  // Faire rejoindre un groupe à un utilisateur
   Future<void> joinGroup(String groupId, String userId) async {
     await groupsReference.doc(groupId).update({
       'members': FieldValue.arrayUnion([userId]),
     });
   }
 
+  // Récupérer la liste des messages
   Stream<QuerySnapshot> getGroupMessages(String groupId) {
     return messagesReference
         .where('groupId', isEqualTo: groupId)
@@ -63,6 +69,7 @@ class GroupService {
         .snapshots();
   }
 
+  // Sauvegarde d'un message dans Firestore
   Future<void> sendMessage(
       String groupId, String senderId, String content) async {
     await messagesReference.add({

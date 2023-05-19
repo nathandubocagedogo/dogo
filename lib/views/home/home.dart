@@ -18,6 +18,8 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
+// Ici, c'est mon Widget principal, qui contient la BottomBar et le PageView
+// Le PageView va être utile pour naviguer entre les différentes pages du bas de l'application
 class _HomeViewState extends State<HomeView>
     with AutomaticKeepAliveClientMixin {
   final PageController pageController = PageController(keepPage: true);

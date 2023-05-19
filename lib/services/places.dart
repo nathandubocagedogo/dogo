@@ -23,6 +23,10 @@ class PlacesService {
 
   Map<String, String> placeIdMap = {};
 
+  // Fonction la plus importante de ce service
+  // Formule de Haversine pour calculer la distance entre deux points
+  // Représentation sphérique de la Terre
+  // On vient chercher dans la base de données les lieux qui rentrent dans le rayon et on retourne un tableau d'objet de type Place
   Future<List<Map<String, dynamic>>> fetchNearbyDatabasePlaces(
     LatLng position,
     double radius,
@@ -124,6 +128,7 @@ class PlacesService {
     return results.map((map) => Place.fromMap(map)).toList();
   }
 
+  // On récupère les lieux suggérés par Google
   Future<List<String>> getPlacesSuggestions({required String query}) async {
     if (query.isEmpty) {
       return [];
@@ -163,6 +168,7 @@ class PlacesService {
     );
   }
 
+  // Récupération de l'adresse selon les coordonnées GPS
   Future<Map<String, String>> getPlace(
       double latitude, double longitude) async {
     final response = await http.get(Uri.parse(

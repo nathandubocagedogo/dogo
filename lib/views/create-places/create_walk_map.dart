@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 // Provider
 import 'package:dogo_final_app/provider/provider.dart';
@@ -8,6 +7,7 @@ import 'package:dogo_final_app/provider/form_provider.dart';
 
 // Services
 import 'package:dogo_final_app/services/places.dart';
+import 'package:dogo_final_app/services/storage.dart';
 
 // Utilities
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,8 +15,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
 
 class CreateWalkMapView extends StatefulWidget {
   const CreateWalkMapView({super.key});
@@ -27,6 +25,7 @@ class CreateWalkMapView extends StatefulWidget {
 
 class _CreateWalkMapViewState extends State<CreateWalkMapView> {
   final PlacesService placesService = PlacesService();
+  final StorageService storageService = StorageService();
 
   CollectionReference places = FirebaseFirestore.instance.collection('places');
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -44,16 +43,6 @@ class _CreateWalkMapViewState extends State<CreateWalkMapView> {
   void initState() {
     super.initState();
     formProvider = Provider.of<FormProvider>(context, listen: false);
-  }
-
-  Future<String> uploadImage(File image) async {
-    Reference storageReference =
-        storage.ref().child("images/${path.basename(image.path)}");
-
-    UploadTask uploadTask = storageReference.putFile(image);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-    return downloadUrl;
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -86,7 +75,7 @@ class _CreateWalkMapViewState extends State<CreateWalkMapView> {
   }
 
   Future<void> createWalk() async {
-    String pictureUrl = await uploadImage(formProvider.image!);
+    String pictureUrl = await storageService.uploadImage(formProvider.image!);
     List<GeoPoint> routePoints = this
         .routePoints
         .map((latLng) => GeoPoint(latLng.latitude, latLng.longitude))
@@ -219,7 +208,9 @@ class _CreateWalkMapViewState extends State<CreateWalkMapView> {
                       (BuildContext context, bool isCreating, Widget? child) {
                     return Material(
                       shape: const CircleBorder(),
-                      color: Colors.orangeAccent,
+                      color: routePoints.length < 2
+                          ? Colors.grey
+                          : Colors.orangeAccent,
                       child: InkWell(
                         customBorder: const CircleBorder(),
                         onTap: isCreating
@@ -242,9 +233,11 @@ class _CreateWalkMapViewState extends State<CreateWalkMapView> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Icon(
+                              : Icon(
                                   Icons.check,
-                                  color: Colors.white,
+                                  color: routePoints.length < 2
+                                      ? Colors.white30
+                                      : Colors.white,
                                 ),
                         ),
                       ),

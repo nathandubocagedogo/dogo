@@ -278,7 +278,7 @@ class _CreateWalkUpdateViewState extends State<CreateWalkUpdateView> {
                       ),
                     const SizedBox(height: 20),
                     ButtonRoundedText(
-                      content: 'Valider et tracer la balade',
+                      content: 'Valider et commencer la balade',
                       callback: submitForm,
                       backgroundColor: Colors.orange,
                       textColor: Colors.white,

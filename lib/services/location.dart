@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationService {
+  // Utilisation de geocoding pour récupérer l'adresse à partir des coordonnées
   Future<Placemark> getAddressFromCoordinates(
     double latitude,
     double longitude,

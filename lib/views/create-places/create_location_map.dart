@@ -1,6 +1,6 @@
 // Flutter
+import 'package:dogo_final_app/services/storage.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 // Services
 import 'package:dogo_final_app/services/places.dart';
@@ -11,12 +11,9 @@ import 'package:dogo_final_app/provider/form_provider.dart';
 
 // Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
 
 class CreateLocationMapView extends StatefulWidget {
   const CreateLocationMapView({super.key});
@@ -25,11 +22,12 @@ class CreateLocationMapView extends StatefulWidget {
   State<CreateLocationMapView> createState() => _CreateLocationMapViewState();
 }
 
+// Sélection d'un emplacement sur la carte et création d'un parc dans Firestore
 class _CreateLocationMapViewState extends State<CreateLocationMapView> {
   final PlacesService placesService = PlacesService();
+  final StorageService storageService = StorageService();
 
   CollectionReference places = FirebaseFirestore.instance.collection('places');
-  FirebaseStorage storage = FirebaseStorage.instance;
   ValueNotifier<bool> isCreatingLocation = ValueNotifier<bool>(false);
 
   GoogleMapController? mapController;
@@ -43,16 +41,6 @@ class _CreateLocationMapViewState extends State<CreateLocationMapView> {
   void initState() {
     super.initState();
     formProvider = Provider.of<FormProvider>(context, listen: false);
-  }
-
-  Future<String> uploadImage(File image) async {
-    Reference storageReference =
-        storage.ref().child("images/${path.basename(image.path)}");
-
-    UploadTask uploadTask = storageReference.putFile(image);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-    return downloadUrl;
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -103,7 +91,7 @@ class _CreateLocationMapViewState extends State<CreateLocationMapView> {
   }
 
   Future<void> createLocation() async {
-    String pictureUrl = await uploadImage(formProvider.image!);
+    String pictureUrl = await storageService.uploadImage(formProvider.image!);
     LatLng position = lastMapPosition!;
     Map<String, String> placesDetails =
         await placesService.getPlace(position.latitude, position.longitude);
@@ -190,7 +178,9 @@ class _CreateLocationMapViewState extends State<CreateLocationMapView> {
                       (BuildContext context, bool isCreating, Widget? child) {
                     return Material(
                       shape: const CircleBorder(),
-                      color: Colors.orangeAccent,
+                      color: lastMapPosition == null
+                          ? Colors.grey
+                          : Colors.orangeAccent,
                       child: InkWell(
                         customBorder: const CircleBorder(),
                         onTap: isCreating
@@ -213,9 +203,11 @@ class _CreateLocationMapViewState extends State<CreateLocationMapView> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Icon(
+                              : Icon(
                                   Icons.check,
-                                  color: Colors.white,
+                                  color: lastMapPosition == null
+                                      ? Colors.white30
+                                      : Colors.white,
                                 ),
                         ),
                       ),

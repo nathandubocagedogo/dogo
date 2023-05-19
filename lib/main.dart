@@ -7,6 +7,9 @@ import 'dart:async';
 // Settings
 import 'package:dogo_final_app/firebase/firebase_options.dart';
 
+// Services
+import 'package:dogo_final_app/services/places.dart';
+
 // Utilities
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +36,9 @@ Future main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => FormProvider(),
+        ),
+        Provider<PlacesService>(
+          create: (_) => PlacesService(),
         ),
       ],
       child: const Dogo(),

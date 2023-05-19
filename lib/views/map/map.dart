@@ -24,6 +24,8 @@ class GoogleMapView extends StatefulWidget {
   State<GoogleMapView> createState() => _GoogleMapViewState();
 }
 
+// Widget le plus important dans lequel on peut effectuer une navigation et afficher des informations selon les filtres.
+// On peut également créer des trajets et des emplacements.
 class _GoogleMapViewState extends State<GoogleMapView> {
   final LocationService locationService = LocationService();
   final CollectionReference placesCollection =
@@ -47,9 +49,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   void initState() {
     super.initState();
 
+    // On récupère tous les emplacements et on vient les enregistrer dans une variable qu'on réutilise.
+    // Je suis conscient que la base de données ne sera pas rempli donc ça ne posera pas de problème de performance.
     fetchAllPlaces();
     dataProvider = Provider.of<DataProvider>(context, listen: false);
 
+    // J'écoute chaque changement de filtre pour mettre à jour les marqueurs sur la carte.
     listener = () {
       String filter = dataProvider.dataModel.filter!;
       updateMarkers(filter);
@@ -167,6 +172,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     setState(() {});
   }
 
+  // Modification de la localisation actuelle de l'utilisateur et enregistrement de la position dans le provider.
   Future<void> updateCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.requestPermission();
@@ -299,7 +305,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 const Text(
-                                  'Que souhaitez-vous créer ? 🤔',
+                                  'Que souhaites-tu créer ? 🤔',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,

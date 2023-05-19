@@ -41,13 +41,13 @@ class ResetPasswordService {
           errorMessage = "Le mot de passe est trop faible.";
           break;
         case 'email-already-in-use':
-          errorMessage = "L'adresse email est déjà utilisée.";
+          errorMessage = "L'adresse e-mail est déjà utilisée.";
           break;
         case 'invalid-email':
-          errorMessage = "Le format de l'adresse email est invalide.";
+          errorMessage = "Le format de l'adresse e-mail est invalide.";
           break;
         default:
-          errorMessage = "Le format de l'adresse email est invalide.";
+          errorMessage = "Le format de l'adresse e-mail est invalide.";
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

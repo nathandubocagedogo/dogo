@@ -1,9 +1,9 @@
 // Flutter
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:io';
 
 // Services
+import 'package:dogo_final_app/services/storage.dart';
 import 'package:dogo_final_app/services/places.dart';
 
 // Provider
@@ -16,8 +16,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
 
 class CreateWalkUpdateMapView extends StatefulWidget {
   const CreateWalkUpdateMapView({Key? key}) : super(key: key);
@@ -29,6 +27,7 @@ class CreateWalkUpdateMapView extends StatefulWidget {
 
 class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
   final PlacesService placesService = PlacesService();
+  final StorageService storageService = StorageService();
 
   CollectionReference places = FirebaseFirestore.instance.collection('places');
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -87,6 +86,7 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
     mapController = controller;
   }
 
+  // Pour éviter de faire un tracé régulièrement et avoir une masse de point, on va tracer un point tous les 5 mètres
   void addPointToRoute(LatLng position) {
     if (routePoints.isEmpty) {
       routePoints.add(position);
@@ -98,7 +98,7 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
         position.longitude,
       );
 
-      double minDistance = 0;
+      double minDistance = 5;
 
       if (distance >= minDistance) {
         routePoints.add(position);
@@ -120,19 +120,6 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
       polylines.clear();
       polylines.add(polyline);
     });
-  }
-
-  void pauseTracking() {
-    if (positionStreamSubscription != null) {
-      positionStreamSubscription!.pause();
-    }
-  }
-
-  void resumeTracking() {
-    if (positionStreamSubscription != null &&
-        positionStreamSubscription!.isPaused) {
-      positionStreamSubscription?.resume();
-    }
   }
 
   void stopTracking() {
@@ -170,18 +157,9 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
     }
   }
 
-  Future<String> uploadImage(File image) async {
-    Reference storageReference =
-        storage.ref().child("images/${path.basename(image.path)}");
-
-    UploadTask uploadTask = storageReference.putFile(image);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
-
   Future<void> createWalk() async {
-    String pictureUrl = await uploadImage(formProvider.image!);
+    stopTracking();
+    String pictureUrl = await storageService.uploadImage(formProvider.image!);
     List<GeoPoint> routePoints = this
         .routePoints
         .map((latLng) => GeoPoint(latLng.latitude, latLng.longitude))
@@ -253,6 +231,7 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
                   child: InkWell(
                     customBorder: const CircleBorder(),
                     onTap: () async {
+                      stopTracking();
                       Navigator.pop(context);
                     },
                     child: const Padding(
@@ -273,7 +252,9 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
                       (BuildContext context, bool isCreating, Widget? child) {
                     return Material(
                       shape: const CircleBorder(),
-                      color: Colors.orangeAccent,
+                      color: routePoints.length < 2
+                          ? Colors.grey
+                          : Colors.orangeAccent,
                       child: InkWell(
                         customBorder: const CircleBorder(),
                         onTap: isCreating
@@ -296,9 +277,11 @@ class _CreateWalkUpdateMapViewState extends State<CreateWalkUpdateMapView> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Icon(
+                              : Icon(
                                   Icons.check,
-                                  color: Colors.white,
+                                  color: routePoints.length < 2
+                                      ? Colors.white30
+                                      : Colors.white,
                                 ),
                         ),
                       ),

@@ -7,6 +7,7 @@ import 'package:dogo_final_app/models/firebase/place.dart';
 class BookmarksService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  // Récupération des favoris de l'utilisateur connecté
   Future<List<Place>> getUserBookmarks(String userId) async {
     DocumentSnapshot userDoc =
         await firestore.collection('users').doc(userId).get();

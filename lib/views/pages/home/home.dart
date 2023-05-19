@@ -1,8 +1,10 @@
 // Flutter
-import 'package:dogo_final_app/models/firebase/place.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+// Models
+import 'package:dogo_final_app/models/firebase/place.dart';
 
 // Services
 import 'package:dogo_final_app/services/places.dart';
@@ -44,11 +46,13 @@ class _HomePageViewState extends State<HomePageView>
     with AutomaticKeepAliveClientMixin {
   final PlacesService placesService = PlacesService();
   final LocationService locationService = LocationService();
-  final User? user = FirebaseAuth.instance.currentUser;
   final Completer<GoogleMapController> controllerCompleter =
       Completer<GoogleMapController>();
 
+  final User? user = FirebaseAuth.instance.currentUser;
+
   Set<Marker> markers = {};
+
   static List<int> radiusOptions = [5, 10, 25, 50, 100];
 
   late GoogleMapController controller;
@@ -62,6 +66,7 @@ class _HomePageViewState extends State<HomePageView>
   }
 
   Future<void> init() async {
+    // Initialisation de la page d'accueil
     await Future.wait([
       initCurrentLocation(),
       initFilter(),
@@ -76,6 +81,7 @@ class _HomePageViewState extends State<HomePageView>
     });
   }
 
+  // Je récupère la position de l'utilisateur et je l'enregistre dans un Provider
   Future<Position> initCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.requestPermission();
@@ -99,12 +105,14 @@ class _HomePageViewState extends State<HomePageView>
     }
   }
 
+  // J'initialise le filtre avec une chaîne vide
   Future<void> initFilter() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<DataProvider>(context, listen: false).updateFilter("");
     });
   }
 
+  // Quand le Widget GoogleMap est chargé, je récupère le style de la carte que j'ai customisé
   Future<void> onMapCreated(GoogleMapController controller) async {
     mapStyle = await locationService.loadMapStyle(
       file: "assets/files/map-flat.json",
@@ -117,6 +125,7 @@ class _HomePageViewState extends State<HomePageView>
     controller.setMapStyle(mapStyle);
   }
 
+  // On écoute les changements de position de l'utilisateur pour changer  la position de la caméra et les données de la carte
   void onPositionChanged() {
     DataProvider dataProvider =
         Provider.of<DataProvider>(context, listen: false);
@@ -143,6 +152,7 @@ class _HomePageViewState extends State<HomePageView>
     }
   }
 
+  // Ouvre une BottomSheet qui me permet de sélectionner un rayon de recherche
   Future<void> showRadiusBottomSheet() async {
     DataProvider dataProvider =
         Provider.of<DataProvider>(context, listen: false);
@@ -178,7 +188,8 @@ class _HomePageViewState extends State<HomePageView>
               Expanded(
                 child: CupertinoPicker(
                   scrollController: FixedExtentScrollController(
-                      initialItem: selectedRadiusIndex),
+                    initialItem: selectedRadiusIndex,
+                  ),
                   itemExtent: 32.0,
                   onSelectedItemChanged: (int index) {
                     selectedRadiusIndex = index;
@@ -209,15 +220,17 @@ class _HomePageViewState extends State<HomePageView>
     );
   }
 
+  // Je récupère les lieux à proximité de l'utilisateur en passant en paramètre les données du Provider
   Future<List<Place>> fetchPlaces(
     String? filter,
     Position position,
     int? radius,
   ) async {
     return await placesService.fetchNearbyPlaces(
-        LatLng(position.latitude, position.longitude),
-        radius?.toDouble() ?? 5,
-        filter ?? "");
+      LatLng(position.latitude, position.longitude),
+      radius?.toDouble() ?? 5,
+      filter ?? "",
+    );
   }
 
   @override
@@ -235,11 +248,7 @@ class _HomePageViewState extends State<HomePageView>
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              HeadingUserWidget(
-                onAvatarTap: () {
-                  widget.onPageChange(3);
-                },
-              ),
+              HeadingUserWidget(onAvatarTap: () => widget.onPageChange(3)),
               const SizedBox(height: 30),
               CardLocationWidget(
                 onMapCreated: onMapCreated,

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 // Services
 import 'package:dogo_final_app/services/places.dart';
 
+// Components
+import 'package:dogo_final_app/components/buttons/button_back.dart';
+
 // Utilities
 import 'package:provider/provider.dart';
 
@@ -22,13 +25,12 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          leading: const ButtonBack(),
           title: const Text("Changer de localisation"),
         ),
         body: SafeArea(
@@ -37,13 +39,17 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
               if (textEditingValue.text == '') {
                 return const Iterable<String>.empty();
               }
+
+              // À chaque fois que l'utilisateur tape une lettre, on va chercher les suggestions de lieux dans l'API Google Places
               return context
                   .read<PlacesService>()
                   .getPlacesSuggestions(query: textEditingValue.text);
             },
             onSelected: (String selected) async {
               FocusScope.of(context).unfocus();
-              final String? placeId = placesService.placeIdMap[selected];
+              final String? placeId =
+                  context.read<PlacesService>().placeIdMap[selected];
+              // On vient récupérer les coordonnées du lieu sélectionné par l'utilisateur pour les stocker dans le Provider
               placesService.getCoordinatesFromPlace(placeId!, context);
             },
             fieldViewBuilder: (
@@ -67,6 +73,8 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                     hintText: "Entrez une ville ou un lieu",
                     suffixIcon: Theme(
                       data: Theme.of(context).copyWith(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         iconTheme: const IconThemeData(
                           color: Colors.black54,
                         ),

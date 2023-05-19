@@ -23,7 +23,6 @@ class CreateWalkView extends StatefulWidget {
 
 class _CreateWalkViewState extends State<CreateWalkView> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController warningController = TextEditingController();

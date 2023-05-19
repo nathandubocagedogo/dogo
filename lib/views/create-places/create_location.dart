@@ -1,5 +1,4 @@
 // Flutter
-import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -11,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 // Components
+import 'package:dogo_final_app/components/snackbar/snackbar_custom.dart';
 import 'package:dogo_final_app/components/input/input_rounded_text.dart';
 import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
 
@@ -21,6 +21,7 @@ class CreateLocationView extends StatefulWidget {
   State<CreateLocationView> createState() => _CreateLocationViewState();
 }
 
+// Widget permettant le création d'un parc
 class _CreateLocationViewState extends State<CreateLocationView> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
@@ -54,7 +55,7 @@ class _CreateLocationViewState extends State<CreateLocationView> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           snackbarCustom(
-            message: "Veuillez remplir tous les champs.",
+            message: "L'image est obligatoire.",
             backgroundColor: Colors.red[100],
             textColor: Colors.red[900],
             duration: const Duration(seconds: 3),

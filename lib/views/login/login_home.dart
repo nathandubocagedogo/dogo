@@ -6,13 +6,11 @@ import 'package:dogo_final_app/theme/theme.dart';
 // Components
 import 'package:dogo_final_app/components/buttons/button_rounded_icon_text.dart';
 import 'package:dogo_final_app/components/buttons/button_back.dart';
-import 'package:dogo_final_app/routes/animations.dart';
 
 // Services
 import 'package:dogo_final_app/services/auth.dart';
 
 // Utilities
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginHomeView extends StatefulWidget {
@@ -73,20 +71,7 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                     iconSize: 16,
                     gap: 18,
                     callback: () async {
-                      await authService.signInWithGoogle().then(
-                            (UserCredential? userCredential) => {
-                              if (userCredential != null)
-                                {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/home',
-                                    arguments: {
-                                      'animationType': AnimationType.slideLeft,
-                                    },
-                                  ),
-                                }
-                            },
-                          );
+                      await authService.signInWithGoogle(context);
                     },
                   ),
                   const SizedBox(height: 12),
@@ -96,20 +81,7 @@ class _LoginHomeViewState extends State<LoginHomeView> {
                     iconSize: 20,
                     gap: 18,
                     callback: () async {
-                      await authService.signInWithApple().then(
-                            (UserCredential? userCredential) => {
-                              if (userCredential != null)
-                                {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/home',
-                                    arguments: {
-                                      'animationType': AnimationType.slideLeft,
-                                    },
-                                  ),
-                                }
-                            },
-                          );
+                      await authService.signInWithApple(context);
                     },
                   ),
                   const SizedBox(height: 20),

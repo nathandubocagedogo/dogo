@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:dogo_final_app/routes/animations.dart';
 
 // Utilities
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,7 +40,7 @@ class AuthService {
   }
 
   // Connexion de l'utilisateur à Firebase avec Google puis redirection vers la page d'accueil
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -55,13 +56,20 @@ class AuthService {
             await FirebaseAuth.instance.signInWithCredential(credential);
         User? user = userCredential.user;
 
-        // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
-        // S'il n'existe pas, je l'ajoute
-        await addUserToFirestore(user);
-
-        return userCredential;
-      } else {
-        return null;
+        if (user != null) {
+          // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
+          // S'il n'existe pas, je l'ajoute
+          await addUserToFirestore(user);
+          await Future.delayed(const Duration(seconds: 2));
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(
+            context,
+            '/home',
+            arguments: {
+              'animationType': AnimationType.slideLeft,
+            },
+          );
+        }
       }
     } catch (exception) {
       rethrow;
@@ -69,7 +77,7 @@ class AuthService {
   }
 
   // Connexion de l'utilisateur à Firebase avec Apple puis redirection vers la page d'accueil
-  Future<UserCredential?> signInWithApple() async {
+  Future<void> signInWithApple(BuildContext context) async {
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -88,10 +96,19 @@ class AuthService {
 
       User? user = userCredential.user;
 
-      // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
-      await addUserToFirestore(user);
-
-      return userCredential;
+      if (user != null) {
+        // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
+        await addUserToFirestore(user);
+        await Future.delayed(const Duration(seconds: 2));
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(
+          context,
+          '/home',
+          arguments: {
+            'animationType': AnimationType.slideLeft,
+          },
+        );
+      }
     } catch (exception) {
       rethrow;
     }

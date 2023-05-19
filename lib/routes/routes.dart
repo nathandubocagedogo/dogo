@@ -15,7 +15,6 @@ import 'package:dogo_final_app/views/landing/landing.dart';
 import 'package:dogo_final_app/views/home/home.dart';
 import 'package:dogo_final_app/views/map/map.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_chat.dart';
-import 'package:dogo_final_app/views/pages/groups/subpages/group_details.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/change_location.dart';
 import 'package:dogo_final_app/views/pages/home/subpages/place_details.dart';
 import 'package:dogo_final_app/views/pages/groups/subpages/group_create.dart';
@@ -101,13 +100,7 @@ Route<dynamic> generateRoute(
         return MakeActivityView(place: place);
       };
       break;
-    case '/group-details':
-      builder = (BuildContext context) {
-        final arguments = settings.arguments as Map<String, dynamic>;
-        final groupId = arguments['groupId'] as String;
-        return GroupDetailsPageView(groupId: groupId);
-      };
-      break;
+
     case '/group-chat':
       builder = (BuildContext context) {
         final arguments = settings.arguments as Map<String, dynamic>;

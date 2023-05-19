@@ -409,6 +409,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             if (isCardDisplayed)
               Positioned(
                   bottom: 30,
+                  left: screenWidth * 0.05,
+                  right: screenWidth * 0.05,
                   child: InkWell(
                     onTap: () {
                       Place place = Place.fromDocument(currentMarker!);

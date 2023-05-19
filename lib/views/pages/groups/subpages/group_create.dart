@@ -59,7 +59,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
         await groupService.createGroup(
           nameController.text,
           descriptionController.text,
-          selectedPrivacy! == 'Private' ? true : false,
+          false,
           pictureUrl,
           user!.uid,
         );
@@ -158,37 +158,6 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                       textInputAction: TextInputAction.next,
                       validator: true,
                       isTextarea: true,
-                    ),
-                    const SizedBox(height: 12),
-                    const Text("Confidentialité du groupe"),
-                    const SizedBox(height: 6),
-                    DropdownButtonFormField<String>(
-                      value: selectedPrivacy,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedPrivacy = newValue;
-                        });
-                      },
-                      items: privacyOptions
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 10),
-                      ),
-                      dropdownColor: Colors.grey[200],
-                      icon: const Icon(Icons.arrow_drop_down),
-                      elevation: 2,
                     ),
                     const SizedBox(height: 12),
                     const Text("Image du parc"),

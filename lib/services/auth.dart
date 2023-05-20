@@ -115,12 +115,14 @@ class AuthService {
   }
 
   Future<void> addUserToFirestore(User? user) async {
+    final int todayInTimestamp = Timestamp.now().millisecondsSinceEpoch;
+
     firestore.collection("users").doc(user?.uid).get().then((value) => {
           if (!value.exists)
             {
               firestore.collection("users").doc(user?.uid).set(
                 {
-                  "name": user?.displayName ?? "Utilisateur inconnu",
+                  "name": user?.displayName ?? "Utilisateur $todayInTimestamp",
                   "email": user?.email,
                   "picture": user?.photoURL,
                   "bookmarks": []

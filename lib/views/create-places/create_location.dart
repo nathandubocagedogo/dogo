@@ -68,7 +68,9 @@ class _CreateLocationViewState extends State<CreateLocationView> {
   Future<File?> pickImage() async {
     final pickedImage = await picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 80,
+      imageQuality: 50,
+      maxWidth: 500,
+      maxHeight: 400,
     );
 
     if (pickedImage != null) {
@@ -81,7 +83,9 @@ class _CreateLocationViewState extends State<CreateLocationView> {
   Future<File?> takePicture() async {
     final pickedImage = await picker.pickImage(
       source: ImageSource.camera,
-      imageQuality: 80,
+      imageQuality: 50,
+      maxWidth: 500,
+      maxHeight: 400,
     );
 
     if (pickedImage != null) {

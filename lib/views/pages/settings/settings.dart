@@ -47,7 +47,9 @@ class _SettingsPageViewState extends State<SettingsPageView> {
   Future<void> pickImage() async {
     final pickedImage = await picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 80,
+      imageQuality: 50,
+      maxWidth: 500,
+      maxHeight: 400,
     );
 
     if (pickedImage != null) {

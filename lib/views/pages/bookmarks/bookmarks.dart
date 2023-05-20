@@ -58,7 +58,8 @@ class _BookmarsPageViewState extends State<BookmarsPageView> {
             return const Center(child: Text('Aucun favoris enregistré'));
           } else {
             List<Place> bookmarks = snapshot.data;
-            return ListView.builder(
+            return ListView.separated(
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemCount: bookmarks.length,
               itemBuilder: (BuildContext context, int index) {
                 Place place = bookmarks[index];

@@ -21,7 +21,6 @@ class MakeActivityView extends StatefulWidget {
 class _MakeActivityViewState extends State<MakeActivityView> {
   late GoogleMapController mapController;
   late Position currentPosition;
-  StreamSubscription<Position>? positionStreamSubscription;
 
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
@@ -30,13 +29,12 @@ class _MakeActivityViewState extends State<MakeActivityView> {
   void initState() {
     super.initState();
     setUpPolyline();
-    initCurrentPosition().then((_) => startLocationTracking());
+    initCurrentPosition();
   }
 
   @override
   void dispose() {
     super.dispose();
-    stopLocationTracking();
   }
 
   void setUpPolyline() {
@@ -46,7 +44,7 @@ class _MakeActivityViewState extends State<MakeActivityView> {
 
     Polyline polyline = Polyline(
       polylineId: const PolylineId("Route principale"),
-      color: Colors.red,
+      color: Colors.orange,
       points: polylineCoordinates,
     );
 
@@ -67,57 +65,56 @@ class _MakeActivityViewState extends State<MakeActivityView> {
     });
   }
 
-  void startLocationTracking() {
-    positionStreamSubscription =
-        Geolocator.getPositionStream().listen((Position position) {
-      double distanceInMeters = Geolocator.distanceBetween(
-          currentPosition.latitude,
-          currentPosition.longitude,
-          position.latitude,
-          position.longitude);
-
-      if (distanceInMeters > 4) {
-        setState(() {
-          currentPosition = position;
-
-          markers.removeWhere(
-              (marker) => marker.markerId.value == "currentLocation");
-
-          markers.add(
-            Marker(
-              markerId: const MarkerId("Ma position"),
-              position: LatLng(position.latitude, position.longitude),
-              infoWindow: const InfoWindow(title: "Ma position"),
-            ),
-          );
-        });
-      }
-    });
-  }
-
-  void stopLocationTracking() {
-    positionStreamSubscription?.cancel();
-  }
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          widget.place.routes[0].latitude,
-          widget.place.routes[0].longitude,
-        ),
-        zoom: 11,
+    return Scaffold(
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                widget.place.routes[0].latitude,
+                widget.place.routes[0].longitude,
+              ),
+              zoom: 11,
+            ),
+            polylines: polylines,
+            myLocationButtonEnabled: true,
+            myLocationEnabled: true,
+          ),
+          SafeArea(
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 16,
+                  child: Material(
+                    shape: const CircleBorder(),
+                    color: Colors.orangeAccent,
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () async {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      markers: markers,
-      polylines: polylines,
-      myLocationButtonEnabled: true,
-      myLocationEnabled: true,
     );
   }
 }

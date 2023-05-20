@@ -1,9 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
 
-// Components
-import 'package:dogo_final_app/components/buttons/button_rounded_text.dart';
-
 // Models
 import 'package:dogo_final_app/models/firebase/place.dart';
 
@@ -220,12 +217,8 @@ class PlaceInfo extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             if (place.type == 'Balades')
-              ButtonRoundedText(
-                spacing: 12,
-                backgroundColor: Colors.orange,
-                textColor: Colors.white,
-                content: 'Faire la balade',
-                callback: () {
+              ElevatedButton(
+                onPressed: () async {
                   Navigator.pushNamed(
                     context,
                     '/make-activity',
@@ -234,6 +227,15 @@ class PlaceInfo extends StatelessWidget {
                     },
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Faire la balade",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
           ],
         ),

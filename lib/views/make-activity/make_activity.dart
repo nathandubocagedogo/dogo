@@ -2,12 +2,16 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+// Provider
+import 'package:dogo_final_app/provider/provider.dart';
+
 // Models
 import 'package:dogo_final_app/models/firebase/place.dart';
 
 // Utilities
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 class MakeActivityView extends StatefulWidget {
   final Place place;
@@ -65,8 +69,47 @@ class _MakeActivityViewState extends State<MakeActivityView> {
     });
   }
 
+  Future<void> updateCurrentLocation() async {
+    try {
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw Exception("La localisation n'est pas activée.");
+      }
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // ignore: use_build_context_synchronously
+      Provider.of<DataProvider>(context, listen: false)
+          .updateCurrentPosition(position);
+
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 14.0,
+          ),
+        ),
+      );
+    } catch (exception) {
+      rethrow;
+    }
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  void zoomToActivity() {
+    mapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(widget.place.latitude, widget.place.longitude),
+          zoom: 14.0,
+        ),
+      ),
+    );
   }
 
   @override
@@ -84,7 +127,7 @@ class _MakeActivityViewState extends State<MakeActivityView> {
               zoom: 11,
             ),
             polylines: polylines,
-            myLocationButtonEnabled: true,
+            myLocationButtonEnabled: false,
             myLocationEnabled: true,
           ),
           SafeArea(
@@ -111,6 +154,36 @@ class _MakeActivityViewState extends State<MakeActivityView> {
                   ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              backgroundColor: Colors.orange,
+              onPressed: () async {
+                await updateCurrentLocation();
+              },
+              child: const Icon(
+                Icons.my_location,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 80,
+            right: 16,
+            child: Material(
+              shape: const CircleBorder(),
+              color: Colors.orange,
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: zoomToActivity,
+                child: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Icon(Icons.place, color: Colors.white),
+                ),
+              ),
             ),
           ),
         ],

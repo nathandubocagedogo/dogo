@@ -54,6 +54,8 @@ class _BookmarsPageViewState extends State<BookmarsPageView> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Erreur: ${snapshot.error}'));
+          } else if (snapshot.data.isEmpty) {
+            return const Center(child: Text('Aucun favoris enregistré'));
           } else {
             List<Place> bookmarks = snapshot.data;
             return ListView.builder(

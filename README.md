@@ -1,17 +1,14 @@
-# dogo_final_app
+# Dogo
 
-A new Flutter project.
+Bienvenue sur le répértoire GitHub de l'application mobile Dogo.
 
-## Getting Started
+## Installation
 
-This project is a starting point for a Flutter application.
+Pour lancer ce projet, il vous faut Flutter et son CLI d'installer sur votre machine.
+Une fois que cela est fait, vous pouvez tester si l'installation a fonctionné en exécutant la commande `flutter`.
 
-A few resources to get you started if this is your first Flutter project:
+Si la commande fonctionne, assurez-vous d'installer les dépendances du projet en exécutant la commande `flutter pub get`.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Puis vous pourrez lancer l'application grâce à la commande `flutter run`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# dogo_final_app
+Assurez-vous d'avoir un simulateur sur votre machine ou connecté à votre machine.

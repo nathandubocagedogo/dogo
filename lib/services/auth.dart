@@ -60,7 +60,7 @@ class AuthService {
           // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
           // S'il n'existe pas, je l'ajoute
           await addUserToFirestore(user);
-          await Future.delayed(const Duration(seconds: 2));
+          await Future.delayed(const Duration(seconds: 1));
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(
             context,
@@ -99,7 +99,7 @@ class AuthService {
       if (user != null) {
         // Si je récupère un utilisateur, je vérifie s'il existe dans la collection "users" de Firestore
         await addUserToFirestore(user);
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(
           context,

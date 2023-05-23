@@ -87,7 +87,21 @@ class _HomePageViewState extends State<HomePageView>
       LocationPermission permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        throw Exception("La localisation n'est pas activée.");
+        // Les coordonnées de Paris
+        Position defaultPosition = const Position(
+          latitude: 48.8566,
+          longitude: 2.3522,
+          timestamp: null,
+          accuracy: 0,
+          altitude: 0,
+          heading: 0,
+          speed: 0,
+          speedAccuracy: 0,
+        );
+        // ignore: use_build_context_synchronously
+        Provider.of<DataProvider>(context, listen: false)
+            .updateCurrentPosition(defaultPosition);
+        return defaultPosition;
       }
 
       Position position = await Geolocator.getCurrentPosition(

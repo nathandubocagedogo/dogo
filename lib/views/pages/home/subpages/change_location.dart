@@ -80,9 +80,7 @@ class _ChangeLocationViewState extends State<ChangeLocationView> {
                         ),
                       ),
                       child: InkWell(
-                        onTap: () {
-                          placesService.setCurrentLocation(context);
-                        },
+                        onTap: () => placesService.setCurrentLocation(context),
                         child: const Icon(
                           (Icons.my_location),
                         ),

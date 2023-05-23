@@ -11,6 +11,7 @@ import 'package:dogo_final_app/models/firebase/message.dart';
 import 'package:dogo_final_app/components/buttons/button_back.dart';
 
 // Utilities
+import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -140,6 +141,13 @@ class _GroupChatPageViewState extends State<GroupChatPageView> {
                             color: isMyMessage ? Colors.white : Colors.black,
                           ),
                         ),
+                        Text(
+                          'Le ${DateFormat('dd/MM').format(message.timestamp)} à ${DateFormat('HH:mm').format(message.timestamp)}',
+                          style: TextStyle(
+                            color: isMyMessage ? Colors.white : Colors.black,
+                            fontSize: 10, // smaller font size
+                          ),
+                        )
                       ],
                     ),
                   ),

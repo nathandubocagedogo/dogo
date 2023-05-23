@@ -100,139 +100,141 @@ class _SettingsPageViewState extends State<SettingsPageView> {
       ),
       body: Align(
         alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: screenWidth * 0.9,
-          child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: userData,
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,
-            ) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else {
-                final Map<String, dynamic>? user = snapshot.data?.data();
-                final String name = convertFullNameInFirstName(
-                  name: snapshot.data?.data()?['name'],
-                );
-                final String? picture = snapshot.data?.data()?['picture'];
-                final String firstLetter =
-                    name.isNotEmpty ? name[0].toUpperCase() : "";
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: screenWidth * 0.9,
+            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: userData,
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,
+              ) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else {
+                  final Map<String, dynamic>? user = snapshot.data?.data();
+                  final String name = convertFullNameInFirstName(
+                    name: snapshot.data?.data()?['name'],
+                  );
+                  final String? picture = snapshot.data?.data()?['picture'];
+                  final String firstLetter =
+                      name.isNotEmpty ? name[0].toUpperCase() : "";
 
-                return Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    InkWell(
-                      onTap: pickImage,
-                      customBorder: const CircleBorder(),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        radius: 50,
-                        child: picture != null && picture.isNotEmpty
-                            ? ClipOval(
-                                child: Image.network(
-                                  picture,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
+                  return Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      InkWell(
+                        onTap: pickImage,
+                        customBorder: const CircleBorder(),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey[300],
+                          radius: 50,
+                          child: picture != null && picture.isNotEmpty
+                              ? ClipOval(
+                                  child: Image.network(
+                                    picture,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Text(
+                                  firstLetter,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              )
-                            : Text(
-                                firstLetter,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      user?['name'] ?? "Inconnu",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      user?['email'] ?? "Inconnu",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Divider(),
-                    const SizedBox(height: 20),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Modifier le nom complet",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Form(
-                      key: formKey,
-                      child: Column(
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        user?['name'] ?? "Inconnu",
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        user?['email'] ?? "Inconnu",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const SizedBox(height: 20),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          InputRoundedText(
-                            controller: nameController,
-                            validator: true,
-                          ),
-                          const SizedBox(height: 12),
-                          ButtonRoundedText(
-                            backgroundColor: Colors.orange,
-                            textColor: Colors.white,
-                            content: "Sauvegarder",
-                            callback: () {
-                              updateUserName(nameController.text);
-                            },
+                          Text(
+                            "Modifier le nom complet",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Actions sur le compte",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const SizedBox(height: 6),
+                      Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            InputRoundedText(
+                              controller: nameController,
+                              validator: true,
+                            ),
+                            const SizedBox(height: 12),
+                            ButtonRoundedText(
+                              backgroundColor: Colors.orange,
+                              textColor: Colors.white,
+                              content: "Sauvegarder",
+                              callback: () {
+                                updateUserName(nameController.text);
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    CupertinoListTile(
-                      backgroundColor: Colors.grey[200],
-                      title: const Text('Déconnexion'),
-                      trailing: const Icon(Icons.logout),
-                      onTap: () async {
-                        await signOut();
-                      },
-                    ),
-                    const Divider(height: 0.1),
-                    CupertinoListTile(
-                      backgroundColor: Colors.grey[200],
-                      title: const Text('Supprimer le compte'),
-                      trailing: const Icon(Icons.delete),
-                      onTap: () async {
-                        await deleteUserAccount();
-                      },
-                    ),
-                  ],
-                );
-              }
-            },
+                      ),
+                      const SizedBox(height: 20),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Actions sur le compte",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      CupertinoListTile(
+                        backgroundColor: Colors.grey[200],
+                        title: const Text('Déconnexion'),
+                        trailing: const Icon(Icons.logout),
+                        onTap: () async {
+                          await signOut();
+                        },
+                      ),
+                      const Divider(height: 0.1),
+                      CupertinoListTile(
+                        backgroundColor: Colors.grey[200],
+                        title: const Text('Supprimer le compte'),
+                        trailing: const Icon(Icons.delete),
+                        onTap: () async {
+                          await deleteUserAccount();
+                        },
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
